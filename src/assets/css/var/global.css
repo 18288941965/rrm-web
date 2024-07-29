@@ -1,0 +1,98 @@
+:root{
+    --font-size-small: 14px;
+    --font-size-medium: 16px;
+    --font-size-large: 18px;
+
+    --color-white: #FFFFFF;
+    --color-blue: #409EFF;
+    --color-red: #ff0000;
+    --color-black-primary: #1F2328;
+    --color-black-regular: #656D76;
+    --color-black-secondary: #909399;
+
+    --hover-color-light-blue: #ECF5FF;
+
+    --h00-size: 3rem;
+    --h0-size: 2.5rem;
+    --h1-size: 2rem;
+    --h2-size: 1.5rem;
+    --h3-size: 1.25rem;
+    --h4-size: 1rem;
+    --h5-size: 0.875rem;
+    --h6-size: 0.75rem;
+    --body-font-size: 0.875rem;
+
+    /*
+    [
+    element:
+    --el-index-normal: 1;
+    --el-index-top: 1000;
+    --el-index-popper: 2000; for dialog boxes, etc，this is dynamic，2000 is basics
+    ]
+    a: override default z-index
+    b: for logo | ...
+    c:
+    d:
+    e: for summary:before
+    f: for summary
+    g: used to search panels and so on，can`t go past the element dialog...
+    h:
+    i:
+    z: used in progress
+    */
+    --z-index-a: 1;
+    --z-index-b: 2;
+    --z-index-c: 3;
+    --z-index-d: 10;
+    --z-index-e: 100;
+    --z-index-f: 500;
+    --z-index-g: 1000;
+    --z-index-h: 2000;
+    --z-index-i: 3000;
+    --z-index-z: 9999;
+
+    --border-radius-ultra-small: 1px;
+    --border-radius-small: 2px;
+    --border-radius-medium: 4px;
+    --border-radius-large: 12px;
+    --border-radius-ultra-large : 20px;
+
+    --border-radius-round-small: 16px;
+    --border-radius-round-medium: 20px;
+
+    /*animation duration*/
+    --duration-slow: 1.25s;
+    --duration-medium: 0.75s;
+    --duration-quick: 0.35s;
+
+    --panel-bg-color: #FFFFFF;
+    --panel-bg2-color: #EEEEEE;
+    --panel-border-inner-color: #DFE1E5;
+    --panel-border-outer-color: #C7CCD1;
+    --panel-width-medium: 260px;
+    --panel-width-large: 300px;
+
+    --mg-ultra-small: 6px;
+    --mg-small: 10px;
+    --mg-medium: 16px;
+    --mg-large: 20px;
+    --mg-ultra-large: 26px;
+
+    --pd-ultra-small: 6px;
+    --pd-small: 10px;
+    --pd-medium: 16px;
+    --pd-large: 20px;
+    --pd-ultra-large: 26px;
+
+    --size-default: 32px;
+    --size-medium: 40px;
+    --size-large: 60px;
+
+    /*top layout*/
+    --header-height: 48px;
+    --banner-height: 56px;
+    --sidebar-width: 260px;
+    --header-banner-height: calc(var(--header-height) + var(--banner-height));
+
+    --menu-level-padding: var(--pd-medium);
+}

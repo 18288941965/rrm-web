@@ -1,0 +1,24 @@
+/*arrow animation to the right*/
+.arrow-line-svg{
+  transition: transform 0.2s;
+  transform: translateX(0);
+}
+.arrow-line-path{
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  transition: stroke-dashoffset 0.2s;
+}
+.al-hover:hover .arrow-line-svg{
+  transform: translateX(4px);
+}
+.al-hover:hover .arrow-line-path{
+  stroke-dashoffset: 34;
+}
+
+/*arrow down animation*/
+.arrow-down svg{
+    transition: all 0.3s;
+}
+.arrow-down:hover .expand-mg{
+   transform: translateY(4px);
+}

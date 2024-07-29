@@ -1,0 +1,23 @@
+.app-light{
+    color-scheme: light;
+    --bg-color: #FFFFFF;
+    --bg-color-header: #F9FAFA;
+    --bg-color-banner: #F9FAFA;
+    --bg-color-hover: #E9E9E9;
+    --bg-color-reverse: #000000;
+    --bg-color-scrollbar-thumb: #E3E3E3;
+    --bg-color-scrollbar-track: transparent;
+
+    --border-color: #D8DEE4;
+    --border-1: 1px solid var(--border-color);
+
+    --text-color-primary: #1F2328;
+    --text-color-regular: #606266;
+    --text-color-disabled: #C0C4CC;
+
+    --box-shadow-small: 0 1px 0 rgba(31,35,40,0.04);
+    --box-shadow-medium: 0 3px 6px rgba(140,149,159,0.15);
+    --box-shadow-large: 0 8px 24px rgba(140,149,159,0.3);
+    --box-shadow-extra-large: 0 12px 28px rgba(140,149,159,0.3);
+    --box-shadow-panel: rgba(31, 35, 40, 0.12) 0 1px 3px, rgba(66, 74, 83, 0.12) 0 8px 24px;
+}

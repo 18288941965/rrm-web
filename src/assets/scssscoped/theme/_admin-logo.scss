@@ -1,0 +1,32 @@
+@use "../../scss/mixin/mixin" as *;
+
+.admin-logo{
+  @include flex-base();
+  position: relative;
+  z-index: var(--z-index-b);
+  border-radius: var(--border-radius-medium);
+  height: var(--size-default);
+  text-decoration: none;
+  & img{
+    width: 24px;
+    margin-right: var(--mg-ultra-small);
+  }
+  & #admin-logo-text{
+    line-height: var(--size-default);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: clip;
+  }
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(-20px);
+  opacity: 0;
+}

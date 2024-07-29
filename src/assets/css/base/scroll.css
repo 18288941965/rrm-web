@@ -1,0 +1,39 @@
+/*Firefox [version] >= 64*/
+.card-scroll{
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #C1C1C1 rgba(255,255,255, 0);
+}
+/*Chrome、Edge、Opera、Safari、iOS*/
+.card-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+.card-scroll::-webkit-scrollbar-thumb {
+    background-color: #C1C1C1;
+    border-radius: var(--border-radius-ultra-small);
+}
+.card-scroll::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+.card-scroll::-webkit-scrollbar-button {
+    height: 0;
+}
+
+/*Firefox [version] >= 64*/
+.menu-scroll{
+    scrollbar-width: thin;
+}
+/*Chrome、Edge、Opera、Safari、iOS */
+.menu-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+.menu-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--bg-color-scrollbar-thumb);
+}
+.menu-scroll::-webkit-scrollbar-track {
+    background-color: var(--bg-color-scrollbar-track);
+}
+.menu-scroll::-webkit-scrollbar-button {
+    height: 0;
+}
+

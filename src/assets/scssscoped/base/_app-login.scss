@@ -1,0 +1,51 @@
+@use "../../scss/mixin/mixin" as *;
+
+.app-login{
+  width: 100%;
+  height: 100vh;
+  min-height: 560px;
+  background-color: var(--color-white);
+}
+
+.login-header{
+  @include flex-base();
+  justify-content: flex-end;
+  height: var(--size-large);
+  padding: 0 var(--pd-large);
+}
+
+.login-main{
+  width: 420px;
+  padding: var(--pd-medium);
+  margin: auto;
+  border-radius: var(--border-radius-ultra-large);
+  color: var(--color-black-primary);
+  & .title{
+    text-align: center;
+    font-size: var(--h1-size);
+    & img{
+      height: 80px;
+    }
+  }
+
+  & section{
+    padding: 40px;
+    border-radius: var(--border-radius-medium);
+    background-color: #F9FAFA;
+    border: 1px solid #E3E6E8;
+  }
+}
+
+.login-main input{
+  display: block;
+  width: 100%;
+  height: 40px;
+  padding-left: 20px;
+  background-color: var(--color-white);
+  border: 1px solid #E1E3E1 {
+    radius: var(--border-radius-medium);
+  };
+  margin-bottom: 40px;
+  font-size: var(--h5-size);
+  color: var(--color-black-primary);
+}

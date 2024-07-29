@@ -1,0 +1,71 @@
+$nav-width-fixed: 260px;
+
+// flex布局
+@mixin flex-base($jc: false){
+	display: flex;
+	align-items: center;
+	@if $jc {
+		justify-content: center;
+	}
+}
+
+// grid布局
+@mixin grid-base($gtc, $jc: false){
+	display: grid;
+	grid-template-columns: $gtc;
+	align-items: center;
+	@if $jc {
+		justify-content: center;
+	}
+}
+
+// 左右布局
+.layout-fixed{
+	display: grid;
+	grid-template-columns: $nav-width-fixed 1fr;
+}
+
+// 左右布局基本信息
+.layout-dynamic{
+	display: grid;
+	grid-template-columns: var(--sidebar-width) calc(100% - var(--sidebar-width));
+	transition: grid-template-columns 0.3s;
+}
+
+// 左右布局折叠/展开
+.admin-theme .layout-dynamic-collapse{
+	grid-template-columns: var(--sidebar-width) calc(100% - var(--sidebar-width));
+}
+
+// 图标按钮的基本信息
+.icon-btn{
+	@include flex-base(true);
+	height: var(--size-default);
+	width: var(--size-default);
+	border-radius: var(--border-radius-medium);
+}
+
+// 禁用
+.disabled{
+	color: var(--text-color-disabled) !important;
+	cursor: not-allowed !important;
+}
+
+// 激活
+.active{
+	font-weight: bolder;
+	color: var(--color-blue);
+}
+
+.overlay{
+	position: absolute;
+	min-width: var(--panel-width-medium);
+	max-width: var(--panel-width-large);
+	padding: var(--pd-small);
+	border-radius: var(--border-radius-large);
+	color: var(--color-black-primary);
+	background-color: var(--panel-bg-color);
+	box-shadow: var(--box-shadow-large);
+	z-index: var(--z-index-f);
+	overflow: auto;
+}

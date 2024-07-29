@@ -1,0 +1,53 @@
+@use "../../scss/mixin/mixin" as *;
+
+.admin-header{
+  @include flex-base();
+  padding: 0 var(--pd-large);
+  background-color: var(--bg-color-header);
+
+  & .active-menu-label{
+    line-height: var(--size-default);
+    color: var(--text-color-regular);
+    & span:first-child{
+      padding: 0 var(--pd-small);
+    }
+    & span:last-child{
+      font-weight: bolder;
+    }
+  }
+
+  & .star-container{
+    @include grid-base(var(--size-default) 1px var(--size-default));
+    position: relative;
+    height: var(--size-default);
+    border: var(--border-1);
+    border-radius: var(--border-radius-medium);
+    & .split{
+      display: block;
+      height: 68%;
+      background-color: var(--border-color);
+    }
+  }
+}
+
+.user-avatar-container details{
+  @include flex-base();
+  height: var(--size-default);
+  border: 0;
+  background-color: var(--color-blue);
+  padding: 0 var(--pd-ultra-small);
+  border-radius: var(--border-radius-round-medium);
+  color: var(--color-white);
+  & summary{
+    width: max-content;
+  }
+  & summary svg:nth-child(2){
+    margin-left: var(--mg-small);
+  }
+}
+
+#star-menu-container .star-menu-overlay{
+    @extend .overlay;
+    top: 40px;
+    right: 0;
+}

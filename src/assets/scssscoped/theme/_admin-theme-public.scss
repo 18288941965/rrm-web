@@ -1,0 +1,23 @@
+@use "../../scss/mixin/mixin" as *;
+
+.menu-collapse-icon svg {
+  transition: transform 0.3s;
+}
+.menu-collapse-icon .icon-rotate{
+  transform: rotate(180deg);
+}
+
+.admin-theme{
+  width: 100%;
+  max-width: 100%;
+}
+
+.theme-header-ht{
+  height: var(--header-height);
+}
+
+.theme-left-wrapper{
+  position: sticky;
+  top: 0;
+  border-right: 1px solid var(--border-color);
+}

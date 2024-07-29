@@ -1,0 +1,14 @@
+@use "../../scss/mixin/mixin" as *;
+
+.icon-demo{
+  @include flex-base();
+  flex-wrap: wrap;
+}
+.icon-demo-item{
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  width: 108px;
+  height: 108px;
+  margin: var(--mg-medium);
+}

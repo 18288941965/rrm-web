@@ -1,0 +1,28 @@
+@use "../../scss/mixin/mixin" as *;
+
+.user-avatar-overlay{
+  @extend .overlay;
+  top: 54px;
+  right: var(--mg-medium);
+
+  & .li-information{
+    line-height: var(--size-large);
+    text-align: center;
+  }
+
+  & .li-action-item{
+    @include grid-base(32px 1fr);
+    line-height: var(--size-medium);
+    padding: 0 var(--pd-small);
+    cursor: pointer;
+    &:hover{
+      color: var(--color-blue) !important ;
+    }
+  }
+
+  & .li-divider{
+    height: 1px;
+    margin: var(--mg-medium) 0;
+    background-color: var(--panel-border-inner-color);
+  }
+}

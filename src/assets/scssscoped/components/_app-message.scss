@@ -1,0 +1,17 @@
+@use "../../scss/mixin/mixin" as *;
+
+.app-message__body{
+  min-height: 30vh;
+  & ul{
+    list-style: '💬 ' inside;
+  }
+  & li{
+    padding: var(--pd-small) var(--pd-medium);
+    margin-bottom: var(--mg-small);
+    border: var(--border-1) {
+      radius: var(--border-radius-medium);
+    };
+    background-color: #DDFFDD;
+    color: var(--color-black-primary);
+  }
+}

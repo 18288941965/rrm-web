@@ -1,0 +1,34 @@
+@use "../mixin/mixin" as *;
+
+.admin-el-menu{
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: var(--mg-small) 0;
+    overflow: {
+        x: hidden;
+        y: auto;
+    };
+
+    .el-menu{
+        border: 0;
+    }
+
+    .el-menu-item, .el-sub-menu__title{
+        margin-bottom: var(--mg-small);
+        border-radius: var(--border-radius-small);
+    }
+
+    .menu-icon{
+        @include flex-base();
+        vertical-align: middle;
+        margin-right: var(--mg-small);
+        text-align: center;
+    }
+
+    .menu-active{
+        font-weight: bolder;
+    }
+}

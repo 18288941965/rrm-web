@@ -1,0 +1,29 @@
+details > summary{
+    display: flex;
+    align-items: center;
+    list-style: none;
+    height: 100%;
+    cursor: pointer;
+}
+details > summary > span{
+    padding: 0 var(--pd-ultra-small);
+    color: var(--color-white);
+}
+details[open]>summary::before {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--z-index-e);
+    display: block;
+    cursor: default;
+    content: " ";
+    background: transparent;
+}
+details[open]>summary.hv-bg{
+    background-color: var(--bg-color-hover);
+}
+details[open] .expand-mg{
+    transform: translateY(4px);
+}
