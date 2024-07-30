@@ -20,6 +20,7 @@
 import {defineComponent, onMounted} from 'vue'
 import {ElRadioGroup, ElRadio} from 'element-plus/es'
 import {defaultProps, uniqueKey, getEvElContext, LabelValue} from './evEl'
+import {RadioValType} from '@utils/types'
 
 export default defineComponent({
   name: 'EvRadio',
@@ -47,7 +48,7 @@ export default defineComponent({
       getDataByDataList,
     } = getEvElContext()
 
-    const updateSelectLabel = (val: string | number | boolean) => {
+    const updateSelectLabel = (val: RadioValType) => {
       if (!dictList.value || !props.labelUpdate) {
         return
       }

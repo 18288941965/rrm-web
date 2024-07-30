@@ -14,3 +14,4 @@ export type IconProps = {
     color?: string
     size?: number
 }
+export type RadioValType = string | number | boolean | undefined
