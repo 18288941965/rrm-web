@@ -8,11 +8,10 @@ export default class LocalStorage {
     getUserInfoObj () {
         const userInfo: LocalUserInfoBean = {
             fontType: '',
-            instCode: '',
-            instName: '',
             loginStatus: '',
             themeModel: '',
             userName: '',
+            token: '',
         }
         const item = localStorage.getItem(this.USER_INFO_KEY)
         if (item) {
@@ -74,5 +73,19 @@ export default class LocalStorage {
 
     getThemeModel() {
         return this.getUserInfoField(UserFieldEnum.THEME_MODEL)
+    }
+
+    setToken (token : string | null) {
+        const userInfoObj = this.getUserInfoObj()
+        if (token == null) {
+            userInfoObj.token = ''
+        } else {
+            userInfoObj.token = token
+        }
+        this.setUserInfo(userInfoObj)
+    }
+
+    getToken () {
+        return this.getUserInfoField(UserFieldEnum.TOKEN)
     }
 }

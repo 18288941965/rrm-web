@@ -6,5 +6,6 @@
 export enum UserFieldEnum{
     LOGIN_STATUS = 'loginStatus',
     FONT_TYPE = 'fontType',
-    THEME_MODEL = 'themeModel'
+    THEME_MODEL = 'themeModel',
+    TOKEN = 'token'
 }

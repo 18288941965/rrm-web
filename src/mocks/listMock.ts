@@ -13,7 +13,7 @@ Mock.mock('/api/admin/getDataList', 'post', (res) => {
 
     return {
         code: 200,
-        msg: null,
+        message: null,
         data: {
             list: list.slice((pageNum - 1) * pageSize, pageNum * pageSize),
             total: 107,
@@ -31,7 +31,7 @@ Mock.mock('/api/admin/getAllDataList', 'post', (res) => {
     }
     return {
         code: 200,
-        msg: null,
+        message: null,
         data: list,
     }
 })

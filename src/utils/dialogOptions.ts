@@ -25,7 +25,7 @@ export function dialogBaseContent () {
     show: false,
     dataId: undefined,
   })
-  const dialogBaseOpen = (id? : string | undefined) => {
+  const dialogBaseOpen = (id? : string | number | undefined) => {
     dialogBase.dataId = id
     dialogBase.show = true
   }
@@ -33,10 +33,17 @@ export function dialogBaseContent () {
     dialogBase.dataId = undefined
     dialogBase.show = false
   }
+  const dialogBaseCloseAndRefresh = (refresh: boolean | undefined, refreshMethod: Function) => {
+    dialogBaseClose()
+    if (refresh) {
+      refreshMethod()
+    }
+  }
   return {
     dialogBase,
     dialogBaseOpen,
     dialogBaseClose,
+    dialogBaseCloseAndRefresh,
   }
 }
 

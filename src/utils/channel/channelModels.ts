@@ -1,11 +1,11 @@
 /**
  * 广播消息接口.
  * @param code 代码
- * @param msg 提示消息
+ * @param message 提示消息
  */
 interface ChannelData {
     code: number
-    msg: string
+    message: string
 }
 
 /**

@@ -6,7 +6,7 @@ import {AxiosResult} from '@utils/interface'
 Mock.mock('/api/admin/getMenus', 'post',(res) => {
     const obj: AxiosResult = {
         code: 200,
-        msg: '操作成功',
+        message: '操作成功',
         data: [],
     }
 
@@ -59,7 +59,7 @@ Mock.mock('/api/admin/getMenus', 'post',(res) => {
 Mock.mock('/api/admin/getStarMenu', 'get', () => {
     return {
         code: 200,
-        msg: '操作成功',
+        message: '操作成功',
         data: [
             {
                 label: 'dic组件',

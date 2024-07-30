@@ -17,6 +17,13 @@ export default defineConfig({
   },
   server: {
     open: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:7070', // 代理的目标地址
+        changeOrigin: true, // 是否更改请求的源
+        rewrite: (path) => path.replace(/^\/api/, ''), // 重写请求路径
+      },
+    },
   },
   build: {
     rollupOptions: {

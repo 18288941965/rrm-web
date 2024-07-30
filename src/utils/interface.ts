@@ -1,12 +1,12 @@
 /**
  * 后端统一返回值接口.
  * @param code 代码
- * @param msg 提示信息
+ * @param message 提示信息
  * @param data 数据
  */
 interface AxiosResult {
     code: number
-    msg: string
+    message: string
     data: any | undefined | null
 }
 
@@ -30,11 +30,10 @@ interface Pagination {
  */
 interface LocalUserInfoBean{
     userName: string
-    instCode: string
-    instName: string
     loginStatus: string
     fontType: string
     themeModel: string
+    token: string
 }
 
 /**
@@ -50,7 +49,7 @@ interface DialogEmpty{
  * @param dataId 唯一标识
  */
 interface DialogBase extends DialogEmpty{
-    dataId: String | undefined
+    dataId: String | number | undefined
 }
 
 /**

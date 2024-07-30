@@ -5,7 +5,7 @@
 enum LSEnum{
     LOG_OUT = '',
     LOG_IN = '1',
-    LOG_INST = '2'
+    LOG_ITEM = '2'
 }
 
 /**
@@ -18,18 +18,7 @@ interface LoginBean{
     password: string
 }
 
-/**
- * 项目
- */
-interface ItemBean{
-    itemName: string
-    itemCode: string
-    itemUser: string
-    itemTime: string
-}
-
 export {
     LSEnum,
     type LoginBean,
-    type ItemBean,
 }

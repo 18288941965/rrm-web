@@ -12,14 +12,14 @@ export default function (BChannel?: BroadcastChannel) {
 
     const activeChannel = reactive<ChannelData>({
         code: -1,
-        msg: '',
+        message: '',
     })
 
     const resetChannel = () => {
         systemMessageList.value = []
         Object.assign(activeChannel, {
             code: -1,
-            msg: '',
+            message: '',
         })
     }
 
@@ -46,7 +46,7 @@ export default function (BChannel?: BroadcastChannel) {
     // 接受到广播消息处理方法
     const channelOnMessage = (ev: MessageEvent, reloadApp: ReloadApp) => {
         const data = ev.data as ChannelData
-        if (data && data.code >= 0 && data.msg) {
+        if (data && data.code >= 0 && data.message) {
 
             // 登录成功
             if (data.code === BCEnum.LOGIN) {

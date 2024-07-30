@@ -2,6 +2,7 @@ import axios, {AxiosResponse} from 'axios'
 import {AxiosResult} from '../interface'
 import {ElMessage} from 'element-plus/es'
 import {useRouter} from 'vue-router'
+import LocalStorage from '../../class/LocalStorage'
 
 export default function () {
     const router = useRouter()
@@ -10,6 +11,10 @@ export default function () {
 
     // Add a request interceptor
     axios.interceptors.request.use(function (config) {
+        const token = new LocalStorage().getToken()
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`
+        }
         // Do something before request is sent
         return config
     }, function (error) {
@@ -32,7 +37,7 @@ export default function () {
         }
 
         if (data.code !== 200) {
-            ElMessage.error(data.msg)
+            ElMessage.error(data.message)
             return response
         }
 

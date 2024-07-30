@@ -11,7 +11,7 @@ import {LSEnum, LoginBean} from './loginModels'
 
 // 退出系统
 const doLogout = (logoutSuccess: LogoutSuccess) => {
-    axios.get('/admin/doLogout').then((res: { data: AxiosResult }) => {
+    axios.get('/auth/logout').then((res: { data: AxiosResult }) => {
         if (res.data.code === 200) {
             logoutSuccess()
         }
@@ -24,7 +24,7 @@ const doLogin = (loginBean: LoginBean, loginSuccess: LoginSuccess) => {
         ElMessage.error('用户名或密码不能为空！')
         return
     }
-    axios.post('/admin/doLogin', { ...loginBean }).then((res: { data: AxiosResult }) => {
+    axios.post('/auth/login', { ...loginBean }).then((res: { data: AxiosResult }) => {
         if (res.data.code === 200) {
             loginSuccess(res.data)
         }
@@ -41,7 +41,7 @@ function logoutContext () {
 
     const logoutSuccess: LogoutSuccess = () => {
         local.setLoginStatus(false, LSEnum.LOG_OUT)
-        postMessage({ code: BCEnum.LOGOUT, msg: '您已在其他窗口退出登录' })
+        postMessage({ code: BCEnum.LOGOUT, message: '您已在其他窗口退出登录' })
         router.replace(RUEnum.LOGIN)
     }
     return {

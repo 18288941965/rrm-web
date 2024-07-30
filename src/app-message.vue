@@ -15,7 +15,7 @@
           v-for="(item, index) in systemMessageList"
           :key="'s-m-l-' + index"
         >
-          {{ item.msg }}
+          {{ item.message }}
         </li>
       </ul>
     </div>

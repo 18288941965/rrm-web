@@ -45,7 +45,6 @@
 import {reactive} from 'vue'
 import {useRouter} from 'vue-router'
 import logo from '@assets/logo.png'
-import {GitHub} from '../../components/svicon/publicIcon'
 import {AxiosResult} from '@utils/interface'
 import {doLogin} from './loginOptions'
 import {LoginSuccess} from '@utils/types'
@@ -62,16 +61,17 @@ const {
 } = BChannel()
 
 const loginBean = reactive<LoginBean>({
-  username: 'admin@163.com',
-  password: 'admin',
+  username: '',
+  password: '',
 })
 
 const local = new LocalStorage()
 
 // 登录成功回调
 const loginSuccess: LoginSuccess = (data: AxiosResult) => {
-  local.setLoginStatus(true, LSEnum.LOG_INST, loginBean.username)
-  postMessage({ code: BCEnum.LOGIN, msg: '登录成功' })
+  local.setToken(data.data)
+  local.setLoginStatus(true, LSEnum.LOG_ITEM, loginBean.username)
+  postMessage({ code: BCEnum.LOGIN, message: '登录成功' })
   router.replace(RUEnum.ITEM)
 }
 
