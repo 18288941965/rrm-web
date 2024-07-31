@@ -40,7 +40,7 @@ function logoutContext () {
     } = BChannel()
 
     const logoutSuccess: LogoutSuccess = () => {
-        local.setLoginStatus(false, LSEnum.LOG_OUT)
+        local.cleanUserInfoObj()
         postMessage({ code: BCEnum.LOGOUT, message: '您已在其他窗口退出登录' })
         router.replace(RUEnum.LOGIN)
     }

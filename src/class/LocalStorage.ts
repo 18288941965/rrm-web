@@ -23,6 +23,7 @@ export default class LocalStorage {
         return userInfo
     }
 
+
     getUserInfoField (field: UserFieldEnum) {
        const userInfo = this.getUserInfoObj()
         return userInfo[field]
@@ -31,6 +32,21 @@ export default class LocalStorage {
     // 更新用户相关信息
     setUserInfo(userInfo: LocalUserInfoBean) {
         localStorage.setItem(this.USER_INFO_KEY, JSON.stringify(userInfo))
+    }
+
+    // 清空所有配置信息
+    cleanUserInfoObj () {
+        const userInfoObj = this.getUserInfoObj()
+        const userInfo: LocalUserInfoBean = {
+            fontType: userInfoObj.fontType,
+            loginStatus: '',
+            themeModel: userInfoObj.themeModel,
+            userName: '',
+            token: '',
+            itemCode: '',
+            itemName: '',
+        }
+        this.setUserInfo(userInfo)
     }
 
     // Set the status and username
