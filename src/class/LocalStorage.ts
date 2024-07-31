@@ -12,6 +12,8 @@ export default class LocalStorage {
             themeModel: '',
             userName: '',
             token: '',
+            itemCode: '',
+            itemName: '',
         }
         const item = localStorage.getItem(this.USER_INFO_KEY)
         if (item) {
@@ -87,5 +89,17 @@ export default class LocalStorage {
 
     getToken () {
         return this.getUserInfoField(UserFieldEnum.TOKEN)
+    }
+
+    setItem (itemCode: string, itemName: string) {
+        const userInfoObj = this.getUserInfoObj()
+        if (itemCode == null) {
+            userInfoObj.itemCode = ''
+            userInfoObj.itemName = ''
+        } else {
+            userInfoObj.itemCode = itemCode
+            userInfoObj.itemName = itemName
+        }
+        this.setUserInfo(userInfoObj)
     }
 }

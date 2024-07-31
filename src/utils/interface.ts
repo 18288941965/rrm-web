@@ -34,6 +34,8 @@ interface LocalUserInfoBean{
     fontType: string
     themeModel: string
     token: string
+    itemCode: string
+    itemName: string
 }
 
 /**

@@ -31,7 +31,6 @@
         </el-button>
       </div>
 
-
       <div class="item-flex">
         <div
           v-for="(item, index) in itemList"
@@ -39,14 +38,15 @@
           class="item-card"
         >
           <div>
-            <h4><a>项目名称</a></h4>
-            <span class="item-cjrq">532626</span>
+            <h4>{{ item.itemName }}</h4>
+            <span class="item-code">{{ item.itemCode }}</span>
           </div>
-          <p>TWL创建，2024-07-30</p>
+          <p>{{ item.username }} {{ item.createTime }}</p>
           <el-button
             type="success"
             plain
             color="#333333"
+            @click="select(item.itemCode, item.itemName)"
           >
             进入
           </el-button>
@@ -74,7 +74,9 @@ import {PersonFill} from '../../components/svicon/publicIcon'
 import {Expand} from '../../components/svicon/publicIcon'
 import appItemEdit from './app-item-edit.vue'
 import {dialogBaseContent} from '@utils/dialogOptions'
-import {ItemBean} from './itemModel'
+import {ItemBeanVO} from './itemModel'
+import {getAllItem, selectItem} from './itemOption'
+import {LSEnum} from './loginModels'
 
 export default defineComponent({
   name: 'AppItem',
@@ -88,7 +90,7 @@ export default defineComponent({
     const router = useRouter()
     const local = new LocalStorage()
     const userInfoObj = local.getUserInfoObj()
-    const itemList = ref<Array<ItemBean>>([])
+    const itemList = ref<Array<ItemBeanVO>>([])
 
     const {
       dialogBase,
@@ -96,21 +98,39 @@ export default defineComponent({
         dialogBaseOpen,
     } = dialogBaseContent()
 
-    // 选择任职机构成功的回调函数
+    // 选择项目后回调函数
     const loginSuccess: LoginSuccess = (data: AxiosResult) => {
+      local.setItem(data.data, data.message)
+      local.setLoginStatus(true, LSEnum.LOG_IN)
       router.replace(RUEnum.HOME)
     }
 
     const query = () => {
-      console.log('===')
+      getAllItem().then(res => {
+        if (res.code == 200) {
+          itemList.value = res.data
+        }
+      })
+    }
+
+    const select = (itemCode: string, itemName: string) => {
+      selectItem(itemCode).then(res => {
+        if (res.code == 200) {
+          res.data = itemCode
+          res.message = itemName
+          loginSuccess(res)
+        }
+      })
     }
 
     onMounted(() => {
+      query()
     })
 
     return {
       userInfoObj,
       itemList,
+      select,
       query,
       dialogBase,
       dialogBaseOpen,
@@ -145,6 +165,9 @@ export default defineComponent({
     & h2{
       line-height: 100px;
     }
+    & h4{
+      line-height: var(--size-default);
+    }
 
     & .item-flex{
       display: grid;
@@ -162,6 +185,9 @@ export default defineComponent({
       border: var(--border-1) {
         radius: var(--border-radius-medium);
       };
+      & .item-code, p{
+        color: var(--color-black-secondary);
+      }
     }
   }
 }

@@ -10,10 +10,17 @@
     />
 
     <div
+      class="active-menu-label"
+    >
+      <span>–</span>
+      <span>{{ userInfoObj.itemName }}</span>
+    </div>
+    
+    <div
       v-show="getMenuLabel"
       class="active-menu-label"
     >
-      <span>/</span>
+      <span>-</span>
       <span>{{ getMenuLabel }}</span>
     </div>
 
@@ -82,7 +89,7 @@
     <app-theme class="mgr-medium" />
 
     <user-avatar
-      :user-name="userName"
+      :user-name="userInfoObj.userName"
       class="user-avatar-container arrow-down"
     >
       <template #summary>
@@ -97,7 +104,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onMounted, PropType, ref} from 'vue'
+import {computed, defineComponent, onMounted, PropType, reactive, ref} from 'vue'
 import AdminLogo from '../../logo/admin-logo.vue'
 import {ActiveMenus, MenuBean} from '../menu/menuModels'
 import AppSearch from '../../../app-search.vue'
@@ -112,7 +119,7 @@ import {
 } from '../../../components/svicon/publicIcon'
 import LocalStorage from '../../../class/LocalStorage'
 import axios from 'axios'
-import {AxiosResult} from '@utils/interface'
+import {AxiosResult, LocalUserInfoBean} from '@utils/interface'
 import {closeDetails} from '@utils/utils'
 import {ElMessage} from 'element-plus/es'
 
@@ -149,7 +156,15 @@ export default defineComponent({
   },
   emits: ['push-router'],
   setup (props, {emit}) {
-    const userName = ref('')
+    const userInfoObj = ref<LocalUserInfoBean>({
+      fontType: '',
+      loginStatus: '',
+      themeModel: '',
+      userName: '',
+      token: '',
+      itemCode: '',
+      itemName: '',
+    })
 
     const getMenuLabel = computed(() => {
       if (!props.activeMenus.menuId || !props.activeMenus.menus) {
@@ -186,14 +201,12 @@ export default defineComponent({
 
     onMounted(() => {
       const local = new LocalStorage()
-      const userInfoObj = local.getUserInfoObj()
-      userName.value = userInfoObj.userName
-
+      userInfoObj.value = local.getUserInfoObj()
       getStarMenus()
     })
 
     return {
-      userName,
+      userInfoObj,
       getMenuLabel,
       pushRouter,
       isStar,
