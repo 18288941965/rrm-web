@@ -1,8 +1,6 @@
 <template>
   <div class="app-login">
-    <header class="login-header">
-
-    </header>
+    <header class="login-header" />
 
     <main class="login-main">
       <div class="title">
@@ -32,6 +30,7 @@
           color="#1F883D"
           size="large"
           style="width: 100%"
+          :loading="loading"
           @click="login"
         >
           登录
@@ -42,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive} from 'vue'
+import {reactive, ref} from 'vue'
 import {useRouter} from 'vue-router'
 import logo from '@assets/logo.png'
 import {AxiosResult} from '@utils/interface'
@@ -55,6 +54,7 @@ import LocalStorage from '../../class/LocalStorage'
 import {LSEnum, LoginBean} from './loginModels'
 
 const router = useRouter()
+const loading = ref(false)
 
 const {
   postMessage,
@@ -76,7 +76,8 @@ const loginSuccess: LoginSuccess = (data: AxiosResult) => {
 }
 
 const login = () => {
-  doLogin(loginBean, loginSuccess)
+  loading.value = true
+  doLogin(loginBean, loginSuccess, loading)
 }
 </script>
 

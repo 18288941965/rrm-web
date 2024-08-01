@@ -7,7 +7,8 @@ import BChannel from '../../utils/channel/BChannel'
 import {BCEnum} from '@utils/channel/channelModels'
 import {RUEnum} from '../../router/routerModels'
 import LocalStorage from '../../class/LocalStorage'
-import {LSEnum, LoginBean} from './loginModels'
+import {LoginBean} from './loginModels'
+import {Ref} from 'vue'
 
 // 退出系统
 const doLogout = (logoutSuccess: LogoutSuccess) => {
@@ -19,7 +20,7 @@ const doLogout = (logoutSuccess: LogoutSuccess) => {
 }
 
 // 登录系统
-const doLogin = (loginBean: LoginBean, loginSuccess: LoginSuccess) => {
+const doLogin = (loginBean: LoginBean, loginSuccess: LoginSuccess, loading: Ref<Boolean>) => {
     if (!loginBean.username || !loginBean.password) {
         ElMessage.error('用户名或密码不能为空！')
         return
@@ -28,6 +29,8 @@ const doLogin = (loginBean: LoginBean, loginSuccess: LoginSuccess) => {
         if (res.data.code === 200) {
             loginSuccess(res.data)
         }
+    }).catch(() => {
+        loading.value = false
     })
 }
 

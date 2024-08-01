@@ -3,7 +3,7 @@ import {MenuBean} from '../views/theme/menu/menuModels'
 import {AxiosResult} from '@utils/interface'
 
 // 获取菜单列表：返回tree结构
-Mock.mock('/api/admin/getMenus', 'post',(res) => {
+Mock.mock('/api/admin/getMenus', 'post',() => {
     const obj: AxiosResult = {
         code: 200,
         message: '操作成功',
