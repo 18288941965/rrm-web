@@ -9,7 +9,7 @@
       v-for="item in dictList"
       :key="item.value"
       :border="border"
-      :label="item.value"
+      :value="item.value"
     >
       {{ item.label }}
     </el-radio>

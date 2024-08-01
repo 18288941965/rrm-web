@@ -50,16 +50,16 @@ export default class LocalStorage {
     }
 
     // Set the status and username
-    setLoginStatus (set: boolean, loginStatus: LSEnum, username = '') {
+    setLoginStatus (loginStatus: LSEnum) {
         const userInfoObj = this.getUserInfoObj()
-        if (set) {
-            userInfoObj.loginStatus = loginStatus
-            userInfoObj.userName = username
+        userInfoObj.loginStatus = loginStatus
+        this.setUserInfo(userInfoObj)
+    }
 
-        } else {
-            userInfoObj.loginStatus = loginStatus
-            userInfoObj.userName = ''
-        }
+
+    setLoginUsername(username: string) {
+        const userInfoObj = this.getUserInfoObj()
+        userInfoObj.userName = username
         this.setUserInfo(userInfoObj)
     }
 

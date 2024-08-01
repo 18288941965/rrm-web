@@ -46,16 +46,14 @@
     overflow: auto;
     margin-bottom: calc(var(--mg-large) * 2);
     h5{
-      margin: var(--mg-small) {
-        top: var(--mg-ultra-small);
-      };
+      margin: var(--mg-small);
+      margin-top: var(--mg-ultra-small);
       color: var(--color-black-secondary);
     }
 
     .search-history{
-      padding: var(--pd-medium) {
-        top: 0;
-      };
+      padding: var(--pd-medium);
+      padding-top: 0;
       ul{
         display: flex;
         flex-wrap: wrap;
@@ -63,9 +61,8 @@
       li {
         line-height: var(--size-default);
         padding: 0 var(--pd-medium);
-        border: 1px solid var(--panel-border-inner-color) {
-          radius: var(--border-radius-round-small);
-        };
+        border: 1px solid var(--panel-border-inner-color);
+        border-radius: var(--border-radius-round-small);
         margin-left: var(--mg-medium);
         cursor: pointer;
         &:hover{

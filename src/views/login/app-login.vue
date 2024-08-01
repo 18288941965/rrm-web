@@ -51,7 +51,7 @@ import BChannel from '../../utils/channel/BChannel'
 import {BCEnum} from '@utils/channel/channelModels'
 import {RUEnum} from '../../router/routerModels'
 import LocalStorage from '../../class/LocalStorage'
-import {LSEnum, LoginBean} from './loginModels'
+import {LoginBean, LSEnum} from './loginModels'
 
 const router = useRouter()
 const loading = ref(false)
@@ -70,7 +70,8 @@ const local = new LocalStorage()
 // 登录成功回调
 const loginSuccess: LoginSuccess = (data: AxiosResult) => {
   local.setToken(data.data)
-  local.setLoginStatus(true, LSEnum.LOG_ITEM, loginBean.username)
+  local.setLoginStatus(LSEnum.LOG_ITEM)
+  local.setLoginUsername(loginBean.username)
   postMessage({ code: BCEnum.LOGIN, message: '登录成功' })
   router.replace(RUEnum.ITEM)
 }

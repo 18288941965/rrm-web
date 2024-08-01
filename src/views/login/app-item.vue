@@ -101,7 +101,7 @@ export default defineComponent({
     // 选择项目后回调函数
     const loginSuccess: LoginSuccess = (data: AxiosResult) => {
       local.setItem(data.data, data.message)
-      local.setLoginStatus(true, LSEnum.LOG_IN)
+      local.setLoginStatus(LSEnum.LOG_IN)
       router.replace(RUEnum.HOME)
     }
 
@@ -174,17 +174,15 @@ export default defineComponent({
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       grid-gap: var(--mg-medium);
       min-height: 200px;
-      border: var(--border-1) {
-        radius: var(--border-radius-large);
-      };
+      border: var(--border-1);
+      border-radius: var(--border-radius-large);
       padding: var(--pd-medium);
     }
 
     & .item-card{
       padding: var(--pd-medium);
-      border: var(--border-1) {
-        radius: var(--border-radius-medium);
-      };
+      border: var(--border-1);
+      border-radius: var(--border-radius-medium);
       & .item-code, p{
         color: var(--color-black-secondary);
       }

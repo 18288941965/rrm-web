@@ -9,9 +9,9 @@
       v-for="item in dictList"
       :key="item.value"
       :border="border"
-      :label="item.value"
+      :value="item.value"
+      :label="item.label"
     >
-      {{ item.label }}
     </el-checkbox>
   </el-checkbox-group>
 </template>
