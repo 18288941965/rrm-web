@@ -35,12 +35,12 @@ const doLogin = (loginBean: LoginBean, loginSuccess: LoginSuccess, loading: Ref<
 }
 
 // 退出登录的回调函数内容
-function logoutContext () {
+function logoutContext (channel?: BroadcastChannel) {
     const router = useRouter()
     const local = new LocalStorage()
     const {
         postMessage,
-    } = BChannel()
+    } = BChannel(channel)
 
     const logoutSuccess: LogoutSuccess = () => {
         local.cleanUserInfoObj()

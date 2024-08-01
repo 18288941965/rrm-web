@@ -59,6 +59,12 @@ export default function (BChannel?: BroadcastChannel) {
                 return
             }
 
+            // 选择项目成功
+            if (data.code === BCEnum.ITEM) {
+                router.replace(RUEnum.HOME)
+                return
+            }
+
             // 退出登录
             if (data.code === BCEnum.LOGOUT) {
                 return addMessage(data)

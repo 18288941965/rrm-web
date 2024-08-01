@@ -6,9 +6,8 @@
 	width: 22px;
 	height: 18px;
 	padding: 0 0 1px;
-	border: 0 {
-		radius: var(--border-radius-ultra-small);
-	};
+	border: 0;
+	border-radius: var(--border-radius-ultra-small);
 	margin-right: var(--mg-small);
 	color: var(--color-black-secondary);
 	background: rgba(125, 125, 125, .1);

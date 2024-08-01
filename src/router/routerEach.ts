@@ -5,8 +5,9 @@ import {useRouter} from 'vue-router'
 import {RUEnum} from './routerModels'
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
+import {LogoutSuccess} from '@utils/types'
 
-const routerEach = () => {
+const routerEach = (logoutSuccess: LogoutSuccess) => {
 
     const router = useRouter()
 
@@ -37,8 +38,8 @@ const routerEach = () => {
                         next()
                     }
                 } else {
-                    localStorage.cleanUserInfoObj()
-                    next(RUEnum.LOGIN)
+                    // next(RUEnum.LOGIN)
+                    logoutSuccess()
                 }
             })
         }

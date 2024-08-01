@@ -77,6 +77,8 @@ import {dialogBaseContent} from '@utils/dialogOptions'
 import {ItemBeanVO} from './itemModel'
 import {getAllItem, selectItem} from './itemOption'
 import {LSEnum} from './loginModels'
+import BChannel from '@utils/channel/BChannel'
+import {BCEnum} from "@utils/channel/channelModels";
 
 export default defineComponent({
   name: 'AppItem',
@@ -97,11 +99,16 @@ export default defineComponent({
         dialogBaseCloseAndRefresh,
         dialogBaseOpen,
     } = dialogBaseContent()
+    
+    const {
+      postMessage,
+    } = BChannel()
 
     // 选择项目后回调函数
     const loginSuccess: LoginSuccess = (data: AxiosResult) => {
       local.setItem(data.data, data.message)
       local.setLoginStatus(LSEnum.LOG_IN)
+      postMessage({ code: BCEnum.ITEM, message: '选择项目成功' })
       router.replace(RUEnum.HOME)
     }
 

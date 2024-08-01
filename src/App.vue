@@ -22,6 +22,7 @@ import {appSettingsContext} from './components/settings/appSettings'
 import {EventType} from '@utils/event'
 import routerEach from './router/routerEach'
 import baseAxios from '@utils/axios/baseAxios'
+import {logoutContext} from './views/login/loginOptions'
 
 export default defineComponent({
   components: {
@@ -30,8 +31,6 @@ export default defineComponent({
   setup() {
     // 路由和守卫
     const router = useRouter()
-    routerEach()
-    baseAxios()
 
     // 页面重新加载
     const reloadFlag = ref(true)
@@ -76,6 +75,13 @@ export default defineComponent({
     const {
       initFontSize,
     } = appSettingsContext()
+
+    const {
+      logoutSuccess,
+    } = logoutContext(channel)
+    
+    routerEach(logoutSuccess)
+    baseAxios(logoutSuccess)
 
     onMounted(() => {
       initThemeModel()

@@ -11,11 +11,12 @@
         <p>RRM</p>
       </div>
 
-      <section>
+      <form>
         <input
           v-model.trim="loginBean.username"
           placeholder="账号"
           autofocus
+          autocomplete="current-username"
           @keyup.enter="login"
         >
 
@@ -23,6 +24,7 @@
           v-model.trim="loginBean.password"
           placeholder="密码"
           type="password"
+          autocomplete="current-password"
           @keyup.enter="login"
         >
 
@@ -35,7 +37,7 @@
         >
           登录
         </el-button>
-      </section>
+      </form>
     </main>
   </div>
 </template>

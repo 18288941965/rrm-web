@@ -3,8 +3,9 @@ import {AxiosResult} from '../interface'
 import {ElMessage} from 'element-plus/es'
 import {useRouter} from 'vue-router'
 import LocalStorage from '../../class/LocalStorage'
+import {LogoutSuccess} from '@utils/types'
 
-export default function () {
+export default function (logoutSuccess: LogoutSuccess) {
     const router = useRouter()
 
     axios.defaults.baseURL = '/api'
@@ -47,7 +48,14 @@ export default function () {
     }, function (error) {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
+
+        if (error.response.status === 401) {
+            logoutSuccess()
+            return new Promise(() => {})
+        }
+
         ElMessage.error(error.message)
+
         return Promise.reject(error)
     })
 }

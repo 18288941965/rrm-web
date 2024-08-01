@@ -28,7 +28,7 @@
     }
   }
 
-  & section{
+  & form{
     padding: 40px;
     border-radius: var(--border-radius-medium);
     background-color: #F9FAFA;
@@ -42,9 +42,8 @@
   height: 40px;
   padding-left: 20px;
   background-color: var(--color-white);
-  border: 1px solid #E1E3E1 {
-    radius: var(--border-radius-medium);
-  };
+  border: 1px solid #E1E3E1;
+  border-radius: var(--border-radius-medium);
   margin-bottom: 40px;
   font-size: var(--h5-size);
   color: var(--color-black-primary);
