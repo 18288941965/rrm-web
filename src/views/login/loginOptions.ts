@@ -7,8 +7,8 @@ import BChannel from '../../utils/channel/BChannel'
 import {BCEnum} from '@utils/channel/channelModels'
 import {RUEnum} from '../../router/routerModels'
 import LocalStorage from '../../class/LocalStorage'
-import {LoginBean} from './loginModels'
 import {Ref} from 'vue'
+import {UserBeanBase} from '../admin/user/userModel'
 
 // 退出系统
 const doLogout = (logoutSuccess: LogoutSuccess) => {
@@ -20,12 +20,12 @@ const doLogout = (logoutSuccess: LogoutSuccess) => {
 }
 
 // 登录系统
-const doLogin = (loginBean: LoginBean, loginSuccess: LoginSuccess, loading: Ref<Boolean>) => {
-    if (!loginBean.username || !loginBean.password) {
+const doLogin = (userBeanBase: UserBeanBase, loginSuccess: LoginSuccess, loading: Ref<Boolean>) => {
+    if (!userBeanBase.username || !userBeanBase.password) {
         ElMessage.error('用户名或密码不能为空！')
         return
     }
-    axios.post('/auth/login', { ...loginBean }).then((res: { data: AxiosResult }) => {
+    axios.post('/auth/login', { ...userBeanBase }).then((res: { data: AxiosResult }) => {
         if (res.data.code === 200) {
             loginSuccess(res.data)
         }

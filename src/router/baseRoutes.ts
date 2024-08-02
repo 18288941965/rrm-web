@@ -11,7 +11,7 @@ const baseRoutes: RouteRecordRaw[] = [
     {
         path: '/app/item',
         name: 'AppItem',
-        component: () => import('../views/login/app-item.vue'),
+        component: () => import('../views/admin/item/app-item.vue'),
         meta: { title: '选择维护项目' },
     },
     {

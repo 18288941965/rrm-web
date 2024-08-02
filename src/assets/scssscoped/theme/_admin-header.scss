@@ -15,19 +15,6 @@
       font-weight: bolder;
     }
   }
-
-  & .star-container{
-    @include grid-base(var(--size-default) 1px var(--size-default));
-    position: relative;
-    height: var(--size-default);
-    border: var(--border-1);
-    border-radius: var(--border-radius-medium);
-    & .split{
-      display: block;
-      height: 68%;
-      background-color: var(--border-color);
-    }
-  }
 }
 
 .user-avatar-container details{
@@ -44,10 +31,4 @@
   & summary svg:nth-child(2){
     margin-left: var(--mg-small);
   }
-}
-
-#star-menu-container .star-menu-overlay{
-    @extend .overlay;
-    top: 40px;
-    right: 0;
 }

@@ -65,20 +65,20 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue'
 import {AxiosResult} from '@utils/interface'
-import LocalStorage from '../../class/LocalStorage'
+import LocalStorage from '../../../class/LocalStorage'
 import {LoginSuccess} from '@utils/types'
-import {RUEnum} from '../../router/routerModels'
+import {RUEnum} from '../../../router/routerModels'
 import {useRouter} from 'vue-router'
-import UserAvatar from '../../components/avatar/user-avatar.vue'
-import {PersonFill} from '../../components/svicon/publicIcon'
-import {Expand} from '../../components/svicon/publicIcon'
+import UserAvatar from '../../../components/avatar/user-avatar.vue'
+import {PersonFill} from '../../../components/svicon/publicIcon'
+import {Expand} from '../../../components/svicon/publicIcon'
 import appItemEdit from './app-item-edit.vue'
 import {dialogBaseContent} from '@utils/dialogOptions'
 import {ItemBeanVO} from './itemModel'
 import {getAllItem, selectItem} from './itemOption'
-import {LSEnum} from './loginModels'
+import {LSEnum} from '../../login/loginModels'
 import BChannel from '@utils/channel/BChannel'
-import {BCEnum} from "@utils/channel/channelModels";
+import {BCEnum} from '@utils/channel/channelModels'
 
 export default defineComponent({
   name: 'AppItem',
@@ -148,7 +148,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@use "@assets/scss/mixin/_mixin.scss" as *;
+@use "@assets/scss/mixin/mixin" as *;
 
 .item-body{
   & .item-header{

@@ -13,7 +13,7 @@
 
       <form>
         <input
-          v-model.trim="loginBean.username"
+          v-model.trim="userBeanBase.username"
           placeholder="账号"
           autofocus
           autocomplete="current-username"
@@ -21,7 +21,7 @@
         >
 
         <input
-          v-model.trim="loginBean.password"
+          v-model.trim="userBeanBase.password"
           placeholder="密码"
           type="password"
           autocomplete="current-password"
@@ -53,7 +53,8 @@ import BChannel from '../../utils/channel/BChannel'
 import {BCEnum} from '@utils/channel/channelModels'
 import {RUEnum} from '../../router/routerModels'
 import LocalStorage from '../../class/LocalStorage'
-import {LoginBean, LSEnum} from './loginModels'
+import {LSEnum} from './loginModels'
+import {UserBeanBase} from '../admin/user/userModel'
 
 const router = useRouter()
 const loading = ref(false)
@@ -62,7 +63,7 @@ const {
   postMessage,
 } = BChannel()
 
-const loginBean = reactive<LoginBean>({
+const userBeanBase = reactive<UserBeanBase>({
   username: '',
   password: '',
 })
@@ -73,14 +74,14 @@ const local = new LocalStorage()
 const loginSuccess: LoginSuccess = (data: AxiosResult) => {
   local.setToken(data.data)
   local.setLoginStatus(LSEnum.LOG_ITEM)
-  local.setLoginUsername(loginBean.username)
+  local.setLoginUsername(userBeanBase.username)
   postMessage({ code: BCEnum.LOGIN, message: '登录成功' })
   router.replace(RUEnum.ITEM)
 }
 
 const login = () => {
   loading.value = true
-  doLogin(loginBean, loginSuccess, loading)
+  doLogin(userBeanBase, loginSuccess, loading)
 }
 </script>
 

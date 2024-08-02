@@ -25,6 +25,18 @@ const menuDemoRouter: RouteRecordRaw[] = [
     component: () => import('../views/demoev/ev-pagination-demo.vue'),
     meta: { title: 'EvPaginationDemo' },
   },
+  {
+    path: 'item/index',
+    name: 'ItemIndex',
+    component: () => import('../views/admin/item/item-index.vue'),
+    meta: { title: 'ItemIndex' },
+  },
+  {
+    path: 'user/index',
+    name: 'UserIndex',
+    component: () => import('../views/admin/user/user-index.vue'),
+    meta: { title: 'UserIndex' },
+  },
 ]
 
 export default menuDemoRouter
