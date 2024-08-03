@@ -20,12 +20,6 @@
       @include flex-base();
       height: 100%;
       padding-left: var(--pd-large);
-
-      & .left-split{
-        width: 1px;
-        height: calc(var(--size-default) - 8px);
-        background-color: var(--border-color);
-      }
     }
 
     &__right{

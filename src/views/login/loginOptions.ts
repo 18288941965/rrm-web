@@ -29,6 +29,7 @@ const doLogin = (userBeanBase: UserBeanBase, loginSuccess: LoginSuccess, loading
         if (res.data.code === 200) {
             loginSuccess(res.data)
         }
+        loading.value = false
     }).catch(() => {
         loading.value = false
     })

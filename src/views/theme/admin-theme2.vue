@@ -37,24 +37,6 @@
             <Adjust />
           </button>
         </el-tooltip>
-
-        <div
-          class="mgr-medium"
-          style="flex: 1;"
-        >
-          <app-search>
-            <template #button>
-              <button
-                class="search-button"
-              >
-                <Search />
-                <span>搜索</span>
-              </button>
-            </template>
-          </app-search>
-        </div>
-
-        <div class="left-split" />
       </div>
 
       <nav class="theme2-nav__right">
@@ -130,21 +112,17 @@ import {
   Adjust,
   MenuOpen,
   Close,
-  Search,
 } from '../../components/svicon/publicIcon'
-import AppSearch from '../../app-search.vue'
 import {useScrollSticky, useScrollHorizontalMenu} from '@utils/event'
 
 export default defineComponent({
   name: 'AdminTheme2',
   components: {
-    AppSearch,
     AdminMenu,
     AdminHeader,
     Adjust,
     MenuOpen,
     Close,
-    Search,
   },
   setup () {
     const {

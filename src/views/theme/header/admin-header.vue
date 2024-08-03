@@ -6,35 +6,18 @@
       class="theme-header-ht"
       :menu-collapse="false"
       :module-icon="moduleIcon"
-      :module-label="moduleLabel"
+      :module-label="userInfoObj.itemName"
     />
 
-    <div
-      class="active-menu-label"
-    >
-      <span>–</span>
-      <span>{{ userInfoObj.itemName }}</span>
-    </div>
-    
     <div
       v-show="getMenuLabel"
       class="active-menu-label"
     >
-      <span>-</span>
+      <span>/</span>
       <span>{{ getMenuLabel }}</span>
     </div>
 
     <div class="empty-flex" />
-
-    <app-search>
-      <template #button>
-        <button
-          class="icon-button mgr-medium"
-        >
-          <Search />
-        </button>
-      </template>
-    </app-search>
 
     <app-theme class="mgr-medium" />
 
@@ -57,10 +40,9 @@
 import {computed, defineComponent, onMounted, PropType, ref} from 'vue'
 import AdminLogo from '../../logo/admin-logo.vue'
 import {ActiveMenus, MenuBean} from '../menu/menuModels'
-import AppSearch from '../../../app-search.vue'
 import AppTheme from '../../../app-theme.vue'
 import UserAvatar from '../../../components/avatar/user-avatar.vue'
-import {Expand, PersonFill, Search, Star, StarFill,} from '../../../components/svicon/publicIcon'
+import {Expand, PersonFill, Search} from '../../../components/svicon/publicIcon'
 import LocalStorage from '../../../class/LocalStorage'
 import {LocalUserInfoBean} from '@utils/interface'
 import {closeDetails} from '@utils/utils'
@@ -69,12 +51,8 @@ export default defineComponent({
   name: 'AdminHeader',
   components: {
     AdminLogo,
-    AppSearch,
     AppTheme,
     UserAvatar,
-    Star,
-    StarFill,
-    Search,
     Expand,
     PersonFill,
   },

@@ -1,7 +1,7 @@
 <template>
   <a
     class="admin-logo"
-    href="/app/home"
+    :href="clickTo"
   >
     <img
       :src="logo"
@@ -35,6 +35,10 @@ export default defineComponent({
     moduleLabel: {
       type: String,
       default: undefined,
+    },
+    clickTo: {
+      type: String,
+      default: '/app/home',
     },
   },
   setup () {

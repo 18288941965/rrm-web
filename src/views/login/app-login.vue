@@ -8,7 +8,7 @@
           :src="logo"
           alt=" "
         >
-        <p>RRM</p>
+        <p>权限管理系统</p>
       </div>
 
       <form>

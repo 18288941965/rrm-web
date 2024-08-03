@@ -1,7 +1,13 @@
 <template>
   <div class="item-body">
     <header class="item-header">
-      <div>RRM</div>
+      <admin-logo
+        class="theme-header-ht"
+        :menu-collapse="false"
+        click-to="/app/item"
+        module-icon=""
+        module-label="RRM"
+      />
 
       <div class="empty-flex" />
 
@@ -21,10 +27,17 @@
 
     <main class="item-main">
       <div class="item-banner">
-        <h2>选择你要管理的项目</h2>
+        <div>
+          <h3>请选择你要管理的项目</h3>
+          <h6>
+            {{ itemList.length > 0 ? '自己创建的项目，' : '请先创建一个项目，'}}
+            进入系统后可在项目管理中将项目授权给其他用户协同管理。
+          </h6>
+        </div>
 
         <el-button
-          type="primary"
+          type="success"
+          :icon="Plus"
           @click="dialogBaseOpen(undefined)"
         >
           创建项目
@@ -37,18 +50,31 @@
           :key="'item-' + index"
           class="item-card"
         >
-          <div>
-            <h4>{{ item.itemName }}</h4>
-            <span class="item-code">{{ item.itemCode }}</span>
+          <div class="item-grid">
+            <div>
+              <h4>{{ item.itemName }}</h4>
+
+              <p class="item-code">
+                {{ item.itemCode }}
+              </p>
+            </div>
+
+            <div class="item-right-card">
+              <img
+                :src="itemLogo"
+                alt=" "
+              >
+            </div>
           </div>
           <p>{{ item.username }} {{ item.createTime }}</p>
           <el-button
-            type="success"
+            type="info"
             plain
-            color="#333333"
+            class="al-hover btn-width"
             @click="select(item.itemCode, item.itemName)"
           >
             进入
+            <arrow-line />
           </el-button>
         </div>
       </div>
@@ -79,10 +105,17 @@ import {getAllItem, selectItem} from './itemOption'
 import {LSEnum} from '../../login/loginModels'
 import BChannel from '@utils/channel/BChannel'
 import {BCEnum} from '@utils/channel/channelModels'
+import logo from '@assets/logo.png'
+import AdminLogo from '../../logo/admin-logo.vue'
+import {Plus} from '@element-plus/icons-vue'
+import {ArrowLine} from '../../../components/svicon/publicIcon'
+import itemLogo from '@assets/image/item-logo.png'
 
 export default defineComponent({
   name: 'AppItem',
   components: {
+    ArrowLine,
+    AdminLogo,
     PersonFill,
     UserAvatar,
     appItemEdit,
@@ -135,6 +168,9 @@ export default defineComponent({
     })
 
     return {
+      Plus,
+      logo,
+      itemLogo,
       userInfoObj,
       itemList,
       select,
@@ -156,6 +192,7 @@ export default defineComponent({
     background-color: var(--bg-color-header);
     padding: 0 var(--pd-medium);
     border-bottom: var(--border-1);
+    height: var(--header-height);
     line-height: var(--header-height);
   }
 
@@ -167,18 +204,18 @@ export default defineComponent({
       display: grid;
       grid-template-columns: 1fr 120px;
       align-items: center;
-    }
-
-    & h2{
-      line-height: 100px;
-    }
-    & h4{
-      line-height: var(--size-default);
+      & h3{
+        line-height: 100px;
+      }
+      & h6{
+        color: var(--color-black-secondary);
+        margin-bottom: var(--mg-large);
+      }
     }
 
     & .item-flex{
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       grid-gap: var(--mg-medium);
       min-height: 200px;
       border: var(--border-1);
@@ -190,12 +227,38 @@ export default defineComponent({
       padding: var(--pd-medium);
       border: var(--border-1);
       border-radius: var(--border-radius-medium);
+      & .item-grid{
+        display: grid;
+        grid-template-columns: 1fr 40px;
+        & h4{
+          line-height: var(--size-default);
+        }
+      }
+      & .item-right-card{
+        width: var(--size-medium);
+        height: var(--size-medium);
+        border-radius: var(--border-radius-round-medium);
+        box-shadow: var(--box-shadow-medium);
+        text-align: center;
+        & img{
+          width: 24px;
+          margin-top: calc((var(--size-medium) - 24px) / 2);
+        }
+      }
       & .item-code, p{
         color: var(--color-black-secondary);
+      }
+      & .btn-width{
+        width: 120px;
       }
     }
   }
 }
+</style>
+
+
+<style lang="scss">
+@use "@assets/scss/mixin/mixin" as *;
 
 .user-avatar-container details{
   @include flex-base();
