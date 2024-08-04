@@ -28,6 +28,10 @@
     margin-right: var(--mg-small);
 }
 
+.mgb-medium{
+    margin-bottom: var(--mg-small);
+}
+
 .empty-flex{
     flex: 1;
     visibility: hidden;

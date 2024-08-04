@@ -21,6 +21,19 @@ const getAllItem = () => {
     })
 }
 
+const getItemById = (id: number) => {
+    return axios.get(`/item/${id}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
+const deleteItem = (id: number) => {
+    return axios.delete(`/item/${id}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
 const selectItem = (itemCode: string) => {
     return axios.put('/auth/select', {itemCode}).then((res: { data: AxiosResult }) => {
         return res.data
@@ -31,5 +44,7 @@ export {
     createItem,
     updateItem,
     getAllItem,
+    getItemById,
+    deleteItem,
     selectItem,
 }

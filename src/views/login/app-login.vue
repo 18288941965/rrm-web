@@ -29,7 +29,7 @@
         >
 
         <el-button
-          color="#1F883D"
+          color="#333333"
           size="large"
           style="width: 100%"
           :loading="loading"

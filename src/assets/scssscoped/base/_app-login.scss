@@ -10,9 +10,9 @@
 .login-header{
   @include flex-base();
   justify-content: flex-end;
-  height: 10px;
+  height: 2px;
   padding: 0 var(--pd-large);
-  background-image: linear-gradient(to right, #e9ffe1, #34C201, #2a9802);
+  background-image: linear-gradient(to right, #e363be, #FFABE7, #34C201, #409eff);
 }
 
 .login-main{

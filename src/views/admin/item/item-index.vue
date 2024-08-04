@@ -1,5 +1,14 @@
 <template>
   <div>
+    <el-button
+      class="mgb-medium"
+      type="success"
+      :icon="Plus"
+      @click="dialogBaseOpen(undefined)"
+    >
+      创建项目
+    </el-button>
+    
     <el-table
       :data="itemList"
       border
@@ -7,7 +16,6 @@
       <el-table-column
         prop="itemName"
         label="项目名称"
-        width="180"
       />
       <el-table-column
         prop="itemCode"
@@ -21,21 +29,48 @@
         prop="username"
         label="创建人"
       />
+      <el-table-column>
+        <template #default="scope">
+          <el-button
+            type="primary"
+            :icon="Edit"
+            @click="dialogBaseOpen(scope.row.itemId)"
+          />
+
+          <el-button
+            type="danger"
+            :icon="Delete"
+            :disabled="scope.row.itemCode === activeItemCode"
+            @click="deleteData(scope.row.itemId)"
+          />
+        </template>
+      </el-table-column>
     </el-table>
+
+    <app-item-edit
+      :data-id="dialogBase.dataId as number"
+      :show="dialogBase.show"
+      @close-dialog="dialogBaseCloseAndRefresh($event, query)"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, ref} from 'vue'
+import {defineComponent, onMounted, reactive, ref} from 'vue'
 import {ItemBeanVO} from './itemModel'
-import {getAllItem} from './itemOption'
+import {deleteItem, getAllItem} from './itemOption'
 import LocalStorage from '../../../class/LocalStorage'
+import appItemEdit from './app-item-edit.vue'
+import {dialogBaseContent} from '@utils/dialogOptions'
+import {Plus, Delete, Edit} from '@element-plus/icons-vue'
+import {ElMessageBox} from 'element-plus'
 
 export default defineComponent({
   name: 'ItemIndex',
+  components: {appItemEdit},
   setup() {
     const itemList = ref<Array<ItemBeanVO>>([])
-    const username = ref('')
+    const activeItemCode = ref('')
 
     const query = () => {
       getAllItem().then(res => {
@@ -44,14 +79,50 @@ export default defineComponent({
         }
       })
     }
+
+    const {
+      dialogBase,
+      dialogBaseCloseAndRefresh,
+      dialogBaseOpen,
+    } = dialogBaseContent()
+
+
+    const deleteData = (id: number) => {
+      ElMessageBox.confirm(
+          '你确定要删除此项目吗?',
+          'Warning',
+          {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning',
+          },
+      )
+          .then(() => {
+            console.log(id)
+            deleteItem(id).then(res => {
+              if (res.code == 200) {
+                query()
+              }
+            })
+          })
+    }
     
     onMounted(() => {
-      username.value = new LocalStorage().getUserInfoObj().userName
+      activeItemCode.value = new LocalStorage().getUserInfoObj().itemCode
       query()
     })
     
     return {
+      Plus,
+        Delete,
+        Edit,
+      activeItemCode,
+      query,
       itemList,
+      deleteData,
+      dialogBase,
+      dialogBaseCloseAndRefresh,
+      dialogBaseOpen,
     }
   },
 })

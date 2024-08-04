@@ -10,18 +10,21 @@
     @open="handleOpen"
   >
     <el-form
+      ref="appItemEditFrom"
       :model="form"
+      :rules="rules"
+      class="app-item-edit-form"
       label-width="auto"
-      style="max-width: 600px"
     >
       <el-form-item
         label="项目代码"
         prop="itemCode"
       >
         <el-input
-          v-model="form.itemCode"
+          v-model.trim.number="form.itemCode"
           clearable
-          placeholder="项目唯一标识，后续不能更改"
+          :disabled="form.id"
+          placeholder="项目唯一标识，只能包含数字，创建后不可修改"
         />
       </el-form-item>
       <el-form-item
@@ -29,7 +32,7 @@
         prop="itemName"
       >
         <el-input
-          v-model="form.itemName"
+          v-model.trim="form.itemName"
           clearable
           placeholder=""
         />
@@ -38,7 +41,7 @@
       <el-form-item>
         <el-button
           type="primary"
-          @click="onSubmit"
+          @click="onSubmit(appItemEditFrom)"
         >
           确定
         </el-button>
@@ -50,8 +53,8 @@
 <script lang="ts">
 import {defineComponent, ref, watch, reactive} from 'vue'
 import {ItemBean} from './itemModel'
-import {createItem, updateItem} from './itemOption'
-import {ElMessage} from 'element-plus/es'
+import {createItem, getItemById, updateItem} from './itemOption'
+import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
 
 export default defineComponent({
   props: {
@@ -69,6 +72,7 @@ export default defineComponent({
   setup(props, {emit}) {
     const visible = ref(false)
     const refresh = ref(false)
+    const appItemEditFrom = ref<FormInstance>()
 
     watch(
         () => props.show,
@@ -83,6 +87,23 @@ export default defineComponent({
       itemCode: '',
     })
 
+    const rules = reactive<FormRules<ItemBean>>({
+      itemCode: [
+        {
+          required: true,
+          message: '请输入项目代码',
+          trigger: 'change',
+        },
+      ],
+      itemName: [
+        {
+          required: true,
+          message: '请输入项目名称',
+          trigger: 'change',
+        },
+      ],
+    })
+
     // 关闭窗口
     const handleClose = () => {
       Object.assign(form, {
@@ -95,29 +116,51 @@ export default defineComponent({
       emit('close-dialog', tmp)
     }
 
-    const onSubmit = () => {
-      if (form.id > 0) {
-        updateItem(form)
-      } else {
-        createItem(form).then(res => {
-          if (res.code == 200) {
-            ElMessage.success(res.message)
-            refresh.value = true
-            handleClose()
+    const onSubmit = (formEl: FormInstance | undefined) => {
+      if (!formEl) return
+      formEl.validate((valid) => {
+        if (valid) {
+          if (form.id > 0) {
+            updateItem(form).then(res => {
+              if (res.code == 200) {
+                ElMessage.success(res.message)
+                refresh.value = true
+                handleClose()
+              }
+            })
+          } else {
+            createItem(form).then(res => {
+              if (res.code == 200) {
+                ElMessage.success(res.message)
+                refresh.value = true
+                handleClose()
+              }
+            })
           }
-        })
-      }
+        } else {
+          ElMessage.error('请填写完整表单！')
+        }
+      })
     }
 
     const handleOpen = () => {
       if (props.dataId) {
         form.id = props.dataId
+        getItemById(form.id).then(res => {
+          if (res.code === 200)  {
+            const data = res.data
+            form.itemCode = data.itemCode
+            form.itemName = data.itemName
+          }
+        })
       }
     }
 
     return {
       visible,
+      rules,
       form,
+      appItemEditFrom,
       handleOpen,
       handleClose,
       onSubmit,
@@ -129,5 +172,7 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
-
+  .app-item-edit-form{
+    margin: var(--mg-large);
+  }
 </style>
