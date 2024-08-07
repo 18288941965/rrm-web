@@ -1,3 +1,4 @@
+import {ItemBeanAll} from '../item/itemModel'
 
 interface UserBeanBase{
     username: string
@@ -14,8 +15,13 @@ interface UserPassBean{
     newPassword: string
 }
 
+interface UserItemBean extends UserBean{
+    itemList: Array<ItemBeanAll>
+}
+
 export {
     type UserBeanBase,
     type UserBean,
     type UserPassBean,
+    type UserItemBean,
 }

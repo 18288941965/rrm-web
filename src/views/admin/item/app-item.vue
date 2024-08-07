@@ -66,7 +66,7 @@
               >
             </div>
           </div>
-          <p>{{ item.username }} {{ item.createTime }}</p>
+          <p>{{ item.createTime }}</p>
           <el-button
             type="info"
             plain
@@ -148,7 +148,11 @@ export default defineComponent({
     const query = () => {
       getAllItem().then(res => {
         if (res.code == 200) {
-          itemList.value = res.data
+          itemList.value = res.data.filter((item: ItemBeanVO) => {
+            const userList = item.userList
+            const find = userList.find(user => user.id === item.loginId)
+            return !!find
+          })
         }
       })
     }
@@ -165,6 +169,8 @@ export default defineComponent({
 
     onMounted(() => {
       query()
+
+      console.log(userInfoObj)
     })
 
     return {

@@ -8,7 +8,7 @@
     >
       创建项目
     </el-button>
-    
+
     <el-table
       :data="itemList"
       border
@@ -16,7 +16,18 @@
       <el-table-column
         prop="itemName"
         label="项目名称"
-      />
+      >
+        <template #default="scope">
+          <span>{{ scope.row.itemName }}</span>
+          <el-tag
+            v-if="scope.row.itemCode === activeItemCode"
+            type="success"
+            class="mgl-medium"
+          >
+            登录项目
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="itemCode"
         label="项目代码"
@@ -26,23 +37,52 @@
         label="创建时间"
       />
       <el-table-column
-        prop="username"
-        label="创建人"
-      />
+        prop="userList"
+        label="关联用户"
+      >
+        <template #default="scope">
+          <ul class="item-index-item">
+            <li
+              v-for="(item, index) in scope.row.userList"
+              :key="scope.$index + '_' + index"
+            >
+              <el-tag
+                v-if="scope.row.userId === item.id"
+                size="small"
+                type="primary"
+              >
+                创建者
+              </el-tag>
+              <el-tag
+                v-else
+                type="info"
+              >
+                协作者
+              </el-tag>
+              <span>{{ item.username }}</span>
+            </li>
+          </ul>
+        </template>
+      </el-table-column>>
       <el-table-column>
         <template #default="scope">
           <el-button
             type="primary"
             :icon="Edit"
-            @click="dialogBaseOpen(scope.row.itemId)"
+            @click="dialogBaseOpen(scope.row.id)"
           />
 
           <el-button
             type="danger"
             :icon="Delete"
-            :disabled="scope.row.itemCode === activeItemCode"
-            @click="deleteData(scope.row.itemId)"
+            :disabled="scope.row.itemCode === activeItemCode
+              ||
+              scope.row.userId !== scope.row.loginId"
+            @click="deleteData(scope.row.id)"
           />
+          <el-button :icon="EditPen">
+            协作者
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -56,14 +96,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive, ref} from 'vue'
+import {defineComponent, onMounted, ref} from 'vue'
 import {ItemBeanVO} from './itemModel'
 import {deleteItem, getAllItem} from './itemOption'
 import LocalStorage from '../../../class/LocalStorage'
 import appItemEdit from './app-item-edit.vue'
 import {dialogBaseContent} from '@utils/dialogOptions'
-import {Plus, Delete, Edit} from '@element-plus/icons-vue'
-import {ElMessageBox} from 'element-plus'
+import {Plus, Delete, Edit, EditPen} from '@element-plus/icons-vue'
 import {deleteConfirm} from '@utils/utils'
 
 export default defineComponent({
@@ -88,6 +127,8 @@ export default defineComponent({
     } = dialogBaseContent()
 
     const deleteData = (id: number) => {
+      // TODO 验证项目绑定的角色
+      // TODO 验证项目绑定的资源等
       deleteConfirm('你确定要删除此项目吗').then(data => {
         if (data) {
           deleteItem(id).then(res => {
@@ -108,6 +149,7 @@ export default defineComponent({
       Plus,
         Delete,
         Edit,
+      EditPen,
       activeItemCode,
       query,
       itemList,
@@ -122,5 +164,14 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
-
+.item-index-item li{
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  grid-column-gap: 20px;
+  align-items: center;
+  line-height: var(--size-default);
+  &:hover{
+    background-color: var(--bg-color-hover);
+  }
+}
 </style>

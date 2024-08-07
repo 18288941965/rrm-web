@@ -1,3 +1,5 @@
+import {UserBean} from '../user/userModel'
+
 /**
  * 项目
  */
@@ -7,16 +9,20 @@ interface ItemBean{
     itemCode: string
 }
 
-interface ItemBeanVO{
-    userId: number
-    itemId: number
-    itemName: string
-    itemCode: string
+interface ItemBeanVO extends ItemBean{
     createTime: Date
-    username: string
+    userId: number
+    loginId: number
+    userList: Array<UserBean>
+}
+
+interface ItemBeanAll extends ItemBean{
+    createTime: Date
+    userId: number
 }
 
 export {
     type ItemBean,
     type ItemBeanVO,
+    type ItemBeanAll,
 }
