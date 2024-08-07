@@ -46,6 +46,14 @@ const updatePass = (userPassBean: UserPassBean) => {
     })
 }
 
+// 获取所有用户的基本信息
+const getAllUserBase = () => {
+    return axios.get('/user/allUserBase').then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
 export {
     createUser,
     updateUserComment,
@@ -54,4 +62,5 @@ export {
     deleteUser,
     validatePass,
     updatePass,
+    getAllUserBase,
 }

@@ -40,6 +40,13 @@ const selectItem = (itemCode: string) => {
     })
 }
 
+const getCorrelationUserId = (itemId: number) => {
+    return axios.get(`/item/correlationUserId/${itemId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
 export {
     createItem,
     updateItem,
@@ -47,4 +54,5 @@ export {
     getItemById,
     deleteItem,
     selectItem,
+    getCorrelationUserId,
 }

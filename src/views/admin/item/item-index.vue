@@ -80,7 +80,10 @@
               scope.row.userId !== scope.row.loginId"
             @click="deleteData(scope.row.id)"
           />
-          <el-button :icon="EditPen">
+          <el-button
+            :icon="EditPen"
+            @click="dialogTeamOpen(scope.row.id)"
+          >
             协作者
           </el-button>
         </template>
@@ -91,6 +94,12 @@
       :data-id="dialogBase.dataId as number"
       :show="dialogBase.show"
       @close-dialog="dialogBaseCloseAndRefresh($event, query)"
+    />
+    
+    <item-teamworker
+      :data-id="dialogTeam.dataId as number"
+      :show="dialogTeam.show"
+      @close-dialog="dialogTeamCloseAndRefresh($event, query)"
     />
   </div>
 </template>
@@ -104,10 +113,14 @@ import appItemEdit from './app-item-edit.vue'
 import {dialogBaseContent} from '@utils/dialogOptions'
 import {Plus, Delete, Edit, EditPen} from '@element-plus/icons-vue'
 import {deleteConfirm} from '@utils/utils'
+import itemTeamworker from './item-teamworker.vue'
 
 export default defineComponent({
   name: 'ItemIndex',
-  components: {appItemEdit},
+  components: {
+    appItemEdit,
+    itemTeamworker,
+  },
   setup() {
     const itemList = ref<Array<ItemBeanVO>>([])
     const activeItemCode = ref('')
@@ -124,6 +137,12 @@ export default defineComponent({
       dialogBase,
       dialogBaseCloseAndRefresh,
       dialogBaseOpen,
+    } = dialogBaseContent()
+
+    const {
+      dialogBase: dialogTeam,
+      dialogBaseCloseAndRefresh: dialogTeamCloseAndRefresh,
+      dialogBaseOpen: dialogTeamOpen,
     } = dialogBaseContent()
 
     const deleteData = (id: number) => {
@@ -157,6 +176,10 @@ export default defineComponent({
       dialogBase,
       dialogBaseCloseAndRefresh,
       dialogBaseOpen,
+
+      dialogTeam,
+      dialogTeamCloseAndRefresh,
+      dialogTeamOpen,
     }
   },
 })
