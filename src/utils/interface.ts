@@ -54,20 +54,23 @@ interface DialogBase extends DialogEmpty{
     dataId: String | number | undefined
 }
 
+interface PropPrams {
+    [key: string]: any
+}
+
 /**
  * 对话框-json参数.
  * @param params json对象参数
  */
 interface DialogParam extends DialogEmpty{
-    params: {
-        [key: string]: any
-    }
+    params: PropPrams
 }
 
 export type {
     AxiosResult,
     Pagination,
     LocalUserInfoBean,
+    PropPrams,
 
     DialogEmpty,
     DialogBase,

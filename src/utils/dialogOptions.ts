@@ -12,10 +12,17 @@ export function dialogEmptyContent () {
   const dialogEmptyClose = () => {
     dialogEmpty.show = false
   }
+  const dialogEmptyCloseAndRefresh = (refresh: boolean | undefined, refreshMethod: Function) => {
+    dialogEmptyClose()
+    if (refresh) {
+      refreshMethod()
+    }
+  }
   return {
     dialogEmpty,
     dialogEmptyOpen,
     dialogEmptyClose,
+    dialogEmptyCloseAndRefresh,
   }
 }
 
@@ -61,10 +68,17 @@ export function dialogParamsContent () {
     dialogParam.params = {}
     dialogParam.show = false
   }
+  const dialogParamsCloseAndRefresh = (refresh: boolean | undefined, refreshMethod: Function) => {
+    dialogParamsClose()
+    if (refresh) {
+      refreshMethod()
+    }
+  }
   return {
     dialogParam,
     dialogParamsOpen,
     dialogParamsClose,
+    dialogParamsCloseAndRefresh,
   }
 }
 

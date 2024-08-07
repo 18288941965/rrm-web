@@ -64,6 +64,7 @@ import appItemEdit from './app-item-edit.vue'
 import {dialogBaseContent} from '@utils/dialogOptions'
 import {Plus, Delete, Edit} from '@element-plus/icons-vue'
 import {ElMessageBox} from 'element-plus'
+import {deleteConfirm} from '@utils/utils'
 
 export default defineComponent({
   name: 'ItemIndex',
@@ -86,25 +87,16 @@ export default defineComponent({
       dialogBaseOpen,
     } = dialogBaseContent()
 
-
     const deleteData = (id: number) => {
-      ElMessageBox.confirm(
-          '你确定要删除此项目吗?',
-          'Warning',
-          {
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Cancel',
-            type: 'warning',
-          },
-      )
-          .then(() => {
-            console.log(id)
-            deleteItem(id).then(res => {
-              if (res.code == 200) {
-                query()
-              }
-            })
+      deleteConfirm('你确定要删除此项目吗').then(data => {
+        if (data) {
+          deleteItem(id).then(res => {
+            if (res.code == 200) {
+              query()
+            }
           })
+        }
+      })
     }
     
     onMounted(() => {

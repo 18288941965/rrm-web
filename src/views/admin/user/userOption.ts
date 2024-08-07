@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {UserBean} from './userModel'
+import {UserBean, UserBeanBase, UserPassBean} from './userModel'
 
 const createUser = (bean: UserBean) => {
     return axios.post('/user', bean).then((res: { data: AxiosResult }) => {
@@ -8,8 +8,8 @@ const createUser = (bean: UserBean) => {
     })
 }
 
-const updateUser = (bean: UserBean) => {
-    return axios.put('/user', bean).then((res: { data: AxiosResult }) => {
+const updateUserComment = (id: number, comment: string) => {
+    return axios.put('/user/comment', {id, comment}).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
@@ -26,9 +26,32 @@ const deleteUser = (id: number) => {
     })
 }
 
+const getUserById = (id: number) => {
+    return axios.get(`/user/${id}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+// 验证密码是否正确
+const validatePass = (userBeanBase: UserBeanBase) => {
+    return axios.post('/user/validatePass', userBeanBase).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+// 验证密码是否正确
+const updatePass = (userPassBean: UserPassBean) => {
+    return axios.put('/user/password', userPassBean).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
 export {
     createUser,
-    updateUser,
+    updateUserComment,
     getAllUser,
+    getUserById,
     deleteUser,
+    validatePass,
+    updatePass,
 }

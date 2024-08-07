@@ -9,7 +9,13 @@ interface UserBean extends UserBeanBase{
     comment: string
 }
 
+interface UserPassBean{
+    password: string
+    newPassword: string
+}
+
 export {
     type UserBeanBase,
     type UserBean,
+    type UserPassBean,
 }

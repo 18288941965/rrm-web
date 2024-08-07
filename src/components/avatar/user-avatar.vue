@@ -22,6 +22,13 @@
             <Discover />
             系统设置
           </li>
+          <li
+            class="li-action-item"
+            @click="dialogOpenUserPass"
+          >
+            <Key />
+            修改密码
+          </li>
           <li class="li-divider" />
           <li
             class="li-action-item"
@@ -38,6 +45,11 @@
       v-bind="dialogSetting"
       @close-dialog="dialogCloseSetting"
     />
+
+    <user-pass-drawer
+      v-bind="dialogUserPass"
+      @close-dialog="dialogCloseUserPass"
+    />
   </div>
 </template>
 
@@ -47,9 +59,11 @@ import {doLogout, logoutContext} from '../../views/login/loginOptions'
 import {
   Discover,
   Logouts,
+    Key,
 } from '../svicon/publicIcon'
 import {dialogEmptyContent} from '@utils/dialogOptions'
 import AppSettingsDrawer from '../settings/app-settings-drawer.vue'
+import UserPassDrawer from '../../views/admin/user/user-pass-drawer.vue'
 import {closeDetails} from '@utils/utils'
 
 export default defineComponent({
@@ -57,7 +71,9 @@ export default defineComponent({
   components: {
     Discover,
     Logouts,
+    Key,
     AppSettingsDrawer,
+    UserPassDrawer,
   },
   props: {
     userName: {
@@ -71,7 +87,13 @@ export default defineComponent({
        dialogEmptyOpen: dialogOpenSetting,
        dialogEmptyClose: dialogCloseSetting,
      } = dialogEmptyContent()
-     
+
+     const {
+       dialogEmpty: dialogUserPass,
+       dialogEmptyOpen: dialogOpenUserPass,
+       dialogEmptyClose: dialogCloseUserPass,
+     } = dialogEmptyContent()
+
      const {
        logoutSuccess,
      } = logoutContext()
@@ -86,6 +108,9 @@ export default defineComponent({
       dialogSetting,
       dialogOpenSetting,
       dialogCloseSetting,
+      dialogUserPass,
+      dialogOpenUserPass,
+      dialogCloseUserPass,
     }
    },
 })

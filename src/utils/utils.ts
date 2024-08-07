@@ -1,4 +1,6 @@
 // 获取模块图标
+import {ElMessageBox} from 'element-plus'
+
 export const getModuleIconUrl = (fileName: string) => {
   return new URL(`../assets/image/moduleicon/${fileName}`, import.meta.url).href
 }
@@ -14,4 +16,17 @@ export const closeDetails = (id: string) => {
   if (elementById && elementById.hasAttribute('open')) {
     elementById.removeAttribute('open')
   }
+}
+
+// 删除确认提示
+export const deleteConfirm = async (message: string) => {
+  return await ElMessageBox.confirm(
+      message,
+      'Warning',
+      {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+      },
+  ).catch(() => {})
 }

@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="项目编辑"
+    title="用户新增"
     width="720"
     :before-close="handleClose"
     :close-on-press-escape="false"
@@ -10,33 +10,42 @@
     @open="handleOpen"
   >
     <el-form
-      ref="appItemEditFrom"
+      ref="userAddFrom"
       :model="form"
       :rules="rules"
       class="app-item-edit-form"
       label-width="auto"
     >
       <el-form-item
-        label="项目代码"
-        prop="itemCode"
-        :rules="form.id ? [] : [
-          { required: true, message: '项目代码为必填项', trigger: 'blur' },
-          { pattern: /^[0-9]{6}$/, message: '项目代码必须为6位数字', trigger: 'blur' }
-        ]"
+        label="用户名"
+        prop="username"
       >
         <el-input
-          v-model.trim.number="form.itemCode"
+          v-model.trim.number="form.username"
           clearable
-          :disabled="form.id"
-          placeholder="请输入6位编码，只能包含数字，创建后不可修改"
+          :disabled="form.id !== 0"
+          placeholder="请输入用户名"
         />
       </el-form-item>
       <el-form-item
-        label="项目名称"
-        prop="itemName"
+        label="密码"
+        prop="password"
       >
         <el-input
-          v-model.trim="form.itemName"
+          v-model.trim="form.password"
+          clearable
+          type="password"
+          show-password
+          placeholder=""
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="用户说明"
+        prop="comment"
+      >
+        <el-input
+          v-model.trim="form.comment"
           clearable
           placeholder=""
         />
@@ -45,7 +54,7 @@
       <el-form-item>
         <el-button
           type="primary"
-          @click="onSubmit(appItemEditFrom)"
+          @click="onSubmit(userAddFrom)"
         >
           确定
         </el-button>
@@ -56,17 +65,13 @@
 
 <script lang="ts">
 import {defineComponent, ref, watch, reactive} from 'vue'
-import {ItemBean} from './itemModel'
-import {createItem, getItemById, updateItem} from './itemOption'
 import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
+import {UserBean} from './userModel'
 import {AxiosResult} from '@utils/interface'
+import {createUser} from './userOption'
 
 export default defineComponent({
   props: {
-    dataId: {
-      type: Number,
-      default: 0,
-    },
     show: {
       type: Boolean,
       default: false,
@@ -77,7 +82,7 @@ export default defineComponent({
   setup(props, {emit}) {
     const visible = ref(false)
     const refresh = ref(false)
-    const appItemEditFrom = ref<FormInstance>()
+    const userAddFrom = ref<FormInstance>()
 
     watch(
         () => props.show,
@@ -86,28 +91,46 @@ export default defineComponent({
         },
     )
 
-    const form = reactive<ItemBean>({
+    const form = reactive<UserBean>({
       id: 0,
-      itemName: '',
-      itemCode: '',
+      username: '',
+      password: '',
+      comment: '',
     })
 
-    const rules = reactive<FormRules<ItemBean>>({
-      itemName: [
-        {
-          required: true,
-          message: '请输入项目名称',
-          trigger: 'change',
-        },
-      ],
+    const validate = (rule: any, value: any, callback: any, message: string) => {
+      const chineseCharPattern = /[\u4e00-\u9fa5]/
+      if (chineseCharPattern.test(value)) {
+        callback(new Error(`${message}不能包含中文字符`))
+      } else if (value.length < 5) {
+        callback(new Error(`${message}长度必须大于等于5位`))
+      } else {
+        callback()
+      }
+    }
+
+    // 用户名自定义验证规则
+    const validateUsername = (rule: any, value: any, callback: any) => {
+      validate(rule, value, callback, '用户名')
+    }
+
+    // 用户名自定义验证规则
+    const validatePassword = (rule: any, value: any, callback: any) => {
+      validate(rule, value, callback, '密码')
+    }
+
+    const rules = reactive<FormRules<UserBean>>({
+      username: [{ validator: validateUsername, trigger: 'blur' }],
+      password: [{ validator: validatePassword, trigger: 'blur' }],
     })
 
     // 关闭窗口
     const handleClose = () => {
       Object.assign(form, {
         id: 0,
-        itemName: '',
-        itemCode: '',
+        username: '',
+        password: '',
+        comment: '',
       })
       const tmp = refresh.value
       refresh.value = false
@@ -126,35 +149,20 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          if (form.id > 0) {
-            updateItem(form).then(res => {handleCallback(res)})
-          } else {
-            createItem(form).then(res => {handleCallback(res)})
-          }
+          createUser(form).then(res => {handleCallback(res)})
         } else {
           ElMessage.error('请填写完整表单！')
         }
       })
     }
 
-    const handleOpen = () => {
-      if (props.dataId) {
-        form.id = props.dataId
-        getItemById(form.id).then(res => {
-          if (res.code === 200)  {
-            const data = res.data
-            form.itemCode = data.itemCode
-            form.itemName = data.itemName
-          }
-        })
-      }
-    }
+    const handleOpen = () => {}
 
     return {
       visible,
       rules,
       form,
-      appItemEditFrom,
+      userAddFrom,
       handleOpen,
       handleClose,
       onSubmit,
