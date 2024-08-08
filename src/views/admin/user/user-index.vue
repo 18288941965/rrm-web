@@ -23,7 +23,6 @@
     >
       <el-table-column
         prop="username"
-        width="200px"
         label="用户名"
       >
         <template #default="scope">
@@ -32,6 +31,7 @@
             v-if="scope.row.username === activeUsername"
             type="success"
             class="mgl-medium"
+            round
           >
             登录用户
           </el-tag>
@@ -55,12 +55,16 @@
                 v-if="scope.row.id === item.userId"
                 size="small"
                 type="primary"
+                round
+                class="mgr-medium"
               >
                 项目所有权
               </el-tag>
               <el-tag
                 v-else
                 type="info"
+                round
+                class="mgr-medium"
               >
                 项目维护权
               </el-tag>
@@ -69,7 +73,7 @@
           </ul>
         </template>
       </el-table-column>
-      <el-table-column width="180px">
+      <el-table-column>
         <template #default="scope">
           <el-button
             type="primary"
@@ -200,13 +204,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
   .user-index-item li{
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    grid-column-gap: 20px;
+    display: flex;
     align-items: center;
-    line-height: var(--size-default);
-    &:hover{
-      background-color: var(--bg-color-hover);
-    }
+    line-height: var(--size-medium);
   }
 </style>

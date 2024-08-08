@@ -15,5 +15,5 @@ export { default as Apps } from './other-16/sv-apps-icon.vue'
 export { default as Send } from './other-16/sv-send-icon.vue'
 export { default as Key } from './other-16/sv-key-icon.vue'
 
-export { default as GitHub } from './other/sv-github-icon.vue'
-export { default as ArrowLine } from './other/sv-arrow-line-icon.vue'
+export { default as GitHub } from './other-16/sv-github-icon.vue'
+export { default as ArrowLine } from './other-16/sv-arrow-line-icon.vue'

@@ -31,6 +31,7 @@
             v-if="scope.row.itemCode === activeItemCode"
             type="success"
             class="mgl-medium"
+            round
           >
             登录项目
           </el-tag>
@@ -58,6 +59,8 @@
                 v-if="scope.row.userId === item.id"
                 size="small"
                 type="primary"
+                class="mgr-medium"
+                round
               >
                 创建者
               </el-tag>
@@ -65,6 +68,8 @@
                 v-else
                 size="small"
                 type="info"
+                class="mgr-medium"
+                round
               >
                 协作者
               </el-tag>
@@ -78,6 +83,7 @@
           <el-button
             type="primary"
             :icon="Edit"
+            :disabled="scope.row.userId !== scope.row.loginId"
             @click="dialogBaseOpen(scope.row.id)"
           />
 
@@ -198,13 +204,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .item-index-item li{
-  display: grid;
-  grid-template-columns: 100px 1fr;
-  grid-column-gap: 20px;
+  display: flex;
   align-items: center;
-  line-height: var(--size-default);
-  &:hover{
-    background-color: var(--bg-color-hover);
-  }
+  line-height: var(--size-medium);
 }
 </style>
