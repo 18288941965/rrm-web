@@ -1,5 +1,5 @@
 import {RouteRecordRaw} from 'vue-router'
-import menuDemoRouter from './menuDemoRouter'
+import systemRouter from './systemRouter'
 
 const baseRoutes: RouteRecordRaw[] = [
     {
@@ -19,7 +19,7 @@ const baseRoutes: RouteRecordRaw[] = [
         name: 'AdminTheme2',
         component: () => import('../views/theme/admin-theme2.vue'),
         meta: { title: 'RRM'},
-        children: menuDemoRouter,
+        children: systemRouter,
     },
     {
         path: '/:pathMatch(.*)',

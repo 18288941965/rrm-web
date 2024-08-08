@@ -69,8 +69,10 @@ import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
 import {UserBean} from './userModel'
 import {AxiosResult} from '@utils/interface'
 import {createUser} from './userOption'
+import {dialogOptions} from '@utils/dialogOptions'
 
 export default defineComponent({
+  name: 'UserAddDialog',
   props: {
     show: {
       type: Boolean,
@@ -80,8 +82,10 @@ export default defineComponent({
   },
   emits: ['close-dialog'],
   setup(props, {emit}) {
-    const visible = ref(false)
-    const refresh = ref(false)
+    const {
+      visible,
+        isRefresh,
+    } = dialogOptions()
     const userAddFrom = ref<FormInstance>()
 
     watch(
@@ -132,15 +136,15 @@ export default defineComponent({
         password: '',
         comment: '',
       })
-      const tmp = refresh.value
-      refresh.value = false
-      emit('close-dialog', tmp)
+      const refresh = isRefresh.value
+      isRefresh.value = false
+      emit('close-dialog', refresh)
     }
 
     const handleCallback = (res: AxiosResult) => {
       if (res.code == 200) {
         ElMessage.success(res.message)
-        refresh.value = true
+        isRefresh.value = true
         handleClose()
       }
     }

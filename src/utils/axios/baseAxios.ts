@@ -1,13 +1,10 @@
 import axios, {AxiosResponse} from 'axios'
 import {AxiosResult} from '../interface'
 import {ElMessage} from 'element-plus/es'
-import {useRouter} from 'vue-router'
 import LocalStorage from '../../class/LocalStorage'
 import {LogoutSuccess} from '@utils/types'
 
 export default function (logoutSuccess: LogoutSuccess) {
-    const router = useRouter()
-
     axios.defaults.baseURL = '/api'
 
     // Add a request interceptor

@@ -87,12 +87,12 @@
       </el-table-column>
     </el-table>
 
-    <user-add
+    <user-add-dialog
       v-bind="dialogEmpty"
       @close-dialog="dialogEmptyCloseAndRefresh($event, query)"
     />
 
-    <user-edit
+    <user-edit-dialog
       v-bind="dialogParam"
       @close-dialog="dialogParamsCloseAndRefresh($event, query)"
     />
@@ -105,8 +105,8 @@ import {UserItemBean} from './userModel'
 import {deleteUser, getAllUser, validatePass} from './userOption'
 import {Delete, Edit, Plus, Refresh} from '@element-plus/icons-vue'
 import {dialogEmptyContent, dialogParamsContent} from '@utils/dialogOptions'
-import UserAdd from './user-add.vue'
-import UserEdit from './user-edit.vue'
+import UserAddDialog from './user-add-dialog.vue'
+import UserEditDialog from './user-edit-dialog.vue'
 import LocalStorage from '../../../class/LocalStorage'
 import {ElMessageBox} from 'element-plus'
 import {ElMessage} from 'element-plus/es'
@@ -114,8 +114,8 @@ import {ElMessage} from 'element-plus/es'
 export default defineComponent({
   name: 'UserIndex',
   components: {
-    UserAdd,
-    UserEdit,
+    UserAddDialog,
+    UserEditDialog,
   },
   setup() {
       const userList = ref<Array<UserItemBean>>([])

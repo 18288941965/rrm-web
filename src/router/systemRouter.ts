@@ -1,6 +1,6 @@
 import {RouteRecordRaw} from 'vue-router'
 
-const menuDemoRouter: RouteRecordRaw[] = [
+const systemRouter: RouteRecordRaw[] = [
   {
     path: 'dashboard',
     name: 'AdminDashboard',
@@ -39,4 +39,4 @@ const menuDemoRouter: RouteRecordRaw[] = [
   },
 ]
 
-export default menuDemoRouter
+export default systemRouter

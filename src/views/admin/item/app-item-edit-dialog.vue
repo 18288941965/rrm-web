@@ -55,13 +55,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, watch, reactive} from 'vue'
+import {defineComponent, reactive, ref, watch} from 'vue'
 import {ItemBean} from './itemModel'
 import {createItem, getItemById, updateItem} from './itemOption'
 import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
 import {AxiosResult} from '@utils/interface'
+import {dialogOptions} from '@utils/dialogOptions'
 
 export default defineComponent({
+  name: 'AppItemEditDialog',
   props: {
     dataId: {
       type: Number,
@@ -75,8 +77,11 @@ export default defineComponent({
   },
   emits: ['close-dialog'],
   setup(props, {emit}) {
-    const visible = ref(false)
-    const refresh = ref(false)
+
+    const {
+      visible,
+        isRefresh,
+    } = dialogOptions()
     const appItemEditFrom = ref<FormInstance>()
 
     watch(
@@ -109,15 +114,15 @@ export default defineComponent({
         itemName: '',
         itemCode: '',
       })
-      const tmp = refresh.value
-      refresh.value = false
-      emit('close-dialog', tmp)
+      const refresh = isRefresh.value
+      isRefresh.value = false
+      emit('close-dialog', refresh)
     }
 
     const handleCallback = (res: AxiosResult) => {
       if (res.code == 200) {
         ElMessage.success(res.message)
-        refresh.value = true
+        isRefresh.value = true
         handleClose()
       }
     }

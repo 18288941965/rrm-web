@@ -100,13 +100,13 @@
       </el-table-column>
     </el-table>
 
-    <app-item-edit
+    <app-item-edit-dialog
       :data-id="dialogBase.dataId as number"
       :show="dialogBase.show"
       @close-dialog="dialogBaseCloseAndRefresh($event, query)"
     />
     
-    <item-teamworker
+    <item-teamworker-dialog
       v-bind="dialogTeam"
       @close-dialog="dialogTeamCloseAndRefresh($event, query)"
     />
@@ -118,17 +118,17 @@ import {defineComponent, onMounted, ref} from 'vue'
 import {ItemBeanVO} from './itemModel'
 import {deleteItem, getAllItem} from './itemOption'
 import LocalStorage from '../../../class/LocalStorage'
-import appItemEdit from './app-item-edit.vue'
+import AppItemEditDialog from './app-item-edit-dialog.vue'
 import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
 import {Plus, Delete, Edit, EditPen,Refresh} from '@element-plus/icons-vue'
 import {deleteConfirm} from '@utils/utils'
-import itemTeamworker from './item-teamworker.vue'
+import ItemTeamworkerDialog from './item-teamworker-dialog.vue'
 
 export default defineComponent({
   name: 'ItemIndex',
   components: {
-    appItemEdit,
-    itemTeamworker,
+    AppItemEditDialog,
+    ItemTeamworkerDialog,
   },
   setup() {
     const itemList = ref<Array<ItemBeanVO>>([])

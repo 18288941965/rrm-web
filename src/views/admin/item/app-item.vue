@@ -30,7 +30,7 @@
         <div>
           <h3>请选择你要管理的项目</h3>
           <h6>
-            {{ itemList.length > 0 ? '自己创建的项目，' : '请先创建一个项目，'}}
+            {{ itemList.length > 0 ? '自己创建的项目，' : '请先创建一个项目，' }}
             进入系统后可在项目管理中将项目授权给其他用户协同管理。
           </h6>
         </div>
@@ -80,7 +80,7 @@
       </div>
     </main>
 
-    <app-item-edit
+    <app-item-edit-dialog
       :data-id="dialogBase.dataId as number"
       :show="dialogBase.show"
       @close-dialog="dialogBaseCloseAndRefresh($event, query)"
@@ -98,10 +98,10 @@ import {useRouter} from 'vue-router'
 import UserAvatar from '../../../components/avatar/user-avatar.vue'
 import {PersonFill} from '../../../components/svicon/publicIcon'
 import {Expand} from '../../../components/svicon/publicIcon'
-import appItemEdit from './app-item-edit.vue'
+import AppItemEditDialog from './app-item-edit-dialog.vue'
 import {dialogBaseContent} from '@utils/dialogOptions'
 import {ItemBeanVO} from './itemModel'
-import {getAllItem, selectItem} from './itemOption'
+import {getAllItem} from './itemOption'
 import {LSEnum} from '../../login/loginModels'
 import BChannel from '@utils/channel/BChannel'
 import {BCEnum} from '@utils/channel/channelModels'
@@ -110,6 +110,7 @@ import AdminLogo from '../../logo/admin-logo.vue'
 import {Plus} from '@element-plus/icons-vue'
 import {ArrowLine} from '../../../components/svicon/publicIcon'
 import itemLogo from '@assets/image/item-logo.png'
+import {selectItem} from '../../login/loginOptions'
 
 export default defineComponent({
   name: 'AppItem',
@@ -118,7 +119,7 @@ export default defineComponent({
     AdminLogo,
     PersonFill,
     UserAvatar,
-    appItemEdit,
+    AppItemEditDialog,
     Expand,
   },
   setup() {

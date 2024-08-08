@@ -1,8 +1,5 @@
 import {UserBean} from '../user/userModel'
 
-/**
- * 项目
- */
 interface ItemBean{
     id: number
     itemName: string

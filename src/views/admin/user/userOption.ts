@@ -26,6 +26,7 @@ const deleteUser = (id: number) => {
     })
 }
 
+// 根据id获取用户信息
 const getUserById = (id: number) => {
     return axios.get(`/user/${id}`).then((res: { data: AxiosResult }) => {
         return res.data
@@ -39,7 +40,7 @@ const validatePass = (userBeanBase: UserBeanBase) => {
     })
 }
 
-// 验证密码是否正确
+// 修改密码
 const updatePass = (userPassBean: UserPassBean) => {
     return axios.put('/user/password', userPassBean).then((res: { data: AxiosResult }) => {
         return res.data
@@ -52,7 +53,6 @@ const getAllUserBase = () => {
         return res.data
     })
 }
-
 
 export {
     createUser,

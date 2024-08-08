@@ -35,6 +35,12 @@ const doLogin = (userBeanBase: UserBeanBase, loginSuccess: LoginSuccess, loading
     })
 }
 
+const selectItem = (itemCode: string) => {
+    return axios.put('/auth/select', {itemCode}).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
 // 退出登录的回调函数内容
 function logoutContext (channel?: BroadcastChannel) {
     const router = useRouter()
@@ -57,4 +63,5 @@ export {
     doLogout,
     doLogin,
     logoutContext,
+    selectItem,
 }

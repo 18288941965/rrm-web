@@ -33,12 +33,6 @@ const deleteItem = (id: number) => {
     })
 }
 
-const selectItem = (itemCode: string) => {
-    return axios.put('/auth/select', {itemCode}).then((res: { data: AxiosResult }) => {
-        return res.data
-    })
-}
-
 const getCorrelationUserId = (itemId: number) => {
     return axios.get(`/item/correlationUserId/${itemId}`).then((res: { data: AxiosResult }) => {
         return res.data
@@ -63,7 +57,6 @@ export {
     getAllItem,
     getItemById,
     deleteItem,
-    selectItem,
     getCorrelationUserId,
     deleteUserItem,
     createUserItem,
