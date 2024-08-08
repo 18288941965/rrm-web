@@ -19,6 +19,7 @@
           :key="'xzz-' + index"
           :label="user.comment ? user.username + '（' + user.comment + '）' : user.username"
           :value="user.id"
+          :disabled="user.id === params.userId"
           border
         />
       </el-checkbox-group>
@@ -30,8 +31,9 @@
 import {defineComponent, PropType, ref, watch} from 'vue'
 import {UserBean} from '../user/userModel'
 import {getAllUserBase} from '../user/userOption'
-import {getCorrelationUserId} from './itemOption'
-import {PropPrams} from '@utils/interface'
+import {createUserItem, deleteUserItem, getCorrelationUserId} from './itemOption'
+import {AxiosResult, PropPrams} from '@utils/interface'
+import {ElMessage} from 'element-plus'
 
 export default defineComponent({
   props: {
@@ -40,7 +42,7 @@ export default defineComponent({
       default() {
         return {
           dataId: 0,
-          itemId: '',
+          userId: 0,
         }
       },
     },
@@ -56,6 +58,7 @@ export default defineComponent({
     const refresh = ref(false)
     const userList = ref<Array<UserBean>>([])
     const selectUserId = ref<Array<number>>([])
+    const selectUserIdBak = ref<Array<number>>([])
 
     watch(
         () => props.show,
@@ -67,19 +70,18 @@ export default defineComponent({
     // 关闭窗口
     const handleClose = () => {
       userList.value = []
+      selectUserId.value = []
+      selectUserIdBak.value = []
       const tmp = refresh.value
       refresh.value = false
       emit('close-dialog', tmp)
-    }
-
-    const onSubmit = () => {
-
     }
 
     const handleOpen = () => {
       getCorrelationUserId(props.params.dataId).then(res => {
         if (res.code === 200) {
           selectUserId.value = res.data
+          selectUserIdBak.value = res.data
         }
       })
       getAllUserBase().then(res => {
@@ -89,15 +91,39 @@ export default defineComponent({
       })
     }
 
-    const teamChange = (value: string | number | boolean) => {
-      console.log(value)
+    const handleCallback = (res: AxiosResult) => {
+      if (res.code == 200) {
+        ElMessage.success(res.message)
+        refresh.value = true
+      }
+    }
+    
+    const create = (userId: number) => {
+      createUserItem(userId, props.params.dataId).then(res => {handleCallback(res)})
+    }
+
+    const remove = (userId: number) => {
+      deleteUserItem(userId, props.params.dataId).then(res => {handleCallback(res)})
+    }
+
+    const teamChange = () => {
+      // 选中
+      const selectArr = selectUserId.value.filter(item => !selectUserIdBak.value.includes(item))
+      if (selectArr.length > 0) {
+        create(selectArr[0])
+      }
+      // 取消选中
+      const unselectArr = selectUserIdBak.value.filter(item => !selectUserId.value.includes(item))
+      if (unselectArr.length > 0) {
+        remove(unselectArr[0])
+      }
+      selectUserIdBak.value = selectUserId.value
     }
 
     return {
       visible,
       handleOpen,
       handleClose,
-      onSubmit,
       userList,
       selectUserId,
       teamChange,
@@ -112,5 +138,15 @@ export default defineComponent({
   .item-team-main{
     padding: var(--pd-ultra-large);
     min-height: 200px;
+
+    & .el-checkbox-group{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-row-gap: var(--mg-medium);
+
+      & .el-checkbox:last-of-type{
+        margin-right: 30px;
+      }
+    }
   }
 </style>

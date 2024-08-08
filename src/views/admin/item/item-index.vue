@@ -9,6 +9,14 @@
       创建项目
     </el-button>
 
+    <el-button
+      class="mgb-medium"
+      :icon="Refresh"
+      @click="query"
+    >
+      刷新页面
+    </el-button>
+
     <el-table
       :data="itemList"
       border
@@ -55,6 +63,7 @@
               </el-tag>
               <el-tag
                 v-else
+                size="small"
                 type="info"
               >
                 协作者
@@ -82,7 +91,8 @@
           />
           <el-button
             :icon="EditPen"
-            @click="dialogTeamOpen(scope.row.id)"
+            :disabled="scope.row.userId !== scope.row.loginId"
+            @click="dialogTeamOpen({ dataId: scope.row.id, userId: scope.row.userId })"
           >
             协作者
           </el-button>
@@ -97,8 +107,7 @@
     />
     
     <item-teamworker
-      :data-id="dialogTeam.dataId as number"
-      :show="dialogTeam.show"
+      v-bind="dialogTeam"
       @close-dialog="dialogTeamCloseAndRefresh($event, query)"
     />
   </div>
@@ -110,8 +119,8 @@ import {ItemBeanVO} from './itemModel'
 import {deleteItem, getAllItem} from './itemOption'
 import LocalStorage from '../../../class/LocalStorage'
 import appItemEdit from './app-item-edit.vue'
-import {dialogBaseContent} from '@utils/dialogOptions'
-import {Plus, Delete, Edit, EditPen} from '@element-plus/icons-vue'
+import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
+import {Plus, Delete, Edit, EditPen,Refresh} from '@element-plus/icons-vue'
 import {deleteConfirm} from '@utils/utils'
 import itemTeamworker from './item-teamworker.vue'
 
@@ -140,10 +149,10 @@ export default defineComponent({
     } = dialogBaseContent()
 
     const {
-      dialogBase: dialogTeam,
-      dialogBaseCloseAndRefresh: dialogTeamCloseAndRefresh,
-      dialogBaseOpen: dialogTeamOpen,
-    } = dialogBaseContent()
+      dialogParam: dialogTeam,
+      dialogParamsCloseAndRefresh: dialogTeamCloseAndRefresh,
+      dialogParamsOpen: dialogTeamOpen,
+    } = dialogParamsContent()
 
     const deleteData = (id: number) => {
       // TODO 验证项目绑定的角色
@@ -169,6 +178,7 @@ export default defineComponent({
         Delete,
         Edit,
       EditPen,
+      Refresh,
       activeItemCode,
       query,
       itemList,

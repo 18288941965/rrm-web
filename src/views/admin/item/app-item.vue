@@ -169,8 +169,6 @@ export default defineComponent({
 
     onMounted(() => {
       query()
-
-      console.log(userInfoObj)
     })
 
     return {

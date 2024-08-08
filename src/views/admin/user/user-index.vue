@@ -9,6 +9,14 @@
       创建用户
     </el-button>
 
+    <el-button
+      class="mgb-medium"
+      :icon="Refresh"
+      @click="query"
+    >
+      刷新页面
+    </el-button>
+    
     <el-table
       :data="userList"
       border
@@ -95,7 +103,7 @@
 import {defineComponent, onMounted, ref} from 'vue'
 import {UserItemBean} from './userModel'
 import {deleteUser, getAllUser, validatePass} from './userOption'
-import {Delete, Edit, Plus} from '@element-plus/icons-vue'
+import {Delete, Edit, Plus, Refresh} from '@element-plus/icons-vue'
 import {dialogEmptyContent, dialogParamsContent} from '@utils/dialogOptions'
 import UserAdd from './user-add.vue'
 import UserEdit from './user-edit.vue'
@@ -173,6 +181,7 @@ export default defineComponent({
       Plus, 
       Delete, 
       Edit,
+      Refresh,
       query,
       activeUsername,
       userList,

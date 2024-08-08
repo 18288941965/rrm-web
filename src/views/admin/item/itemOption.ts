@@ -27,7 +27,6 @@ const getItemById = (id: number) => {
     })
 }
 
-
 const deleteItem = (id: number) => {
     return axios.delete(`/item/${id}`).then((res: { data: AxiosResult }) => {
         return res.data
@@ -46,6 +45,17 @@ const getCorrelationUserId = (itemId: number) => {
     })
 }
 
+const deleteUserItem = (userId: number, itemId: number) => {
+    return axios.delete(`/user-item/${userId}/${itemId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const createUserItem = (userId: number, itemId: number) => {
+    return axios.post('/user-item', { userId, itemId }).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
 
 export {
     createItem,
@@ -55,4 +65,6 @@ export {
     deleteItem,
     selectItem,
     getCorrelationUserId,
+    deleteUserItem,
+    createUserItem,
 }
