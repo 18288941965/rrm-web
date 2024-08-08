@@ -95,4 +95,8 @@
     --header-banner-height: calc(var(--header-height) + var(--banner-height));
 
     --menu-level-padding: var(--pd-medium);
+
+    .el-tree{
+        --el-tree-node-content-height: 50px;
+    }
 }
