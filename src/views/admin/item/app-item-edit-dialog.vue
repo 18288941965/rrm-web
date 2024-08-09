@@ -13,7 +13,7 @@
       ref="appItemEditFrom"
       :model="form"
       :rules="rules"
-      class="app-item-edit-form"
+      class="rrm-form"
       label-width="auto"
     >
       <el-form-item
@@ -171,7 +171,4 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
-  .app-item-edit-form{
-    margin: var(--mg-large);
-  }
 </style>

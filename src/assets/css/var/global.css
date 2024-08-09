@@ -6,6 +6,7 @@
     --color-white: #FFFFFF;
     --color-blue: #409EFF;
     --color-red: #ff0000;
+    --color-purple: #D1A2FD;
     --color-black-primary: #1F2328;
     --color-black-regular: #656D76;
     --color-black-secondary: #909399;
@@ -97,6 +98,6 @@
     --menu-level-padding: var(--pd-medium);
 
     .el-tree{
-        --el-tree-node-content-height: 50px;
+        --el-tree-node-content-height: var(--size-medium);
     }
 }
