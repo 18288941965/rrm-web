@@ -17,11 +17,11 @@ interface AxiosResult {
  * @param total 总数
  * @param list 数据
  */
-interface Pagination {
+interface Pagination<T> {
     pageNum: number
     pageSize: number
     total: number
-    list: Array<any>
+    list: Array<T>
 }
 
 

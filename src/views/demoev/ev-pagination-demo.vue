@@ -97,7 +97,7 @@ export default defineComponent({
     const dataList = ref<Array<any>>([])
 
     // ================== 后端分页===================== start ===
-    const pager = reactive<Pagination>({
+    const pager = reactive<Pagination<any>>({
       pageNum: 1,
       pageSize: 10,
       total: 0,
@@ -120,7 +120,7 @@ export default defineComponent({
 
     // ================== 前端分页===================== start ===
     const scrollTable = ref()
-    const pager2 = reactive<Pagination>({
+    const pager2 = reactive<Pagination<any>>({
       pageNum: 1,
       pageSize: 10,
       total: 0,
@@ -138,7 +138,7 @@ export default defineComponent({
     // ================== 前端分页===================== end ===
 
     // ================== 无限加载 ===================== start ===
-    const pager3 = reactive<Pagination>({
+    const pager3 = reactive<Pagination<any>>({
       pageNum: 1,
       pageSize: 10,
       total: 0,

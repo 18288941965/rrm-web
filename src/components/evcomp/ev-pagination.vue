@@ -14,7 +14,7 @@
 import {ref, defineComponent, watch, PropType} from 'vue'
 import {Pagination} from '@utils/interface'
 
-const _pagination: Pagination = {
+const _pagination: Pagination<any> = {
   pageNum: 1,
   pageSize: 10,
   total: 0,
@@ -31,7 +31,7 @@ export default defineComponent({
       default: _pageSizes,
     },
     pager: {
-      type: Object as PropType<Pagination>,
+      type: Object as PropType<Pagination<any>>,
       default: _pagination,
       required: true,
     },
