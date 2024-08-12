@@ -1,3 +1,4 @@
+
 /**
  * 后端统一返回值接口.
  * @param code 代码
@@ -8,6 +9,14 @@ interface AxiosResult {
     code: number
     message: string
     data: any | undefined | null
+}
+
+/**
+ * 查询对象分页
+ */
+interface PaginationQr {
+    pageNum?: number
+    pageSize?: number
 }
 
 /**
@@ -50,8 +59,8 @@ interface DialogEmpty{
  * 对话框-唯一标识.
  * @param dataId 唯一标识
  */
-interface DialogBase extends DialogEmpty{
-    dataId: String | number | undefined
+interface DialogBase<T> extends DialogEmpty{
+    dataId: T | undefined
 }
 
 interface PropPrams {
@@ -69,6 +78,7 @@ interface DialogParam extends DialogEmpty{
 export type {
     AxiosResult,
     Pagination,
+    PaginationQr,
     LocalUserInfoBean,
     PropPrams,
 

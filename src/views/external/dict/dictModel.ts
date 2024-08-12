@@ -1,3 +1,5 @@
+import {PaginationQr} from '@utils/interface'
+
 interface DictTypeBeanBase{
     typeCode: string
     typeName: string
@@ -12,7 +14,7 @@ interface DictTypeBeanVO extends DictTypeBean{
     itemCount: number
 }
 
-interface DictTypeBeanQuery extends DictTypeBeanBase{}
+interface DictTypeBeanQuery extends DictTypeBeanBase, PaginationQr{}
 
 export {
     type DictTypeBean,

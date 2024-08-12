@@ -1,4 +1,4 @@
-import {reactive, ref} from 'vue'
+import {reactive, ref, UnwrapRef} from 'vue'
 import {DialogBase, DialogEmpty, DialogParam} from './interface'
 
 // 无参对话框.
@@ -26,13 +26,14 @@ export function dialogEmptyContent () {
   }
 }
 
+
 // 一个参数对话框
-export function dialogBaseContent () {
-  const dialogBase = reactive<DialogBase>({
+export function dialogBaseContent<T = string> () {
+  const dialogBase = reactive<DialogBase<T>>({
     show: false,
     dataId: undefined,
   })
-  const dialogBaseOpen = (id? : string | number | undefined) => {
+  const dialogBaseOpen = (id : UnwrapRef<T> | undefined) => {
     dialogBase.dataId = id
     dialogBase.show = true
   }

@@ -81,8 +81,7 @@
     </main>
 
     <app-item-edit-dialog
-      :data-id="dialogBase.dataId as number"
-      :show="dialogBase.show"
+      v-bind="dialogBase"
       @close-dialog="dialogBaseCloseAndRefresh($event, query)"
     />
   </div>
@@ -132,7 +131,7 @@ export default defineComponent({
       dialogBase,
         dialogBaseCloseAndRefresh,
         dialogBaseOpen,
-    } = dialogBaseContent()
+    } = dialogBaseContent<number>()
     
     const {
       postMessage,

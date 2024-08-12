@@ -14,4 +14,5 @@ export type IconProps = {
     color?: string
     size?: number
 }
+// 单选框值
 export type RadioValType = string | number | boolean | undefined

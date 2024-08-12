@@ -38,8 +38,7 @@
     <section />
     
     <dict-type-edit-dialog
-      :data-id="dialogType.dataId as number"
-      :show="dialogType.show"
+      v-bind="dialogType"
       @close-dialog="dialogTypeCloseAndRefresh($event,query)"
     />
   </div>
@@ -77,7 +76,11 @@ export default defineComponent({
         pageNum,
         pageSize,
       })
-      searchWithPagination(queryParams).then(res => {
+      searchWithPagination({
+        pageNum: pager.pageNum,
+        pageSize: pager.pageSize,
+        ...queryParams,
+      }).then(res => {
         if (res.code === 200) {
           Object.assign(pager, res.data)
         }
@@ -88,7 +91,7 @@ export default defineComponent({
       dialogBase: dialogType,
         dialogBaseOpen: dialogTypeOpen,
         dialogBaseCloseAndRefresh: dialogTypeCloseAndRefresh,
-    } = dialogBaseContent()
+    } = dialogBaseContent<number>()
 
     onMounted(() => {
       query(1)
