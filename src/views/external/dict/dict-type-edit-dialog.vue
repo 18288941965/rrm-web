@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="字典编辑"
+    title="字典类型编辑"
     width="720"
     :before-close="handleClose"
     :close-on-press-escape="false"
@@ -19,9 +19,14 @@
       <el-form-item
         label="类型代码"
         prop="typeCode"
+        :rules="form.id ? [] : [
+          { required: true, message: '类型代码为必填项', trigger: 'change' },
+        ]"
       >
         <el-input
           v-model.trim="form.typeCode"
+          :disabled="dataId"
+          placeholder="类型代码在创建后不可更改"
           clearable
         />
       </el-form-item>
@@ -60,7 +65,7 @@ import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
 import {AxiosResult} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
 import {DictTypeBean} from './dictModel'
-import {createDictType, updateDictType} from './dictOption'
+import {createDictType, getDictTypeById, updateDictType} from './dictOption'
 
 export default defineComponent({
   name: 'DictTypeEditDialog',
@@ -98,12 +103,12 @@ export default defineComponent({
     })
 
     const rules = reactive<FormRules<DictTypeBean>>({
-      typeCode: [{ required: true, message: '请输入菜单名称', trigger: 'change'}],
-      typeName: [{ required: true, message: '请输入菜单名称', trigger: 'change'}],
+      typeName: [{ required: true, message: '类型名称为必填项', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {
       if (!formEl) return
+      form.id = 0
       formEl.resetFields()
     }
     
@@ -138,7 +143,21 @@ export default defineComponent({
       })
     }
 
-    const handleOpen = () => {}
+    const handleOpen = () => {
+      if (props.dataId) {
+        getDictTypeById(props.dataId).then(res => {
+          if (res.code === 200) {
+            const data = res.data
+            Object.assign(form, {
+              id: data.id,
+              typeCode: data.typeCode,
+              typeName: data.typeName,
+              description: data.description,
+            })
+          }
+        })
+      }
+    }
 
     return {
       visible,

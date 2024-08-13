@@ -241,6 +241,7 @@ export default defineComponent({
 
     const resetForm = (formEl: FormInstance | undefined) => {
       if (!formEl) return
+      form.id = ''
       formEl.resetFields()
     }
     
