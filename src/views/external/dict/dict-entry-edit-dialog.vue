@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    :title="params.typeName + '（' + params.typeCode + '）' + '字典项编辑'"
+    :title="params.typeName + '：' + '字典项编辑'"
     width="720"
     :before-close="handleClose"
     :close-on-press-escape="false"
@@ -18,13 +18,13 @@
     >
       <el-form-item
         label="字典代码"
-        prop="itemCode"
+        prop="entryCode"
         :rules="form.id ? [] : [
           { required: true, message: '字典代码为必填项', trigger: 'change' },
         ]"
       >
         <el-input
-          v-model.trim="form.itemCode"
+          v-model.trim="form.entryCode"
           :disabled="form.id > 0"
           placeholder="字典代码在创建后不可更改"
           clearable
@@ -32,10 +32,10 @@
       </el-form-item>
       <el-form-item
         label="字典名称"
-        prop="itemName"
+        prop="entryName"
       >
         <el-input
-          v-model.trim="form.itemName"
+          v-model.trim="form.entryName"
           clearable
         />
       </el-form-item>
@@ -85,11 +85,11 @@ import {defineComponent, ref, watch, reactive, PropType} from 'vue'
 import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
 import {AxiosResult, PropPrams} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
-import {DictItemBean} from './dictModel'
+import {DictEntryBean} from './dictModel'
 import {
-  createDictItem,
-  getDictItemById,
-  updateDictItem,
+  createDictEntry,
+  getDictEntryById,
+  updateDictEntry,
 } from './dictOption'
 
 export default defineComponent({
@@ -100,7 +100,7 @@ export default defineComponent({
       default() {
         return {
           dataId: 0,
-          typeCode: '',
+          typeId: 0,
           typeName: '',
         }
       },
@@ -126,27 +126,27 @@ export default defineComponent({
         },
     )
 
-    const form = reactive<DictItemBean>({
-      itemCode: '',
-      itemName: '',
+    const form = reactive<DictEntryBean>({
+      entryCode: '',
+      entryName: '',
 
       id: 0,
-      typeCode: '',
+      typeId: 0,
       parentId: 0,
       sortOrder: 0,
       status: 1,
       description: '',
     })
 
-    const rules = reactive<FormRules<DictItemBean>>({
-      itemName: [{ required: true, message: '字典名称为必填项', trigger: 'change'}],
+    const rules = reactive<FormRules<DictEntryBean>>({
+      entryName: [{ required: true, message: '字典名称为必填项', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {
       if (!formEl) return
       Object.assign(form, {
         id: 0,
-        typeCode: '',
+        typeId: 0,
         sortOrder: 0,
       })
       formEl.resetFields()
@@ -173,9 +173,9 @@ export default defineComponent({
       formEl.validate((valid) => {
         if (valid) {
           if (props.params.dataId) {
-            updateDictItem(form).then(res => {handleCallback(res)})
+            updateDictEntry(form).then(res => {handleCallback(res)})
           } else {
-            createDictItem(form).then(res => {handleCallback(res)})
+            createDictEntry(form).then(res => {handleCallback(res)})
           }
         } else {
           ElMessage.error('请填写完整表单！')
@@ -184,16 +184,16 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
-      form.typeCode = props.params.typeCode
+      form.typeId = props.params.typeId
       if (props.params.dataId) {
-        getDictItemById(props.params.dataId).then(res => {
+        getDictEntryById(props.params.dataId).then(res => {
           if (res.code === 200) {
             const data = res.data
             Object.assign(form, {
               id: data.id,
-              typeCode: data.typeCode,
-              itemName: data.itemName,
-              itemCode: data.itemCode,
+              typeId: data.typeId,
+              entryName: data.entryName,
+              entryCode: data.entryCode,
               status: data.status,
               sortOrder: data.sortOrder,
               description: data.description,

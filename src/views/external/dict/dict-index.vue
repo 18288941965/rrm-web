@@ -4,7 +4,7 @@
       <dict-type @set-dict-type="setDictType" />
     </section>
     <section class="layout-main">
-      <dict-item :select-dict-type="selectDictType" />
+      <dict-entry :select-dict-type="selectDictType" />
     </section>
   </div>
 </template>
@@ -12,20 +12,20 @@
 <script lang="ts">
 import {defineComponent, ref} from 'vue'
 import DictType from './dict-type.vue'
-import DictItem from './dict-item.vue'
+import DictEntry from './dict-entry.vue'
 import {DictTypeBeanVO} from './dictModel'
 
 export default defineComponent({
   name: 'DictIndex',
   components: {
     DictType,
-    DictItem,
+    DictEntry,
   },
   setup() {
     const selectDictType = ref<DictTypeBeanVO>({
       description: '',
       id: 0,
-      itemCount: 0,
+      entryCount: 0,
       typeCode: '',
       typeName: '',
     })

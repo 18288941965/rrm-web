@@ -48,13 +48,13 @@
           <el-button
             type="danger"
             :icon="Delete"
-            :disabled="scope.row.itemCount > 0"
+            :disabled="scope.row.entryCount > 0"
             @click="deleteData(scope.row.id)"
           />
         </template>
       </el-table-column>
       <el-table-column
-        prop="itemCount"
+        prop="entryCount"
         width="90px"
         align="center"
         label="字典项"
@@ -66,7 +66,7 @@
             style="width: 100%;"
             @click="setDictType(scope.row)"
           >
-            {{ scope.row.itemCount }}
+            {{ scope.row.entryCount }}
           </el-button>
         </template>
       </el-table-column>

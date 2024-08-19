@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {DictItemBean, DictItemBeanQuery, DictTypeBean, DictTypeBeanQuery} from './dictModel'
+import {DictEntryBean, DictEntryBeanQuery, DictTypeBean, DictTypeBeanQuery} from './dictModel'
 
 // 分页查询
 const searchDictTypePage = (params: DictTypeBeanQuery) => {
@@ -39,36 +39,36 @@ const deleteDictType = (id: number) => {
 
 
 // 分页查询
-const searchDictItemPage = (params: DictItemBeanQuery) => {
-    return axios.post('/dict-item/page', params).then((res: { data: AxiosResult }) => {
+const searchDictEntryPage = (params: DictEntryBeanQuery) => {
+    return axios.post('/dict-entry/page', params).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
 
 // 根据ID查询字典
-const getDictItemById = (id: number) => {
-    return axios.get(`/dict-item/${id}`).then((res: { data: AxiosResult }) => {
+const getDictEntryById = (id: number) => {
+    return axios.get(`/dict-entry/${id}`).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
 
 // 创建新的字典类型
-const createDictItem = (bean: DictItemBean) => {
-    return axios.post('/dict-item', bean).then((res: { data: AxiosResult }) => {
+const createDictEntry = (bean: DictEntryBean) => {
+    return axios.post('/dict-entry', bean).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
 
 // 更新字典类型
-const updateDictItem = (bean: DictItemBean) => {
-    return axios.put('/dict-item', bean).then((res: { data: AxiosResult }) => {
+const updateDictEntry = (bean: DictEntryBean) => {
+    return axios.put('/dict-entry', bean).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
 
 // 删除字典类型
-const deleteDictItem = (id: number) => {
-    return axios.delete(`/dict-item/${id}`).then((res: { data: AxiosResult }) => {
+const deleteDictEntry = (id: number) => {
+    return axios.delete(`/dict-entry/${id}`).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
@@ -81,9 +81,9 @@ export {
     updateDictType,
     deleteDictType,
 
-    searchDictItemPage,
-    getDictItemById,
-    createDictItem,
-    updateDictItem,
-    deleteDictItem,
+    searchDictEntryPage,
+    getDictEntryById,
+    createDictEntry,
+    updateDictEntry,
+    deleteDictEntry,
 }

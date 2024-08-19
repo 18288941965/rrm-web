@@ -11,27 +11,27 @@ interface DictTypeBean extends DictTypeBeanBase{
 }
 
 interface DictTypeBeanVO extends DictTypeBean{
-    itemCount: number
+    entryCount: number
 }
 
 interface DictTypeBeanQuery extends DictTypeBeanBase, PaginationQr{}
 
-interface DictItemBeanBase{
-    itemCode: string
-    itemName: string
+interface DictEntryBeanBase{
+    entryCode: string
+    entryName: string
 }
 
-interface DictItemBean extends DictItemBeanBase{
+interface DictEntryBean extends DictEntryBeanBase{
     id: number
-    typeCode: string
+    typeId: number
     parentId: number
     sortOrder: number
     status: number
     description: string
 }
 
-interface DictItemBeanQuery extends DictItemBeanBase, PaginationQr{
-    typeCode: string
+interface DictEntryBeanQuery extends DictEntryBeanBase, PaginationQr{
+    typeId: number
 }
 
 
@@ -39,7 +39,7 @@ export {
     type DictTypeBean,
     type DictTypeBeanVO,
     type DictTypeBeanQuery,
-    type DictItemBeanBase,
-    type DictItemBean,
-    type DictItemBeanQuery,
+    type DictEntryBeanBase,
+    type DictEntryBean,
+    type DictEntryBeanQuery,
 }

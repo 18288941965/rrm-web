@@ -9,7 +9,7 @@
 
       <div class="input-g mgl-medium">
         <el-input
-          v-model="queryParams.itemName"
+          v-model="queryParams.entryName"
           placeholder="请输入字典名称"
           class="mgb-medium"
           clearable
@@ -29,7 +29,7 @@
       class="mgb-medium"
       type="success"
       :icon="Plus"
-      @click="dialogItemOpen({ dataId: 0, typeCode: selectDictType.typeCode, typeName: selectDictType.typeName })"
+      @click="dialogItemOpen({ dataId: 0, typeId: selectDictType.id, typeName: selectDictType.typeName })"
     >
       创建字典项
     </el-button>
@@ -53,15 +53,15 @@
         align="center"
       />
       <el-table-column
-        prop="itemCode"
+        prop="entryCode"
         label="字典代码"
       />
       <el-table-column
-        prop="itemName"
+        prop="entryName"
         label="字典名称"
       />
       <el-table-column
-        prop="parentItemName"
+        prop="parentEntryName"
         label="上级字典"
       />
       <el-table-column
@@ -84,7 +84,7 @@
           <el-button
             type="primary"
             :icon="Edit"
-            @click="dialogItemOpen({ dataId: scope.row.id, typeCode: selectDictType.typeCode, typeName: selectDictType.typeName })"
+            @click="dialogItemOpen({ dataId: scope.row.id, typeId: selectDictType.id, typeName: selectDictType.typeName })"
           />
 
           <el-button
@@ -101,7 +101,7 @@
       @query="query"
     />
 
-    <dict-item-edit-dialog
+    <dict-entry-edit-dialog
       v-bind="dialogItem"
       @close-dialog="dialogItemCloseAndRefresh($event,query)"
     />
@@ -112,16 +112,16 @@
 import {defineComponent, PropType, reactive, watchEffect} from 'vue'
 import {dialogParamsContent} from '@utils/dialogOptions'
 import {Delete, Edit, Plus, Search, Sort} from '@element-plus/icons-vue'
-import DictItemEditDialog from './dict-item-edit-dialog.vue'
-import {DictItemBeanQuery, DictTypeBeanVO} from './dictModel'
+import DictEntryEditDialog from './dict-entry-edit-dialog.vue'
+import {DictEntryBeanQuery, DictTypeBeanVO} from './dictModel'
 import {Pagination} from '@utils/interface'
-import {deleteDictItem, searchDictItemPage} from './dictOption'
+import {deleteDictEntry, searchDictEntryPage} from './dictOption'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import {deleteConfirm} from '@utils/utils'
 
 export default defineComponent({
-  name: 'DictItem',
-  components: {EvPagination, DictItemEditDialog},
+  name: 'DictEntry',
+  components: {EvPagination, DictEntryEditDialog},
   props: {
     selectDictType: {
       type: Object as PropType<DictTypeBeanVO>,
@@ -129,7 +129,7 @@ export default defineComponent({
         return {
           description: '',
           id: 0,
-          itemCount: 0,
+          entryCount: 0,
           typeCode: '',
           typeName: '',
         }
@@ -137,10 +137,10 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const queryParams = reactive<DictItemBeanQuery>({
-      typeCode: '',
-      itemName: '',
-      itemCode: '',
+    const queryParams = reactive<DictEntryBeanQuery>({
+      typeId: 0,
+      entryName: '',
+      entryCode: '',
     })
 
     const pager = reactive<Pagination<DictTypeBeanVO>>({
@@ -154,7 +154,7 @@ export default defineComponent({
         pageNum,
         pageSize,
       })
-      searchDictItemPage({
+      searchDictEntryPage({
         pageNum: pager.pageNum,
         pageSize: pager.pageSize,
         ...queryParams,
@@ -166,8 +166,8 @@ export default defineComponent({
     }
 
     watchEffect(() => {
-      if (props.selectDictType.typeCode) {
-        queryParams.typeCode = props.selectDictType.typeCode
+      if (props.selectDictType.id) {
+        queryParams.typeId = props.selectDictType.id
         query(1)
       }
     })
@@ -175,7 +175,7 @@ export default defineComponent({
     const deleteData = (id: number) => {
       deleteConfirm('你确定要删除此字典项吗？').then(flag => {
         if (flag) {
-          deleteDictItem(id).then(res => {
+          deleteDictEntry(id).then(res => {
             if (res.code === 200) {
               query(1)
             }
