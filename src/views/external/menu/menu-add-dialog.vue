@@ -57,10 +57,10 @@
       <div class="form-item-grid">
         <el-form-item
           label="菜单排序"
-          prop="sort"
+          prop="sortOrder"
         >
           <el-input-number
-            v-model="form.sort"
+            v-model="form.sortOrder"
             :min="0"
             :step="1"
             max="999"
@@ -222,7 +222,7 @@ export default defineComponent({
       parentId: '',
       name: '',
       icon: '',
-      sort: 0,
+      sortOrder: 0,
       visibility: '1',
       url: '',
       type: '',

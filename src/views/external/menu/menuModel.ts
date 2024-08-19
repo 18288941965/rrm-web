@@ -4,7 +4,7 @@ interface MenuBean{
     parentId: string
     name: string
     icon: string
-    sort: number
+    sortOrder: number
     visibility: string
     url: string
     type: string
