@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {DictTypeBean, DictTypeBeanQuery} from './dictModel'
+import {DictItemBean, DictItemBeanQuery, DictTypeBean, DictTypeBeanQuery} from './dictModel'
 
 // 分页查询
 const searchDictTypePage = (params: DictTypeBeanQuery) => {
@@ -38,10 +38,52 @@ const deleteDictType = (id: number) => {
 }
 
 
+// 分页查询
+const searchDictItemPage = (params: DictItemBeanQuery) => {
+    return axios.post('/dict-item/page', params).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+// 根据ID查询字典
+const getDictItemById = (id: number) => {
+    return axios.get(`/dict-item/${id}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+// 创建新的字典类型
+const createDictItem = (bean: DictItemBean) => {
+    return axios.post('/dict-item', bean).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+// 更新字典类型
+const updateDictItem = (bean: DictItemBean) => {
+    return axios.put('/dict-item', bean).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+// 删除字典类型
+const deleteDictItem = (id: number) => {
+    return axios.delete(`/dict-item/${id}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
 export {
     searchDictTypePage,
     getDictTypeById,
     createDictType,
     updateDictType,
     deleteDictType,
+
+    searchDictItemPage,
+    getDictItemById,
+    createDictItem,
+    updateDictItem,
+    deleteDictItem,
 }

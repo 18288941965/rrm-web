@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="字典类型编辑"
+    :title="params.typeName + '（' + params.typeCode + '）' + '字典项编辑'"
     width="720"
     :before-close="handleClose"
     :close-on-press-escape="false"
@@ -10,34 +10,55 @@
     @open="handleOpen"
   >
     <el-form
-      ref="dictTypeEditRef"
+      ref="dictItemEditRef"
       class="rrm-form"
       :model="form"
       :rules="rules"
       label-width="100px"
     >
       <el-form-item
-        label="类型代码"
-        prop="typeCode"
+        label="字典代码"
+        prop="itemCode"
         :rules="form.id ? [] : [
-          { required: true, message: '类型代码为必填项', trigger: 'change' },
+          { required: true, message: '字典代码为必填项', trigger: 'change' },
         ]"
       >
         <el-input
-          v-model.trim="form.typeCode"
+          v-model.trim="form.itemCode"
           :disabled="form.id > 0"
-          placeholder="类型代码在创建后不可更改"
+          placeholder="字典代码在创建后不可更改"
           clearable
         />
       </el-form-item>
       <el-form-item
-        label="类型名称"
-        prop="typeName"
+        label="字典名称"
+        prop="itemName"
       >
-        <el-input v-model.trim="form.typeName" />
+        <el-input
+          v-model.trim="form.itemName"
+          clearable
+        />
       </el-form-item>
       <el-form-item
-        label="类型描述"
+        label="字典状态"
+        prop="status"
+      >
+        <el-radio-group v-model="form.status">
+          <el-radio
+            border
+            label="启用"
+            :value="1"
+          />
+          <el-radio
+            border
+            label="停用"
+            :value="0"
+          />
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item
+        label="字典描述"
         prop="description"
       >
         <el-input
@@ -52,7 +73,7 @@
       <span class="dialog-footer">
         <el-button
           type="primary"
-          @click="onSubmit(dictTypeEditRef)"
+          @click="onSubmit(dictItemEditRef)"
         >提交</el-button>
       </span>
     </template>
@@ -60,19 +81,29 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, watch, reactive} from 'vue'
+import {defineComponent, ref, watch, reactive, PropType} from 'vue'
 import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
-import {AxiosResult} from '@utils/interface'
+import {AxiosResult, PropPrams} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
-import {DictTypeBean} from './dictModel'
-import {createDictType, getDictTypeById, updateDictType} from './dictOption'
+import {DictItemBean} from './dictModel'
+import {
+  createDictItem,
+  getDictItemById,
+  updateDictItem,
+} from './dictOption'
 
 export default defineComponent({
-  name: 'DictTypeEditDialog',
+  name: 'DictItemEditDialog',
   props: {
-    dataId: {
-      type: Number,
-      default: 0,
+    params: {
+      type: Object as PropType<PropPrams>,
+      default() {
+        return {
+          dataId: 0,
+          typeCode: '',
+          typeName: '',
+        }
+      },
     },
     show: {
       type: Boolean,
@@ -86,7 +117,7 @@ export default defineComponent({
       visible,
         isRefresh,
     } = dialogOptions()
-    const dictTypeEditRef = ref<FormInstance>()
+    const dictItemEditRef = ref<FormInstance>()
 
     watch(
         () => props.show,
@@ -95,26 +126,35 @@ export default defineComponent({
         },
     )
 
-    const form = reactive<DictTypeBean>({
+    const form = reactive<DictItemBean>({
+      itemCode: '',
+      itemName: '',
+
       id: 0,
       typeCode: '',
-      typeName: '',
+      parentId: 0,
+      sortOrder: 0,
+      status: 1,
       description: '',
     })
 
-    const rules = reactive<FormRules<DictTypeBean>>({
-      typeName: [{ required: true, message: '类型名称为必填项', trigger: 'change'}],
+    const rules = reactive<FormRules<DictItemBean>>({
+      itemName: [{ required: true, message: '字典名称为必填项', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {
       if (!formEl) return
-      form.id = 0
+      Object.assign(form, {
+        id: 0,
+        typeCode: '',
+        sortOrder: 0,
+      })
       formEl.resetFields()
     }
     
     // 关闭窗口
     const handleClose = () => {
-      resetForm(dictTypeEditRef.value)
+      resetForm(dictItemEditRef.value)
       const refresh = isRefresh.value
       isRefresh.value = false
       emit('close-dialog', refresh)
@@ -132,10 +172,10 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          if (props.dataId) {
-            updateDictType(form).then(res => {handleCallback(res)})
+          if (props.params.dataId) {
+            updateDictItem(form).then(res => {handleCallback(res)})
           } else {
-            createDictType(form).then(res => {handleCallback(res)})
+            createDictItem(form).then(res => {handleCallback(res)})
           }
         } else {
           ElMessage.error('请填写完整表单！')
@@ -144,14 +184,18 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
-      if (props.dataId) {
-        getDictTypeById(props.dataId).then(res => {
+      form.typeCode = props.params.typeCode
+      if (props.params.dataId) {
+        getDictItemById(props.params.dataId).then(res => {
           if (res.code === 200) {
             const data = res.data
             Object.assign(form, {
               id: data.id,
               typeCode: data.typeCode,
-              typeName: data.typeName,
+              itemName: data.itemName,
+              itemCode: data.itemCode,
+              status: data.status,
+              sortOrder: data.sortOrder,
               description: data.description,
             })
           }
@@ -163,7 +207,7 @@ export default defineComponent({
       visible,
       rules,
       form,
-      dictTypeEditRef,
+      dictItemEditRef,
       handleOpen,
       handleClose,
       onSubmit,

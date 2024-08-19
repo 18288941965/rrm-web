@@ -30,7 +30,9 @@ interface DictItemBean extends DictItemBeanBase{
     description: string
 }
 
-interface DictItemBeanQuery extends DictItemBeanBase, PaginationQr{}
+interface DictItemBeanQuery extends DictItemBeanBase, PaginationQr{
+    typeCode: string
+}
 
 
 export {
