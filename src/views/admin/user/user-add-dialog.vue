@@ -1,14 +1,18 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="用户新增"
     width="720"
     :before-close="handleClose"
-    :close-on-press-escape="false"
     :close-on-click-modal="false"
     :destroy-on-close="true"
     @open="handleOpen"
   >
+    <template #header>
+      <dialog-header
+        title="用户"
+        type="新增"
+      />
+    </template>
     <el-form
       ref="userAddFrom"
       :model="form"
@@ -50,16 +54,20 @@
           placeholder=""
         />
       </el-form-item>
-      
-      <el-form-item>
-        <el-button
-          type="primary"
-          @click="onSubmit(userAddFrom)"
-        >
-          确定
-        </el-button>
-      </el-form-item>
     </el-form>
+
+    <template #footer>
+      <dialog-footer>
+        <template #default>
+          <el-button
+            type="primary"
+            @click="onSubmit(userAddFrom)"
+          >
+            确定
+          </el-button>
+        </template>
+      </dialog-footer>
+    </template>
   </el-dialog>
 </template>
 
@@ -70,9 +78,15 @@ import {UserBean} from './userModel'
 import {AxiosResult} from '@utils/interface'
 import {createUser} from './userOption'
 import {dialogOptions} from '@utils/dialogOptions'
+import DialogHeader from '../../../components/dialog-header.vue'
+import DialogFooter from '../../../components/dialog-footer.vue'
 
 export default defineComponent({
   name: 'UserAddDialog',
+  components: {
+    DialogFooter, 
+    DialogHeader,
+  },
   props: {
     show: {
       type: Boolean,

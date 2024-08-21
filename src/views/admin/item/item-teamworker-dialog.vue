@@ -1,15 +1,20 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="项目协作者编辑"
     width="720"
     :before-close="handleClose"
-    :close-on-press-escape="false"
     :close-on-click-modal="false"
     :destroy-on-close="true"
     @open="handleOpen"
   >
-    <main class="item-team-main">
+    <template #header>
+      <dialog-header
+        title="项目协作者"
+        type="编辑"
+      />
+    </template>
+    
+    <main class="item-team-main rrm-form">
       <el-checkbox-group
         v-model="selectUserId"
         @change="teamChange"
@@ -24,6 +29,10 @@
         />
       </el-checkbox-group>
     </main>
+
+    <template #footer>
+      <dialog-footer />
+    </template>
   </el-dialog>
 </template>
 
@@ -35,9 +44,12 @@ import {createUserItem, deleteUserItem, getCorrelationUserId} from './itemOption
 import {AxiosResult, PropPrams} from '@utils/interface'
 import {ElMessage} from 'element-plus'
 import {dialogOptions} from '@utils/dialogOptions'
+import DialogHeader from '../../../components/dialog-header.vue'
+import DialogFooter from '../../../components/dialog-footer.vue'
 
 export default defineComponent({
   name: 'ItemTeamworkerDialog',
+  components: {DialogFooter, DialogHeader},
   props: {
     params: {
       type: Object as PropType<PropPrams>,
@@ -141,9 +153,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
   .item-team-main{
-    padding: var(--pd-ultra-large);
-    min-height: 200px;
-
     & .el-checkbox-group{
       display: grid;
       grid-template-columns: 1fr 1fr;

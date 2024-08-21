@@ -1,14 +1,18 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="字典项排序"
     width="720"
     :before-close="handleClose"
-    :close-on-press-escape="false"
     :close-on-click-modal="false"
     :destroy-on-close="true"
     @open="handleOpen"
   >
+    <template #header>
+      <dialog-header
+        title="字典项"
+        type="排序"
+      />
+    </template>
     <div class="drag-body">
       <draggable
         v-model="dataList"
@@ -23,12 +27,16 @@
     </div>
 
     <template #footer>
-      <span class="dialog-footer">
-        <el-button
-          type="primary"
-          @click="onSubmit"
-        >提交</el-button>
-      </span>
+      <dialog-footer>
+        <template #default>
+          <el-button
+            type="primary"
+            @click="onSubmit"
+          >
+            提交
+          </el-button>
+        </template>
+      </dialog-footer>
     </template>
   </el-dialog>
 </template>
@@ -43,11 +51,15 @@ import {
   getDictEntryByTypeId, updateDictEntrySort,
 } from './dictOption'
 import draggable from 'vuedraggable'
+import DialogHeader from '../../../components/dialog-header.vue'
+import DialogFooter from '../../../components/dialog-footer.vue'
 
 export default defineComponent({
   name: 'DictItemSortDialog',
   components: {
     draggable,
+    DialogHeader,
+    DialogFooter,
   },
   props: {
     dataId: {

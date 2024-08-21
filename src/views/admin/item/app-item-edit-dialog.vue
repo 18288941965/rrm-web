@@ -1,14 +1,19 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="项目编辑"
     width="720"
     :before-close="handleClose"
-    :close-on-press-escape="false"
     :close-on-click-modal="false"
     :destroy-on-close="true"
     @open="handleOpen"
   >
+    <template #header>
+      <dialog-header
+        title="项目"
+        :type="form.id ? '编辑' : '新增'"
+      />
+    </template>
+    
     <el-form
       ref="appItemEditFrom"
       :model="form"
@@ -41,16 +46,20 @@
           placeholder=""
         />
       </el-form-item>
-      
-      <el-form-item>
-        <el-button
-          type="primary"
-          @click="onSubmit(appItemEditFrom)"
-        >
-          确定
-        </el-button>
-      </el-form-item>
     </el-form>
+
+    <template #footer>
+      <dialog-footer>
+        <template #default>
+          <el-button
+            type="primary"
+            @click="onSubmit(appItemEditFrom)"
+          >
+            确定
+          </el-button>
+        </template>
+      </dialog-footer>
+    </template>
   </el-dialog>
 </template>
 
@@ -61,9 +70,12 @@ import {createItem, getItemById, updateItem} from './itemOption'
 import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
 import {AxiosResult} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
+import DialogHeader from '../../../components/dialog-header.vue'
+import DialogFooter from '../../../components/dialog-footer.vue'
 
 export default defineComponent({
   name: 'AppItemEditDialog',
+  components: {DialogFooter, DialogHeader},
   props: {
     dataId: {
       type: Number,

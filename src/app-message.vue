@@ -5,7 +5,6 @@
     width="720"
     :modal="false"
     :before-close="closeMessage"
-    :close-on-press-escape="false"
     :close-on-click-modal="false"
     :destroy-on-close="true"
   >

@@ -1,14 +1,19 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="菜单编辑"
     width="720"
     :before-close="handleClose"
-    :close-on-press-escape="false"
     :close-on-click-modal="false"
     :destroy-on-close="true"
     @open="handleOpen"
   >
+    <template #header>
+      <dialog-header
+        title="菜单"
+        :type="form.id ? '编辑' : '新增'"
+      />
+    </template>
+    
     <el-form
       ref="menuEditFrom"
       class="rrm-form"
@@ -21,7 +26,7 @@
       >
         <span class="parent-name-span">{{ params.parentName }}</span>
       </el-form-item>
-      
+
       <el-form-item
         label="菜单名称"
         prop="name"
@@ -154,23 +159,26 @@
           />
         </el-form-item>
       </div>
-      
-
-      <el-form-item>
-        <el-button
-          type="primary"
-          @click="onSubmit(menuEditFrom)"
-        >
-          提交
-        </el-button>
-        <el-button
-          v-if="params.dataId"
-          @click="resetForm"
-        >
-          重置
-        </el-button>
-      </el-form-item>
     </el-form>
+
+    <template #footer>
+      <dialog-footer>
+        <template #default>
+          <el-button
+            type="primary"
+            @click="onSubmit(menuEditFrom)"
+          >
+            提交
+          </el-button>
+          <el-button
+            v-if="params.dataId"
+            @click="resetForm"
+          >
+            重置
+          </el-button>
+        </template>
+      </dialog-footer>
+    </template>
   </el-dialog>
 </template>
 
@@ -181,10 +189,16 @@ import {AxiosResult, PropPrams} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
 import {MenuBean} from './menuModel'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
+import DialogHeader from '../../../components/dialog-header.vue'
+import DialogFooter from '../../../components/dialog-footer.vue'
 
 export default defineComponent({
   name: 'MenuAddDialog',
-  components: {EvSelect},
+  components: {
+    EvSelect,
+    DialogHeader,
+    DialogFooter,
+  },
   props: {
     params: {
       type: Object as PropType<PropPrams>,
@@ -244,7 +258,7 @@ export default defineComponent({
       form.id = ''
       formEl.resetFields()
     }
-    
+
     // 关闭窗口
     const handleClose = () => {
       resetForm(menuEditFrom.value)
