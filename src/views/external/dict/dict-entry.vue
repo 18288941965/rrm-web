@@ -201,6 +201,13 @@ export default defineComponent({
       if (props.selectDictType.id) {
         queryParams.typeId = props.selectDictType.id
         query(1)
+      } else {
+        Object.assign(pager, {
+          pageNum: 1,
+          pageSize: 10,
+          total: 0,
+          list: [],
+        })
       }
     })
 

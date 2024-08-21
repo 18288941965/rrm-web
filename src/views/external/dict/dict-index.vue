@@ -38,7 +38,17 @@ export default defineComponent({
 
     const dictTypeRef = ref()
 
-    const setDictType = (obj: DictTypeBeanVO) => {
+    const setDictType = (obj: DictTypeBeanVO | undefined) => {
+      if (!obj) {
+        Object.assign(selectDictType.value, {
+          description: '',
+          id: 0,
+          entryCount: 0,
+          typeCode: '',
+          typeName: '',
+        })
+        return
+      }
       selectDictType.value = obj
     }
 

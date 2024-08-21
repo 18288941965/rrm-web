@@ -114,7 +114,13 @@ export default defineComponent({
       total: 0,
       list: [],
     })
+
+    const setDictType = (obj: DictTypeBeanVO | undefined) => {
+      emit('set-dict-type', obj)
+    }
+
     const query = (pageNum = pager.pageNum, pageSize = pager.pageSize) => {
+      setDictType(undefined)
       Object.assign(pager, {
         pageNum,
         pageSize,
@@ -146,10 +152,6 @@ export default defineComponent({
           })
         }
       })
-    }
-
-    const setDictType = (obj: DictTypeBeanVO) => {
-      emit('set-dict-type', obj)
     }
 
     const setEntryCount = (id: number, flag: number) => {
