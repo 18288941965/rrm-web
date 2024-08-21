@@ -17,6 +17,7 @@
           <template #append>
             <el-button
               :icon="Search"
+              :disabled="!selectDictType.typeCode"
               style="width: 100px"
               @click="query(1)"
             />
@@ -26,6 +27,7 @@
     </div>
 
     <el-button
+      :disabled="!selectDictType.typeCode"
       class="mgb-medium"
       type="success"
       :icon="Plus"
@@ -35,8 +37,10 @@
     </el-button>
 
     <el-button
+      :disabled="!selectDictType.typeCode || pager.list.length === 0"
       class="mgb-medium"
       :icon="Sort"
+      @click="dialogBaseOpen(selectDictType.id)"
     >
       字典项排序
     </el-button>
@@ -71,12 +75,15 @@
         align="center"
       >
         <template #default="scope">
-          <el-tag
-            :type="scope.row.status === 1 ? 'info' : 'danger'"
-            round
-          >
-            {{ scope.row.statusName }}
-          </el-tag>
+          <el-switch
+            v-model="scope.row.status"
+            inline-prompt
+            :active-value="1"
+            :inactive-value="0"
+            active-text="启用"
+            inactive-text="停用"
+            @change="setDictEntryStatus(scope.row.id, scope.row.status)"
+          />
         </template>
       </el-table-column>
       <el-table-column width="140px">
@@ -103,25 +110,36 @@
 
     <dict-entry-edit-dialog
       v-bind="dialogItem"
-      @close-dialog="dialogItemCloseAndRefresh($event,query)"
+      @close-dialog="dialogItemCloseAndRefresh"
+    />
+
+    <dict-entry-sort-dialog
+      v-bind="dialogBase"
+      @close-dialog="dialogBaseCloseAndRefresh($event, query)"
     />
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, PropType, reactive, watchEffect} from 'vue'
-import {dialogParamsContent} from '@utils/dialogOptions'
+import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
 import {Delete, Edit, Plus, Search, Sort} from '@element-plus/icons-vue'
 import DictEntryEditDialog from './dict-entry-edit-dialog.vue'
-import {DictEntryBeanQuery, DictTypeBeanVO} from './dictModel'
+import {DictEntryBean, DictEntryBeanQuery, DictTypeBeanVO} from './dictModel'
 import {Pagination} from '@utils/interface'
-import {deleteDictEntry, searchDictEntryPage} from './dictOption'
+import {deleteDictEntry, searchDictEntryPage, updateDictEntryStatus} from './dictOption'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import {deleteConfirm} from '@utils/utils'
+import {ElMessage} from 'element-plus/es'
+import DictEntrySortDialog from './dict-entry-sort-dialog.vue'
 
 export default defineComponent({
   name: 'DictEntry',
-  components: {EvPagination, DictEntryEditDialog},
+  components: {
+    EvPagination, 
+    DictEntryEditDialog,
+    DictEntrySortDialog,
+  },
   props: {
     selectDictType: {
       type: Object as PropType<DictTypeBeanVO>,
@@ -136,14 +154,15 @@ export default defineComponent({
       },
     },
   },
-  setup(props) {
+  emits: ['set-entry-count'],
+  setup(props, { emit }) {
     const queryParams = reactive<DictEntryBeanQuery>({
       typeId: 0,
       entryName: '',
       entryCode: '',
     })
 
-    const pager = reactive<Pagination<DictTypeBeanVO>>({
+    const pager = reactive<Pagination<DictEntryBean>>({
       pageNum: 1,
       pageSize: 10,
       total: 0,
@@ -172,24 +191,59 @@ export default defineComponent({
       }
     })
 
+    const setEntryCount = (flag: number) => {
+      emit('set-entry-count', flag)
+    }
+
     const deleteData = (id: number) => {
       deleteConfirm('你确定要删除此字典项吗？').then(flag => {
         if (flag) {
           deleteDictEntry(id).then(res => {
             if (res.code === 200) {
               query(1)
+              setEntryCount(-1)
             }
           })
         }
       })
     }
 
-
+    const {
+      dialogBase,
+        dialogBaseOpen,
+        dialogBaseCloseAndRefresh,
+    } = dialogBaseContent<number>()
+    
     const {
       dialogParam: dialogItem,
       dialogParamsOpen: dialogItemOpen,
-      dialogParamsCloseAndRefresh: dialogItemCloseAndRefresh,
+      dialogParamsClose,
     } = dialogParamsContent()
+
+    const dialogItemCloseAndRefresh = (refresh: boolean, add: boolean) => {
+      dialogParamsClose()
+      if (refresh) {
+        query(1)
+      }
+      if (add) {
+        setEntryCount(1)
+      }
+    }
+
+    const setDictEntryStatus = (id: number, status: number) => {
+      updateDictEntryStatus(id, status).then(res => {
+        if (res.code !== 200) {
+          for (let i = 0; i < pager.list.length; i++) {
+            if (id === pager.list[i].id) {
+              pager.list[i].status = status === 1 ? 0 : 1
+              break
+            }
+          }
+        } else {
+          ElMessage.success(res.message)
+        }
+      })
+    }
     
     return {
       Plus,
@@ -200,11 +254,16 @@ export default defineComponent({
       pager,
       query,
       deleteData,
+      setDictEntryStatus,
 
       queryParams,
       dialogItem,
       dialogItemOpen,
       dialogItemCloseAndRefresh,
+
+      dialogBase,
+      dialogBaseOpen,
+      dialogBaseCloseAndRefresh,
     }
   },
   computed: {

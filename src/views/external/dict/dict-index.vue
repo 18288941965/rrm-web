@@ -1,10 +1,16 @@
 <template>
   <div class="dict-grid">
     <section class="layout-sidebar">
-      <dict-type @set-dict-type="setDictType" />
+      <dict-type
+        ref="dictTypeRef"
+        @set-dict-type="setDictType"
+      />
     </section>
-    <section class="layout-main">
-      <dict-entry :select-dict-type="selectDictType" />
+    <section>
+      <dict-entry
+        :select-dict-type="selectDictType"
+        @set-entry-count="setEntryCount"
+      />
     </section>
   </div>
 </template>
@@ -30,13 +36,21 @@ export default defineComponent({
       typeName: '',
     })
 
+    const dictTypeRef = ref()
+
     const setDictType = (obj: DictTypeBeanVO) => {
       selectDictType.value = obj
+    }
+
+    const setEntryCount = (flag: number) => {
+      dictTypeRef.value.setEntryCount(selectDictType.value.id, flag)
     }
 
       return {
         selectDictType,
         setDictType,
+        setEntryCount,
+        dictTypeRef,
       }
   },
 })
@@ -49,9 +63,7 @@ export default defineComponent({
     grid-column-gap: var(--mg-medium);
     & .layout-sidebar{
       padding-right: var(--pd-medium);
-      border-right: 2px dotted var(--border-color);
-    }
-    & .layout-main{
+      border-right: 1px dotted var(--border-color);
     }
   }
 </style>

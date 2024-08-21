@@ -55,18 +55,17 @@
       </el-table-column>
       <el-table-column
         prop="entryCount"
-        width="90px"
+        width="100px"
         align="center"
         label="字典项"
       >
         <template #default="scope">
           <el-button
-            type="success"
-            link
-            style="width: 100%;"
+            class="al-hover"
             @click="setDictType(scope.row)"
           >
             {{ scope.row.entryCount }}
+            <arrow-line />
           </el-button>
         </template>
       </el-table-column>
@@ -94,10 +93,12 @@ import {dialogBaseContent} from '@utils/dialogOptions'
 import {Delete, Edit, Plus, Search} from '@element-plus/icons-vue'
 import {deleteConfirm} from '@utils/utils'
 import DictTypeEditDialog from './dict-type-edit-dialog.vue'
+import {ArrowLine} from '../../../components/svicon/publicIcon'
 
 export default defineComponent({
   name: 'DictType',
   components: {
+    ArrowLine,
     DictTypeEditDialog,
     EvPagination,
   },
@@ -150,6 +151,15 @@ export default defineComponent({
     const setDictType = (obj: DictTypeBeanVO) => {
       emit('set-dict-type', obj)
     }
+
+    const setEntryCount = (id: number, flag: number) => {
+      for (let i = 0; i < pager.list.length; i++) {
+        if (pager.list[i].id === id) {
+          pager.list[0].entryCount = pager.list[0].entryCount + flag
+          break
+        }
+      }
+    }
     
     onMounted(() => {
       query(1)
@@ -167,6 +177,7 @@ export default defineComponent({
       queryParams,
       query,
       pager,
+      setEntryCount,
 
       dialogType,
       dialogTypeOpen,

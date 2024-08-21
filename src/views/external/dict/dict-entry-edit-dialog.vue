@@ -153,18 +153,18 @@ export default defineComponent({
     }
     
     // 关闭窗口
-    const handleClose = () => {
+    const handleClose = (evt: Event | undefined, add = false) => {
       resetForm(dictItemEditRef.value)
       const refresh = isRefresh.value
       isRefresh.value = false
-      emit('close-dialog', refresh)
+      emit('close-dialog', refresh, add)
     }
 
-    const handleCallback = (res: AxiosResult) => {
+    const handleCallback = (res: AxiosResult, add = false) => {
       if (res.code == 200) {
         ElMessage.success(res.message)
         isRefresh.value = true
-        handleClose()
+        handleClose(undefined, add)
       }
     }
 
@@ -175,7 +175,7 @@ export default defineComponent({
           if (props.params.dataId) {
             updateDictEntry(form).then(res => {handleCallback(res)})
           } else {
-            createDictEntry(form).then(res => {handleCallback(res)})
+            createDictEntry(form).then(res => {handleCallback(res, true)})
           }
         } else {
           ElMessage.error('请填写完整表单！')

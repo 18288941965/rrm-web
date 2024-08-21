@@ -21,11 +21,14 @@ interface DictEntryBeanBase{
     entryName: string
 }
 
-interface DictEntryBean extends DictEntryBeanBase{
+interface DictEntrySortBean{
     id: number
+    sortOrder: number
+}
+
+interface DictEntryBean extends DictEntryBeanBase, DictEntrySortBean{
     typeId: number
     parentId: number
-    sortOrder: number
     status: number
     description: string
 }
@@ -42,4 +45,5 @@ export {
     type DictEntryBeanBase,
     type DictEntryBean,
     type DictEntryBeanQuery,
+    type DictEntrySortBean,
 }

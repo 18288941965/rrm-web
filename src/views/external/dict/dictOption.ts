@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {DictEntryBean, DictEntryBeanQuery, DictTypeBean, DictTypeBeanQuery} from './dictModel'
+import {DictEntryBean, DictEntryBeanQuery, DictEntrySortBean, DictTypeBean, DictTypeBeanQuery} from './dictModel'
 
 // 分页查询
 const searchDictTypePage = (params: DictTypeBeanQuery) => {
@@ -73,6 +73,23 @@ const deleteDictEntry = (id: number) => {
     })
 }
 
+const updateDictEntryStatus = (id: number, status: number) => {
+    return axios.put('/dict-entry/status', { id, status }).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const getDictEntryByTypeId = (typeId: number) => {
+    return axios.get(`/dict-entry/subitems/${typeId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const updateDictEntrySort = (entryList: Array<DictEntrySortBean>) => {
+    return axios.put('/dict-entry/sort', entryList).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
 
 export {
     searchDictTypePage,
@@ -86,4 +103,7 @@ export {
     createDictEntry,
     updateDictEntry,
     deleteDictEntry,
+    updateDictEntryStatus,
+    getDictEntryByTypeId,
+    updateDictEntrySort,
 }

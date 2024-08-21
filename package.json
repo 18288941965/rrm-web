@@ -18,7 +18,8 @@
     "json-server": "^1.0.0-alpha.23",
     "nprogress": "^0.2.0",
     "vue": "^3.4.21",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@types/mockjs": "^1.0.7",
