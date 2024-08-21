@@ -1,49 +1,61 @@
 <template>
   <div>
-    <div class="top-flex">
-      <h5>
-        <span>字典项管理</span>
-        {{ selectDictType.typeName }}
-        <span v-if="selectDictType.id">（{{ selectDictType.typeCode }}）</span>
-      </h5>
-
-      <div class="input-g mgl-medium">
-        <el-input
-          v-model="queryParams.entryName"
-          placeholder="请输入字典名称"
-          class="mgb-medium"
-          clearable
-        >
-          <template #append>
-            <el-button
-              :icon="Search"
-              :disabled="!selectDictType.typeCode"
-              style="width: 100px"
-              @click="query(1)"
-            />
-          </template>
-        </el-input>
-      </div>
+    <div class="mgb-medium">
+      <el-input
+        v-model="queryParams.entryName"
+        placeholder="请输入字典名称"
+        clearable
+      >
+        <template #append>
+          <el-button
+            :icon="Search"
+            :disabled="!selectDictType.typeCode"
+            style="width: 100px"
+            @click="query(1)"
+          />
+        </template>
+      </el-input>
     </div>
 
-    <el-button
-      :disabled="!selectDictType.typeCode"
-      class="mgb-medium"
-      type="success"
-      :icon="Plus"
-      @click="dialogItemOpen({ dataId: 0, typeId: selectDictType.id, typeName: selectDictType.typeName })"
-    >
-      创建字典项
-    </el-button>
+    <div class="top-flex">
+      <h5>
+        <el-icon
+          size="20"
+          color="var(--color-orange)"
+        >
+          <FolderOpened />
+        </el-icon>
+        <span>
+          {{ selectDictType.typeName }}
+          <span
+            v-if="selectDictType.id"
+            class="dict-type-code"
+          > {{ selectDictType.typeCode }}</span>
+        </span>
+      </h5>
 
-    <el-button
-      :disabled="!selectDictType.typeCode || pager.list.length === 0"
-      class="mgb-medium"
-      :icon="Sort"
-      @click="dialogBaseOpen(selectDictType.id)"
-    >
-      字典项排序
-    </el-button>
+      <div>
+        <el-button
+          :disabled="!selectDictType.typeCode"
+          class="mgb-medium"
+          type="success"
+          :icon="Plus"
+          @click="dialogItemOpen({ dataId: 0, typeId: selectDictType.id, typeName: selectDictType.typeName })"
+        >
+          创建字典项
+        </el-button>
+
+        <el-button
+          :disabled="!selectDictType.typeCode || pager.list.length === 0"
+          class="mgb-medium"
+          :icon="Sort"
+          @click="dialogBaseOpen(selectDictType.id)"
+        >
+          字典项排序
+        </el-button>
+      </div>
+    </div>
+   
 
     <el-table
       :data="pager.list"
@@ -123,7 +135,7 @@
 <script lang="ts">
 import {defineComponent, PropType, reactive, watchEffect} from 'vue'
 import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
-import {Delete, Edit, Plus, Search, Sort} from '@element-plus/icons-vue'
+import {Delete, Edit, Plus, Search, Sort, FolderOpened} from '@element-plus/icons-vue'
 import DictEntryEditDialog from './dict-entry-edit-dialog.vue'
 import {DictEntryBean, DictEntryBeanQuery, DictTypeBeanVO} from './dictModel'
 import {Pagination} from '@utils/interface'
@@ -136,6 +148,7 @@ import DictEntrySortDialog from './dict-entry-sort-dialog.vue'
 export default defineComponent({
   name: 'DictEntry',
   components: {
+    FolderOpened,
     EvPagination, 
     DictEntryEditDialog,
     DictEntrySortDialog,
@@ -275,17 +288,17 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
- h5 {
-   line-height: var(--size-default);
-   & span{
-     color: var(--color-black-secondary);
-   }
- }
-.top-flex{
-  display: flex;
-  justify-content: space-between;
-  & .input-g{
-    flex: 1;
+  .top-flex{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    & h5{
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      align-items: center;
+    }
   }
-}
+  .dict-type-code{
+    color: var(--color-black-secondary);
+  }
 </style>

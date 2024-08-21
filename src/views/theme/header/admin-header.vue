@@ -7,6 +7,7 @@
       :menu-collapse="false"
       :module-icon="moduleIcon"
       :module-label="userInfoObj.itemName"
+      :module-code="userInfoObj.itemCode"
     />
 
     <div

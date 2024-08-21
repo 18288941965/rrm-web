@@ -12,7 +12,7 @@
         v-if="!menuCollapse"
         id="admin-logo-text"
       >
-        {{ moduleLabel }}
+        {{ moduleLabel }} （{{ moduleCode }}）
       </span>
     </Transition>
   </a>
@@ -33,6 +33,10 @@ export default defineComponent({
       default: undefined,
     },
     moduleLabel: {
+      type: String,
+      default: undefined,
+    },
+    moduleCode: {
       type: String,
       default: undefined,
     },
