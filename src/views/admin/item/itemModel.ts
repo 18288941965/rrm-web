@@ -7,14 +7,14 @@ interface ItemBean{
 }
 
 interface ItemBeanVO extends ItemBean{
-    createTime: Date
+    createdAt: Date
     userId: number
     loginId: number
     userList: Array<UserBean>
 }
 
 interface ItemBeanAll extends ItemBean{
-    createTime: Date
+    createdAt: Date
     userId: number
 }
 

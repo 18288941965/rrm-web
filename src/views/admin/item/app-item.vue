@@ -66,7 +66,7 @@
               >
             </div>
           </div>
-          <p>{{ item.createTime }}</p>
+          <p>{{ item.createdAt }}</p>
           <el-button
             type="info"
             plain

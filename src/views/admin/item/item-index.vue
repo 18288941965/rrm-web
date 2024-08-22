@@ -42,7 +42,7 @@
         label="项目代码"
       />
       <el-table-column
-        prop="createTime"
+        prop="createdAt"
         label="创建时间"
       />
       <el-table-column
