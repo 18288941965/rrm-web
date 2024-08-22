@@ -18,6 +18,7 @@
       ref="menuEditFrom"
       class="rrm-form"
       :model="form"
+      :rules="rules"
       label-width="90px"
     >
       <el-form-item
@@ -48,11 +49,11 @@
       </el-form-item>
 
       <el-form-item
-        label="菜单地址"
-        prop="url"
+        label="菜单路径"
+        prop="path"
       >
         <el-input
-          v-model.trim="form.url"
+          v-model.trim="form.path"
           type="textarea"
           :rows="2"
           clearable
@@ -97,8 +98,8 @@
       >
         <ev-select
           v-model="form.type"
-          req-url="/admin/getDict2"
-          :default-attr="{ label: 'mc', value: 'dm' }"
+          dict-type="dic_menu_type"
+          :default-attr="{ label: 'entryName', value: 'entryCode' }"
           clearable
         />
       </el-form-item>
@@ -136,7 +137,7 @@
       <div class="form-item-grid">
         <el-form-item
           label="跳转方式"
-          prop="version"
+          prop="target"
         >
           <el-select v-model="form.target">
             <el-option
@@ -238,7 +239,7 @@ export default defineComponent({
       icon: '',
       sortOrder: 0,
       visibility: '1',
-      url: '',
+      path: '',
       type: '',
       target: '_self',
       pageName: '',
@@ -249,8 +250,8 @@ export default defineComponent({
 
     const rules = reactive<FormRules<MenuBean>>({
       name: [{ required: true, message: '请输入菜单名称', trigger: 'change'}],
-      url: [{ required: true, message: '请输入菜单名称', trigger: 'change'}],
-      version: [{ required: true, message: '请输入菜单名称', trigger: 'change'}],
+      path: [{ required: true, message: '请输入菜单路径', trigger: 'change'}],
+      version: [{ required: true, message: '请输入菜单版本', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {

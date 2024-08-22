@@ -9,7 +9,8 @@
       <div class="ev-comp-demo-grid2">
         <ev-radio
           v-model="evSelectValue.value"
-          dict-type="ev_dict_demo"
+          dict-type="dic_menu_type"
+          :default-attr="{ label: 'entryName', value: 'entryCode' }"
         />
         <span>{{ evSelectValue.valueText }}</span>
       </div>
@@ -21,8 +22,8 @@
         <ev-radio
           v-model="evSelectValue.value2"
           v-model:select-label="evSelectValue.value2Text"
-          req-url="/admin/getDict2"
-          :default-attr="{ label: 'mc', value: 'dm' }"
+          req-url="/dict-entry/select/dic_menu_type"
+          :default-attr="{ label: 'entryName', value: 'entryCode' }"
           :label-update="true"
           clearable
         />
@@ -51,10 +52,12 @@
 <script lang="ts">
 import {defineComponent, reactive} from 'vue'
 import EvRadio from '../../components/evcomp/ev-radio.vue'
+import EvCheckbox from "../../components/evcomp/ev-checkbox.vue";
 
 export default defineComponent({
   name: 'EvRadioDemo',
   components: {
+    EvCheckbox,
     EvRadio,
   },
   setup () {

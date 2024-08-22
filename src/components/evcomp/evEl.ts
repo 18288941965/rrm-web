@@ -42,17 +42,7 @@ export const defaultProps = {
 export function getEvElContext () {
     const dictList = ref<LabelValue[]>([])
 
-    /**
-     * 根据字典类型获取字典.
-     * 这里的url是固定的
-     */
-    const getDataByDictType = (dictType: string) => {
-        axios.post('/admin/getDict', { dictType }).then((res: {data: AxiosResult}) => {
-            if (res.data.code === 200) {
-                dictList.value = res.data.data
-            }
-        })
-    }
+
 
     /**
      * 根据请求地址获取数据。
@@ -70,6 +60,15 @@ export function getEvElContext () {
                 })
             }
         })
+    }
+
+    /**
+     * 根据字典类型获取字典.
+     * 这里的url是固定的
+     */
+    const getDataByDictType = (typeCode: string, defaultAttr: LabelValue) => {
+        const path = `/dict-entry/select/${typeCode}`
+        getDataByReqUrl(path, defaultAttr)
     }
 
     /**

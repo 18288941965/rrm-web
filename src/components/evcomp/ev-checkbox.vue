@@ -63,7 +63,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (props.dictType) {
-        return getDataByDictType(props.dictType)
+        return getDataByDictType(props.dictType, props.defaultAttr as LabelValue)
       }
 
       if (props.reqUrl) {

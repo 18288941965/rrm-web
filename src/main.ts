@@ -16,7 +16,6 @@ import '@assets/scss/components/_base-button.scss'
 
 // 模拟后端数据：在自己的项目中请删除此引用
 import './mocks/menuMock'
-import './mocks/dicMock'
 import './mocks/listMock'
 
 import * as menuIcon from './components/svicon/menuIcon'

@@ -16,8 +16,8 @@
 
 <script lang="ts">
 import {defineComponent, onMounted} from 'vue'
-import {ElSelect, ElOption} from 'element-plus/es'
-import {defaultProps, LabelValue, uniqueKey, getEvElContext} from './evEl'
+import {ElOption, ElSelect} from 'element-plus/es'
+import {defaultProps, getEvElContext, LabelValue, uniqueKey} from './evEl'
 
 export default defineComponent({
   name: 'EvSelect',
@@ -63,7 +63,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (props.dictType) {
-        return getDataByDictType(props.dictType)
+        return getDataByDictType(props.dictType, props.defaultAttr as LabelValue)
       }
 
       if (props.reqUrl) {
@@ -71,7 +71,7 @@ export default defineComponent({
       }
 
       if (props.dataList) {
-        getDataByDataList(props.dataList, props.defaultAttr as LabelValue)
+        return getDataByDataList(props.dataList, props.defaultAttr as LabelValue)
       }
     })
 

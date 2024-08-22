@@ -58,7 +58,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (props.dictType) {
-        return getDataByDictType(props.dictType)
+        return getDataByDictType(props.dictType, props.defaultAttr as LabelValue)
       }
 
       if (props.reqUrl) {
@@ -66,7 +66,7 @@ export default defineComponent({
       }
 
       if (props.dataList) {
-        getDataByDataList(props.dataList, props.defaultAttr as LabelValue)
+        return getDataByDataList(props.dataList, props.defaultAttr as LabelValue)
       }
     })
 

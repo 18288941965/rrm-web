@@ -6,7 +6,7 @@ interface MenuBean{
     icon: string
     sortOrder: number
     visibility: string
-    url: string
+    path: string
     type: string
     target: string
     pageName: string
