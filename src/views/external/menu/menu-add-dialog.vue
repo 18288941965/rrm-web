@@ -80,12 +80,12 @@
           <el-radio-group v-model="form.visibility">
             <el-radio
               label="是"
-              value="1"
+              :value="1"
               border
             />
             <el-radio
               label="否"
-              value="0"
+              :value="0"
               border
             />
           </el-radio-group>
@@ -122,12 +122,12 @@
           <el-radio-group v-model="form.pageCache">
             <el-radio
               label="是"
-              value="1"
+              :value="1"
               border
             />
             <el-radio
               label="否"
-              value="0"
+              :value="0"
               border
             />
           </el-radio-group>
@@ -192,6 +192,7 @@ import {MenuBean} from './menuModel'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
 import DialogHeader from '../../../components/dialog-header.vue'
 import DialogFooter from '../../../components/dialog-footer.vue'
+import {createMenu, updateMenu} from './menuOption'
 
 export default defineComponent({
   name: 'MenuAddDialog',
@@ -218,10 +219,10 @@ export default defineComponent({
     },
   },
   emits: ['close-dialog'],
-  setup(props, {emit}) {
+  setup: function (props, {emit}) {
     const {
       visible,
-        isRefresh,
+      isRefresh,
     } = dialogOptions()
     const menuEditFrom = ref<FormInstance>()
 
@@ -234,24 +235,23 @@ export default defineComponent({
 
     const form = reactive<MenuBean>({
       id: '',
-      parentId: '',
+      parentId: null,
       name: '',
-      icon: '',
+      icon: null,
       sortOrder: 0,
-      visibility: '1',
+      visibility: 1,
       path: '',
-      type: '',
+      type: null,
       target: '_self',
-      pageName: '',
-      pageCache: '0',
+      pageName: null,
+      pageCache: 0,
       version: '1.0',
-      itemCode: '',
     })
 
     const rules = reactive<FormRules<MenuBean>>({
-      name: [{ required: true, message: '请输入菜单名称', trigger: 'change'}],
-      path: [{ required: true, message: '请输入菜单路径', trigger: 'change'}],
-      version: [{ required: true, message: '请输入菜单版本', trigger: 'change'}],
+      name: [{required: true, message: '请输入菜单名称', trigger: 'change'}],
+      path: [{required: true, message: '请输入菜单路径', trigger: 'change'}],
+      version: [{required: true, message: '请输入菜单版本', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {
@@ -280,14 +280,24 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          // createUser(form).then(res => {handleCallback(res)})
+
+          if (props.params.dataId) {
+            updateMenu(form).then(res => {
+              handleCallback(res)
+            })
+          } else {
+            createMenu(form).then(res => {
+              handleCallback(res)
+            })
+          }
         } else {
           ElMessage.error('请填写完整表单！')
         }
       })
     }
 
-    const handleOpen = () => {}
+    const handleOpen = () => {
+    }
 
     return {
       visible,

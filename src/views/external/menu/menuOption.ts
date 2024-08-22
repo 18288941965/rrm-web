@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {MenuBean} from "../../theme/menu/menuModels";
+import {MenuBean} from './menuModel'
 
 const getMenuById = (id: string) => {
     return axios.get(`/menu/${id}`).then((res: { data: AxiosResult }) => {

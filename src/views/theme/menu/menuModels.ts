@@ -3,7 +3,7 @@
  * @param label 菜单名称
  * @param icon 菜单图标
  */
-interface MenuBeanBase{
+interface RrmMenuBeanBase{
     id: string
     label: string
     icon: string | undefined
@@ -17,13 +17,13 @@ interface MenuBeanBase{
  * @param sxh 菜单排序号
  * @param children 子菜单
  */
-interface MenuBean extends MenuBeanBase{
+interface RrmMenuBean extends RrmMenuBeanBase{
     pid: string | undefined
     url: string | undefined
     cache: boolean
     name: string | undefined
     sxh: number | undefined
-    children?: Array<MenuBean>
+    children?: Array<RrmMenuBean>
 }
 
 /**
@@ -32,11 +32,11 @@ interface MenuBean extends MenuBeanBase{
  */
 interface ActiveMenus {
     menuId: string
-    menus: Array<MenuBean>
+    menus: Array<RrmMenuBean>
 }
 
 export type {
-    MenuBeanBase,
-    MenuBean,
+    RrmMenuBeanBase,
+    RrmMenuBean,
     ActiveMenus,
 }

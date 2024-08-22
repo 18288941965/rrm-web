@@ -1,18 +1,17 @@
 
 interface MenuBean{
     id: string
-    parentId: string
+    parentId: string | null
     name: string
-    icon: string
+    icon: string | null
     sortOrder: number
-    visibility: string
+    visibility: number
     path: string
-    type: string
+    type: string | null
     target: string
-    pageName: string
-    pageCache: string
+    pageName: string | null
+    pageCache: number
     version: string
-    itemCode: string
 }
 
 export {

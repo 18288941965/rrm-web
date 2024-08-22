@@ -1,5 +1,5 @@
 import {reactive} from 'vue'
-import {MenuBeanBase} from './menu/menuModels'
+import {RrmMenuBeanBase} from './menu/menuModels'
 import {useRouter} from 'vue-router'
 
 const updateBrowserTitle = (title: string) => {
@@ -8,7 +8,7 @@ const updateBrowserTitle = (title: string) => {
 
 function themeBaseContext() {
     const router = useRouter()
-    const rootMenu = reactive<MenuBeanBase>({
+    const rootMenu = reactive<RrmMenuBeanBase>({
         id: '',
         icon: '',
         label: '',
