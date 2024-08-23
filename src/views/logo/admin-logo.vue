@@ -12,7 +12,7 @@
         v-if="!menuCollapse"
         id="admin-logo-text"
       >
-        {{ moduleLabel }} （{{ moduleCode }}）
+        {{ moduleLabel }} <span v-if="moduleCode">（{{ moduleCode }}）</span>
       </span>
     </Transition>
   </a>

@@ -26,9 +26,16 @@ const deleteMenuById = (id: string) => {
     })
 }
 
+const getMenuByItemCode = () => {
+    return axios.get('/menu/all').then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
 export {
     getMenuById,
     createMenu,
     updateMenu,
     deleteMenuById,
+    getMenuByItemCode,
 }

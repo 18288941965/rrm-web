@@ -1,8 +1,10 @@
-
-interface MenuBean{
+interface MenuBeanDefault{
     id: string
-    parentId: string | null
     name: string
+}
+
+interface MenuBeanBase extends MenuBeanDefault{
+    parentId: string | null
     icon: string | null
     sortOrder: number
     visibility: number
@@ -14,6 +16,23 @@ interface MenuBean{
     version: string
 }
 
+interface MenuBean extends MenuBeanBase{
+
+}
+
+interface MenuBeanVO extends MenuBeanBase {
+    typeName: string | null
+    children: Array<MenuBeanVO>
+}
+
+interface MenuBeanActive extends MenuBeanDefault{
+    id: string
+    name: string
+    childrenCount: number
+}
+
 export {
     type MenuBean,
+    type MenuBeanVO,
+    type MenuBeanActive,
 }

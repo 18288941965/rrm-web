@@ -11,9 +11,11 @@
       <dialog-header
         title="菜单"
         :type="form.id ? '编辑' : '新增'"
+        :name="params.parentName ? '上级菜单：' : ''"
+        :detail="params.parentName"
       />
     </template>
-    
+
     <el-form
       ref="menuEditFrom"
       class="rrm-form"
@@ -21,13 +23,6 @@
       :rules="rules"
       label-width="90px"
     >
-      <el-form-item
-        label="父菜单"
-        prop="parentName"
-      >
-        <span class="parent-name-span">{{ params.parentName }}</span>
-      </el-form-item>
-
       <el-form-item
         label="菜单名称"
         prop="name"
@@ -251,6 +246,7 @@ export default defineComponent({
     const rules = reactive<FormRules<MenuBean>>({
       name: [{required: true, message: '请输入菜单名称', trigger: 'change'}],
       path: [{required: true, message: '请输入菜单路径', trigger: 'change'}],
+      type: [{required: true, message: '请选择菜单类型', trigger: 'change'}],
       version: [{required: true, message: '请输入菜单版本', trigger: 'change'}],
     })
 
@@ -297,6 +293,7 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
+      form.parentId = props.params.parentId ? props.params.parentId : null
     }
 
     return {
@@ -316,14 +313,6 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
-  .parent-name-span{
-    display: block;
-    height: var(--size-default);
-    width: 100%;
-    border: var(--border-1);
-    border-radius: var(--border-radius-medium);
-    background-color: var(--el-disabled-bg-color);
-  }
   .form-item-grid{
     display: grid;
     grid-template-columns: 1fr 1fr;

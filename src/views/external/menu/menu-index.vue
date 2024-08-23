@@ -21,43 +21,50 @@
         >
           一级菜单排序
         </el-button>
-      </div>
 
-      <div class="empty-flex" />
-
-      <el-button-group class="mgl-medium">
         <el-button
+          :disabled="!activeMenu.id && activeMenu.childrenCount < 1"
+          :icon="Delete"
+          @click="deleteData"
+        >
+          删除菜单
+        </el-button>
+
+        <el-button
+          :disabled="!activeMenu.id"
+          :icon="Edit"
+          @click="dialogParamsOpen({ dataId: activeMenu.id, parentId: '', parentName: '' })"
+        >
+          编辑菜单
+        </el-button>
+        
+        <el-button
+          :disabled="!activeMenu.id"
           :icon="Plus"
           type="success"
+          @click="dialogParamsOpen({ dataId: '', parentId: activeMenu.id, parentName: activeMenu.name })"
         >
           添加子菜单
         </el-button>
 
         <el-button
+          :disabled="activeMenu.childrenCount < 1"
           :icon="Sort"
         >
           子菜单排序
         </el-button>
+      </div>
 
-        <el-button
-          :icon="Edit"
-        >
-          编辑
-        </el-button>
-
-        <el-button
-          :icon="Delete"
-        >
-          删除
-        </el-button>
-      </el-button-group>
+      <div class="empty-flex" />
     </div>
 
     <main class="menu-main">
       <el-tree
         ref="menuElTreeRef"
         class="menu-index-tree"
-        :data="dataSource"
+        :class="{'tree-bd': menuList.length < 1}"
+        :data="menuList"
+        :props="{label: 'name', children: 'children'}"
         node-key="id"
         show-checkbox
         default-expand-all
@@ -66,13 +73,14 @@
         :check-strictly="true"
         @check-change="treeCheckChange"
       >
-        <template #default="{ node }">
+        <template #default="{ node, data }">
           <span class="custom-tree-node">
             <span class="tree-node-label">
               {{ node.label }}
             </span>
             <span>
               <el-tag
+                v-if="!data.visibility"
                 type="warning"
                 round
                 size="small"
@@ -80,36 +88,36 @@
               >
                 不可见
               </el-tag>
-              <el-tag
-                type="primary"
-                round
-                size="small"
-                class="mgl-medium"
-              >
-                资源：1234
-              </el-tag>
-              <el-tag
-                type="info"
-                round
-                size="small"
-                class="mgl-medium"
-              >
-                控件：32
-              </el-tag>
             </span>
           </span>
         </template>
       </el-tree>
       <div class="menu-index-control">
-        <h4>Level Two 1-1</h4>
+        <div class="control-top">
+          <h4>
+            <span v-if="!activeMenu.id">未选中菜单</span>
+            {{ activeMenu.name }}
+          </h4>
+          <el-button :icon="Right">
+            移动到指定菜单下
+          </el-button>
+        </div>
+
         <div class="control-main">
           <el-button
+            :disabled="!activeMenu.id"
             :icon="Link"
           >
             绑定资源
           </el-button>
         </div>
-        <h5>菜单控件管理</h5>
+        <div class="control-top control-top2">
+          <h5>菜单控件管理</h5>
+          <el-button :icon="Plus">
+            创建控件
+          </el-button>
+        </div>
+
         <div class="control-main">
           <p>控件管理包括菜单下的按钮、标签页、链接等，对各类控件绑定资源达到更精细的权限控制。</p>
         </div>
@@ -118,31 +126,19 @@
     
     <menu-add-dialog
       v-bind="dialogParam"
-      @close-dialog="dialogParamsCloseAndRefresh"
+      @close-dialog="dialogParamsCloseAndRefresh($event, query)"
     />
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue'
-import {
-  Delete,
-  Edit,
-  Link,
-  Plus,
-  Sort, 
-  Tickets,
-  PriceTag,
-} from '@element-plus/icons-vue'
+import {defineComponent, onMounted, reactive, ref} from 'vue'
+import {Delete, Edit, Link, Plus, PriceTag, Sort, Tickets, Right} from '@element-plus/icons-vue'
 import MenuAddDialog from './menu-add-dialog.vue'
-import type Node from 'element-plus/es/components/tree/src/model/node'
 import {dialogParamsContent} from '@utils/dialogOptions'
-
-interface Tree {
-  id: number
-  label: string
-  children?: Tree[]
-}
+import {MenuBeanActive, MenuBeanVO} from './menuModel'
+import {deleteMenuById, getMenuByItemCode} from './menuOption'
+import {deleteConfirm} from '@utils/utils'
 
 export default defineComponent({
   name: 'MenuIndex',
@@ -157,81 +153,56 @@ export default defineComponent({
         dialogParamsCloseAndRefresh,
     } = dialogParamsContent()
     
-    let id = 1000
-
-    const dataSource = ref<Tree[]>([
-      {
-        id: 1,
-        label: 'Level one 1',
-        children: [
-          {
-            id: 4,
-            label: 'Level two 1-1',
-            children: [
-              {
-                id: 9,
-                label: 'Level three 1-1-1',
-              },
-              {
-                id: 10,
-                label: 'Level three 1-1-2',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: 2,
-        label: 'Level one 2',
-        children: [
-          {
-            id: 5,
-            label: 'Level two 2-1',
-          },
-          {
-            id: 6,
-            label: 'Level two 2-2',
-          },
-        ],
-      },
-      {
-        id: 3,
-        label: 'Level one 3',
-        children: [
-          {
-            id: 7,
-            label: 'Level two 3-1',
-          },
-          {
-            id: 8,
-            label: 'Level two 3-2',
-          },
-        ],
-      },
-    ])
-
-    const append = (data: Tree) => {
-      const newChild = { id: id++, label: 'testtest', children: [] }
-      if (!data.children) {
-        data.children = []
-      }
-      data.children.push(newChild)
-      dataSource.value = [...dataSource.value]
+    const menuList = ref<Array<MenuBeanVO>>([])
+    const activeMenu = reactive<MenuBeanActive>({
+      id: '',
+      name: '',
+      childrenCount: 0,
+    })
+    const clearActiveMenu = () => {
+      Object.assign(activeMenu, {
+        id: '',
+        name: '',
+        childrenCount: 0,
+      })
     }
-
-    const remove = (node: Node, data: Tree) => {
-      const parent = node.parent
-      const children: Tree[] = parent.data.children || parent.data
-      const index = children.findIndex((d) => d.id === data.id)
-      children.splice(index, 1)
-      dataSource.value = [...dataSource.value]
-    }
-
-    const treeCheckChange = (data: Tree, checkNode: boolean) => {
+    
+    const treeCheckChange = (data: MenuBeanVO, checkNode: boolean) => {
       if (checkNode) {
         menuElTreeRef.value.setCheckedKeys([data.id])
+        Object.assign(activeMenu, {
+          id: data.id,
+          name: data.name,
+          childrenCount: data.children ? data.children.length : 0,
+        })
       }
     }
+
+    const query = () => {
+      getMenuByItemCode().then(res => {
+        if (res.code === 200) {
+          menuList.value = res.data
+        }
+      })
+    }
+
+    const deleteData = () => {
+      deleteConfirm('你确定要删除此菜单吗？菜单关联项也将被一并删除').then(data => {
+        if (data) {
+          deleteMenuById(activeMenu.id).then(res => {
+            if (res.code == 200) {
+              query()
+              clearActiveMenu()
+            }
+          })
+        }
+      })
+    }
+
+
+    onMounted(() => {
+      query()
+    })
 
       return {
         Plus,
@@ -241,11 +212,15 @@ export default defineComponent({
         Edit,
         Link,
         PriceTag,
+        Right,
+
+        activeMenu,
+        menuList,
         menuElTreeRef,
-        dataSource,
-        append,
-        remove,
         treeCheckChange,
+
+        query,
+        deleteData,
 
         dialogParam,
         dialogParamsOpen,
@@ -262,10 +237,11 @@ export default defineComponent({
 }
 
 .menu-main{
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  grid-column-gap: var(--mg-large);
+  display: flex;
+  align-items: flex-start;
   & .menu-index-tree{
+    flex: 1;
+    margin-right: var(--mg-medium);
     border: var(--border-1);
     border-bottom: 0;
     border-radius: var(--border-radius-medium);
@@ -282,16 +258,23 @@ export default defineComponent({
       line-height: var(--size-default);
     }
   }
+  & .tree-bd{
+    border-bottom: var(--border-1);;
+  }
 
   & .menu-index-control{
     border: var(--border-1);
     border-radius: var(--border-radius-medium);
-    & h4,h5{
+    & .control-top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       line-height: var(--size-medium);
       border-bottom: var(--border-1);
       padding-left: var(--pd-medium);
+      padding-right: var(--pd-ultra-small);
     }
-    & h5{
+    & .control-top2{
       border-top: var(--border-1);
     }
     & .control-main{
