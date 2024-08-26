@@ -1,4 +1,4 @@
-import {MenuBean} from '../views/theme/menu/menuModels'
+import {RrmMenuBean} from '../views/theme/menu/menuModels'
 
 let found = false
 let nodeDepth = 0
@@ -11,7 +11,7 @@ let nodeDepth = 0
  * @param prev 节点层级关系
  * @param _nodeDepth 树的深度
  */
-const recurDfs = (menuNode: MenuBean, condition: string, visited: Map<String, boolean>, prev: MenuBean[], _nodeDepth: number) => {
+const recurDfs = (menuNode: RrmMenuBean, condition: string, visited: Map<String, boolean>, prev: RrmMenuBean[], _nodeDepth: number) => {
     if (found) {
         return
     }
@@ -44,11 +44,11 @@ const recurDfs = (menuNode: MenuBean, condition: string, visited: Map<String, bo
  * @param condition 搜索的菜单[ID | URL]
  * @param containRoot 是否包含根节点
  */
-const menuDfs = (menus: MenuBean, condition: string, containRoot = false) => {
+const rrmMenuDfs = (menus: RrmMenuBean, condition: string, containRoot = false) => {
     found = false
     nodeDepth = 0
     const visited = new Map<String, boolean>()
-    let prev: MenuBean[] = []
+    let prev: RrmMenuBean[] = []
     recurDfs(menus, condition, visited, prev, 0)
     // 这里需要高版本的浏览器才支持，具体参照官网
     // structuredClone(prev)
@@ -61,4 +61,4 @@ const menuDfs = (menus: MenuBean, condition: string, containRoot = false) => {
     return found? (containRoot ? prev.slice(0, nodeDepth + 1) : prev.slice(1, nodeDepth + 1)) : []
 }
 
-export default menuDfs
+export default rrmMenuDfs

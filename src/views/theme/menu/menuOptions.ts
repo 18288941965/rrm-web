@@ -1,14 +1,15 @@
 import {reactive, ref} from 'vue'
-import {ActiveMenus, MenuBean} from './menuModels'
+import {ActiveMenus} from './menuModels'
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
 import {PushRouter} from '@utils/types'
-import menuDfs from '../../../algo/menuDfs'
+import rrmMenuDfs from '../../../algo/rrmMenuDfs'
 import {useRouter} from 'vue-router'
+import {RrmMenuBean} from './menuModels'
 
 export function MenuStatusContent() {
     const keepAliveInclude = ref<string[]>([])
-    const activeMenuPath = ref<MenuBean[]>([])
+    const activeMenuPath = ref<RrmMenuBean[]>([])
     const activeMenus = reactive<ActiveMenus>({
         menuId: '',
         menus: [],
@@ -25,7 +26,7 @@ export function MenuStatusContent() {
         }
     }
     // 更新激活的菜单
-    const updateActiveMenus = (menu: MenuBean) => {
+    const updateActiveMenus = (menu: RrmMenuBean) => {
         activeMenus.menuId = menu.id
         const menuIds = activeMenus.menus.map(item => item.id)
         if (!menuIds.includes(menu.id)) {
@@ -113,7 +114,7 @@ export function MenuStatusContent() {
  * @constructor
  */
 export function MenuOptions() {
-    const menus = ref<MenuBean[]>([])
+    const menus = ref<RrmMenuBean[]>([])
     const menuDefaultOpeneds = ref<String[]>([])
     const router = useRouter()
 
@@ -134,7 +135,7 @@ export function MenuOptions() {
                 }
 
                 // 菜单的深度优先搜索
-                const menuNodes = menuDfs(data[0], routerPath)
+                const menuNodes = rrmMenuDfs(data[0], routerPath)
                 if (menuNodes.length === 0) {
                     menus.value = data
                     return

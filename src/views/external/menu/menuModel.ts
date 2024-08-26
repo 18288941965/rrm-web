@@ -17,7 +17,8 @@ interface MenuBeanBase extends MenuBeanDefault{
 }
 
 interface MenuBean extends MenuBeanBase{
-
+    createdAt?: Date
+    updatedAt?: Date
 }
 
 interface MenuBeanVO extends MenuBeanBase {

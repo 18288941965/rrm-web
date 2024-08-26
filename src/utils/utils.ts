@@ -30,3 +30,16 @@ export const deleteConfirm = async (message: string) => {
       },
   ).catch(() => {})
 }
+
+// 合并表单对象，仅合并target中存在的字段
+export const assignExistingFields = (target: any, sources: any) => {
+    if (sources === null || Object.keys(sources).length < 1) {
+        return
+    }
+    const keys = Object.keys(target)
+    for (let sourcesKey in sources) {
+        if (keys.includes(sourcesKey)) {
+            target[sourcesKey] = sources[sourcesKey]
+        }
+    }
+}

@@ -66,7 +66,7 @@ import {MenuBean} from './menuModels'
 import {MenuOptions} from './menuOptions'
 import {useRouter} from 'vue-router'
 import {PushRouter} from '@utils/types'
-import menuDfs from '../../../algo/menuDfs'
+import rrmMenuDfs from '../../../algo/rrmMenuDfs'
 
 export default defineComponent({
   name: 'AdminMenu',
@@ -102,13 +102,13 @@ export default defineComponent({
     }
 
     const setActivePath = (menuId: string) => {
-      const menuPath = menuDfs(menus.value[0], menuId, false)
+      const menuPath = rrmMenuDfs(menus.value[0], menuId, false)
       emit('set-active-menu', menuPath)
     }
 
     // 1、展开当前的菜单
     const menuOpen = (index: string) => {
-      const menuPrev = menuDfs(menus.value[0], index)
+      const menuPrev = rrmMenuDfs(menus.value[0], index)
       if (menuPrev.length > 1) {
         index = menuPrev[menuPrev.length - 2].id
       }

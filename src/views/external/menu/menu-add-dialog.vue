@@ -64,7 +64,7 @@
             v-model="form.sortOrder"
             :min="0"
             :step="1"
-            max="999"
+            :max="999"
           />
         </el-form-item>
 
@@ -179,7 +179,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, watch, reactive, PropType} from 'vue'
+import {defineComponent, PropType, reactive, ref, watch} from 'vue'
 import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
 import {AxiosResult, PropPrams} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
@@ -187,7 +187,8 @@ import {MenuBean} from './menuModel'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
 import DialogHeader from '../../../components/dialog-header.vue'
 import DialogFooter from '../../../components/dialog-footer.vue'
-import {createMenu, updateMenu} from './menuOption'
+import {createMenu, getMenuById, updateMenu} from './menuOption'
+import {assignExistingFields} from '@utils/utils'
 
 export default defineComponent({
   name: 'MenuAddDialog',
@@ -258,15 +259,17 @@ export default defineComponent({
 
     // 关闭窗口
     const handleClose = () => {
+      const editId = isRefresh.value ? form.id : ''
       resetForm(menuEditFrom.value)
       const refresh = isRefresh.value
       isRefresh.value = false
-      emit('close-dialog', refresh)
+      emit('close-dialog', refresh, editId)
     }
 
     const handleCallback = (res: AxiosResult) => {
       if (res.code == 200) {
         ElMessage.success(res.message)
+        form.id = res.data
         isRefresh.value = true
         handleClose()
       }
@@ -294,6 +297,13 @@ export default defineComponent({
 
     const handleOpen = () => {
       form.parentId = props.params.parentId ? props.params.parentId : null
+      if (props.params.dataId) {
+        getMenuById(props.params.dataId).then(res => {
+          if (res.code === 200) {
+            assignExistingFields(form, res.data)
+          }
+        })
+      }
     }
 
     return {
