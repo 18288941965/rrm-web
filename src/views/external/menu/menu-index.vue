@@ -148,52 +148,24 @@ export default defineComponent({
   setup() {
     const menuList = ref<Array<MenuBeanVO>>([])
     const menuIndexTreeRef = ref()
-    let checkMap = new Map<string, number>
+
+    // 右侧激活的菜单
     const activeMenu = reactive<MenuBeanActive>({
       id: '',
       name: '',
       childrenCount: 0,
     })
-
     const treeCheckChange = (data: MenuBeanActive) => {
       Object.assign(activeMenu, data)
     }
 
+    // 选中的菜单
+    let checkMap = new Map<string, number>
     const treeCheckMap = (data: Map<string, number>) => {
       checkMap = data
     }
 
-    const query = () => {
-      getMenuByItemCode().then(res => {
-        if (res.code === 200) {
-          menuList.value = res.data
-        }
-      })
-    }
-
-    const deleteNodeById = (tree: Array<MenuBeanVO>, id: string) => {
-      for (let i = 0; i < tree.length; i++) {
-        const node = tree[i]
-
-        // 如果找到匹配的节点，删除它
-        if (node.id === id) {
-          tree.splice(i, 1)
-          return true // 返回 true 表示成功删除
-        }
-
-        // 如果有子节点，递归处理
-        if (node.children && node.children.length > 0) {
-          const result = deleteNodeById(node.children, id)
-
-          // 如果在子树中删除了节点，可以停止进一步的处理
-          if (result) {
-            return true
-          }
-        }
-      }
-      return false // 返回 false 表示未找到节点
-    }
-
+    // ————————删除————————start
     const findChildrenIds = (tree: Array<MenuBeanVO>, targetId: string) => {
       const result: Array<string> = []
 
@@ -219,14 +191,39 @@ export default defineComponent({
       tree.forEach(rootNode => traverse(rootNode))
       return result.slice(1)
     }
-    
-    const deleteData = () => {
+    const deleteNodeById = (tree: Array<MenuBeanVO>, id: string) => {
+      for (let i = 0; i < tree.length; i++) {
+        const node = tree[i]
+
+        // 如果找到匹配的节点，删除它
+        if (node.id === id) {
+          tree.splice(i, 1)
+          return true // 返回 true 表示成功删除
+        }
+
+        // 如果有子节点，递归处理
+        if (node.children && node.children.length > 0) {
+          const result = deleteNodeById(node.children, id)
+
+          // 如果在子树中删除了节点，可以停止进一步的处理
+          if (result) {
+            return true
+          }
+        }
+      }
+      return false // 返回 false 表示未找到节点
+    }
+    const deleteValid = (): {
+      message: string
+      deleteIds: Array<string>
+    } => {
       if (checkMap.size === 0) {
-        ElMessage.warning('未选中菜单！')
-        return
+        return {
+          message: '未选中菜单！',
+          deleteIds: [],
+        }
       }
       const deleteIds: Array<string> = []
-
       for (let key of checkMap.keys()) {
         const val = checkMap.get(key) as number
         if (val <= 0) {
@@ -237,11 +234,24 @@ export default defineComponent({
         const childIds = findChildrenIds(menuList.value, key)
         for (let i = 0; i < childIds.length; i++) {
           if (!checkMap.has(childIds[i])) {
-            ElMessage.warning('请一并选择要删除菜单的所有子菜单！')
-            return
+            return {
+              message: '请一并选择要删除菜单的所有子菜单！',
+              deleteIds: [],
+            }
           }
         }
         deleteIds.push(key)
+      }
+      return {
+        message: '',
+        deleteIds,
+      }
+    }
+    const deleteData = () => {
+      const { message, deleteIds } = deleteValid()
+      if (message) {
+        ElMessage.warning(message)
+        return
       }
 
       deleteConfirm('你确定要删除所有选中菜单吗？菜单关联项也将被一并删除').then(data => {
@@ -259,14 +269,14 @@ export default defineComponent({
         }
       })
     }
+    // ————————删除————————end
 
+    // ————————新增、编辑————————start
     const {
       dialogParam,
       dialogParamsOpen,
       dialogParamsClose,
     } = dialogParamsContent()
-
-
     const updateOrInsertNode = (tree: Array<MenuBeanVO>, id: string, newData: MenuBeanVO, parentId: string | null) => {
       let found = false
 
@@ -334,7 +344,6 @@ export default defineComponent({
         recursiveInsert(tree)
       }
     }
-
     const dialogParamsCloseAndRefresh = (refresh: boolean, editId: string) => {
       dialogParamsClose()
       if (refresh) {
@@ -351,7 +360,9 @@ export default defineComponent({
         })
       }
     }
+    // ————————新增、编辑————————end
 
+    // ————————菜单移动————————start
     const {
       dialogEmpty: dialogMenuMove,
       dialogEmptyOpen,
@@ -364,7 +375,15 @@ export default defineComponent({
       }
       dialogEmptyOpen()
     }
+    // ————————菜单移动————————end
 
+    const query = () => {
+      getMenuByItemCode().then(res => {
+        if (res.code === 200) {
+          menuList.value = res.data
+        }
+      })
+    }
     onMounted(() => {
       query()
     })
@@ -381,12 +400,12 @@ export default defineComponent({
 
         activeMenu,
         menuList,
+        query,
+        deleteData,
+
         treeCheckChange,
         treeCheckMap,
         menuIndexTreeRef,
-
-        query,
-        deleteData,
 
         dialogParam,
         dialogParamsOpen,
