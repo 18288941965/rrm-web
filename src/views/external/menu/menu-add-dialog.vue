@@ -9,10 +9,9 @@
   >
     <template #header>
       <dialog-header
-        title="菜单"
-        :type="form.id ? '编辑' : '新增'"
-        :name="params.parentName ? '上级菜单：' : ''"
-        :detail="params.parentName"
+        :title="params.parentId ? '子菜单' : '一级菜单'"
+        :type="form.id ? '编辑' : (params.parentId ? '添加' : '创建')"
+        :name="params.parentName"
       />
     </template>
 
@@ -62,6 +61,7 @@
         >
           <el-input-number
             v-model="form.sortOrder"
+            :disabled="form.id != null && form.id != ''"
             :min="0"
             :step="1"
             :max="999"
@@ -165,12 +165,6 @@
             @click="onSubmit(menuEditFrom)"
           >
             提交
-          </el-button>
-          <el-button
-            v-if="params.dataId"
-            @click="resetForm"
-          >
-            重置
           </el-button>
         </template>
       </dialog-footer>

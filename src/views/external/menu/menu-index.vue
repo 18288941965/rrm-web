@@ -23,15 +23,13 @@
         </el-button>
 
         <el-button
-          :disabled="!activeMenu.id"
           :icon="Right"
           @click="dialogMenuMoveOpen"
         >
-          移动选中菜单到指定菜单下
+          移动选中菜单
         </el-button>
 
         <el-button
-          :disabled="!activeMenu.id || activeMenu.childrenCount > 0"
           :icon="Delete"
           @click="deleteData"
         >
@@ -44,8 +42,10 @@
 
     <main class="menu-main">
       <menu-tree
+        ref="menuIndexTreeRef"
         :menu-list="menuList"
         @set-active-menu="treeCheckChange"
+        @set-checked-keys="treeCheckMap"
       />
       
       <div class="menu-index-control">
@@ -54,7 +54,7 @@
             <span
               v-if="!activeMenu.id"
               class="no-data"
-            >请选择要操作的菜单</span>
+            >请点击左侧菜单名称选择要操作的菜单</span>
             {{ activeMenu.name }}
           </h4>
 
@@ -136,6 +136,7 @@ import {deleteMenuById, getMenuById, getMenuByItemCode} from './menuOption'
 import {deleteConfirm} from '@utils/utils'
 import MenuTree from './menu-tree.vue'
 import MenuMoveDrawer from './menu-move-drawer.vue'
+import {ElMessage} from 'element-plus/es'
 
 export default defineComponent({
   name: 'MenuIndex',
@@ -146,21 +147,20 @@ export default defineComponent({
   },
   setup() {
     const menuList = ref<Array<MenuBeanVO>>([])
+    const menuIndexTreeRef = ref()
+    let checkMap = new Map<string, number>
     const activeMenu = reactive<MenuBeanActive>({
       id: '',
       name: '',
       childrenCount: 0,
     })
-    const clearActiveMenu = () => {
-      Object.assign(activeMenu, {
-        id: '',
-        name: '',
-        childrenCount: 0,
-      })
-    }
-    
+
     const treeCheckChange = (data: MenuBeanActive) => {
       Object.assign(activeMenu, data)
+    }
+
+    const treeCheckMap = (data: Map<string, number>) => {
+      checkMap = data
     }
 
     const query = () => {
@@ -194,13 +194,66 @@ export default defineComponent({
       return false // 返回 false 表示未找到节点
     }
 
+    const findChildrenIds = (tree: Array<MenuBeanVO>, targetId: string) => {
+      const result: Array<string> = []
+
+      // 递归遍历树，找到目标节点及其子节点的所有id
+      function traverse(node: MenuBeanVO) {
+        if (node.id === targetId) {
+          collectIds(node)
+        } else if (node.children) {
+          node.children.forEach(child => traverse(child))
+        }
+      }
+
+      // 收集所有子节点的id
+      function collectIds(node: MenuBeanVO) {
+        if (!node) return
+        result.push(node.id)
+        if (node.children) {
+          node.children.forEach(child => collectIds(child))
+        }
+      }
+
+      // 遍历整个树
+      tree.forEach(rootNode => traverse(rootNode))
+      return result.slice(1)
+    }
+    
     const deleteData = () => {
-      deleteConfirm('你确定要删除此菜单吗？菜单关联项也将被一并删除').then(data => {
+      if (checkMap.size === 0) {
+        ElMessage.warning('未选中菜单！')
+        return
+      }
+      const deleteIds: Array<string> = []
+
+      for (let key of checkMap.keys()) {
+        const val = checkMap.get(key) as number
+        if (val <= 0) {
+          deleteIds.push(key)
+          continue
+        }
+
+        const childIds = findChildrenIds(menuList.value, key)
+        for (let i = 0; i < childIds.length; i++) {
+          if (!checkMap.has(childIds[i])) {
+            ElMessage.warning('请一并选择要删除菜单的所有子菜单！')
+            return
+          }
+        }
+        deleteIds.push(key)
+      }
+
+      deleteConfirm('你确定要删除所有选中菜单吗？菜单关联项也将被一并删除').then(data => {
         if (data) {
-          deleteMenuById(activeMenu.id).then(res => {
+          deleteMenuById(deleteIds.join(',')).then(res => {
             if (res.code == 200) {
-              deleteNodeById(menuList.value, activeMenu.id)
-              clearActiveMenu()
+              deleteIds.forEach(id => {
+                deleteNodeById(menuList.value, id)
+              })
+              if (checkMap.has(activeMenu.id)) {
+                menuIndexTreeRef.value!.cleanActiveMenu(true)
+              }
             }
           })
         }
@@ -289,6 +342,11 @@ export default defineComponent({
           if (res.code === 200) {
             const data: MenuBeanVO = res.data
             updateOrInsertNode(menuList.value, editId, data, data.parentId)
+            if (editId === activeMenu.id) {
+              Object.assign(activeMenu, {
+                name: data.name,
+              })
+            }
           }
         })
       }
@@ -296,9 +354,16 @@ export default defineComponent({
 
     const {
       dialogEmpty: dialogMenuMove,
-      dialogEmptyOpen: dialogMenuMoveOpen,
+      dialogEmptyOpen,
       dialogEmptyCloseAndRefresh: dialogMenuMoveCloseAndRefresh,
     } = dialogEmptyContent()
+    const dialogMenuMoveOpen = () => {
+      if (checkMap.size === 0) {
+        ElMessage.warning('未选中菜单！')
+        return
+      }
+      dialogEmptyOpen()
+    }
 
     onMounted(() => {
       query()
@@ -317,6 +382,8 @@ export default defineComponent({
         activeMenu,
         menuList,
         treeCheckChange,
+        treeCheckMap,
+        menuIndexTreeRef,
 
         query,
         deleteData,

@@ -23,9 +23,9 @@
       show-checkbox
       default-expand-all
       :expand-on-click-node="false"
-      :check-on-click-node="true"
       :check-strictly="true"
       @check-change="treeCheckChange"
+      @node-click="treeNodeClick"
     >
       <template #default="{ node, data }">
         <span class="custom-tree-node">
@@ -66,10 +66,11 @@ export default defineComponent({
       default: 0,
     },
   },
-  emits: ['set-active-menu'],
+  emits: ['set-active-menu', 'set-checked-keys'],
   setup(props, { emit }) {
     const menuElTreeRef = ref()
     const searchVal = ref('')
+    const checkNodeMap = new Map<string, number>
 
     const setActiveMenu = (data: MenuBeanVO) => {
       emit('set-active-menu', {
@@ -81,20 +82,36 @@ export default defineComponent({
 
     const treeCheckChange = (data: MenuBeanVO, checkNode: boolean) => {
       if (checkNode) {
-        menuElTreeRef.value.setCheckedKeys([data.id])
-        if (props.source === 0) {
-          setActiveMenu(data)
+        if (props.source === 1) {
+          menuElTreeRef.value.setCheckedKeys([data.id])
+          checkNodeMap.clear()
+          checkNodeMap.set(data.id, data.children.length)
+        } else {
+          checkNodeMap.set(data.id, data.children.length)
         }
+      } else {
+        checkNodeMap.delete(data.id)
       }
+      // 根据子节点数量排序
+      const sortedMap = new Map([...checkNodeMap.entries()].sort((a, b) => a[1] - b[1]))
+      emit('set-checked-keys', sortedMap)
     }
 
-    const cleanActiveMenu = () => {
+    const treeNodeClick = (data: MenuBeanVO) => {
+      setActiveMenu(data)
+    }
+
+    const cleanActiveMenu = (cleanActive = false) => {
       menuElTreeRef.value.setCheckedKeys([])
-      emit('set-active-menu', {
-        id: '',
-        name: '',
-        children: [],
-      })
+      checkNodeMap.clear()
+      emit('set-checked-keys', checkNodeMap)
+      if (cleanActive) {
+        emit('set-active-menu', {
+          id: '',
+          name: '',
+          children: [],
+        })
+      }
     }
 
     return {
@@ -103,6 +120,7 @@ export default defineComponent({
       menuElTreeRef,
       treeCheckChange,
       cleanActiveMenu,
+      treeNodeClick,
     }
   },
 })
