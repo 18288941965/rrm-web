@@ -24,6 +24,7 @@ interface MenuBean extends MenuBeanBase{
 interface MenuBeanVO extends MenuBeanBase {
     typeName: string | null
     children: Array<MenuBeanVO>
+    disabled?: boolean
 }
 
 interface MenuBeanActive extends MenuBeanDefault{

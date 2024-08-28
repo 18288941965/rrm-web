@@ -32,10 +32,18 @@ const getMenuByItemCode = () => {
     })
 }
 
+const moveMenuTo = (moveIds: Array<string>, parentId: string) => {
+    return axios.put('/menu/move', { moveIds, parentId }).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
 export {
     getMenuById,
     createMenu,
     updateMenu,
     deleteMenuById,
     getMenuByItemCode,
+    moveMenuTo,
 }

@@ -7,10 +7,17 @@
     :size="560"
     @open="handleOpen"
   >
+    <p class="tree-move-tip">
+      红色标记项为需要移动的菜单，如果要移动到根目录下则不选中任务菜单直接提交即可。
+    </p>
+
     <menu-tree
       ref="menuMoveTreeRef"
       :menu-list="menuList"
+      :move-ids="moveIds"
+      :disabled-ids="disabledIds"
       :source="1"
+      @set-checked-keys="setCheckedKeys"
     />
 
     <template #footer>
@@ -18,7 +25,8 @@
         <template #default>
           <el-button
             type="primary"
-            @click="null"
+            :loading="loading"
+            @click="submitBefore"
           >
             提交
           </el-button>
@@ -33,6 +41,9 @@ import {defineComponent,ref, watch} from 'vue'
 import MenuTree from './menu-tree.vue'
 import {MenuBeanVO} from './menuModel'
 import DialogFooter from '../../../components/dialog-footer.vue'
+import {deleteConfirm} from '@utils/utils'
+import {dialogOptions} from '@utils/dialogOptions'
+import {moveMenuTo} from './menuOption'
 
 export default defineComponent({
   name: 'MenuMoveDrawer',
@@ -50,11 +61,24 @@ export default defineComponent({
       type: Array<MenuBeanVO>,
       default: [],
     },
+    moveIds: {
+      type: Array<string>,
+      default: [],
+    },
+    disabledIds: {
+      type: Array<string>,
+      default: [],
+    },
   },
   emits: ['close-dialog'],
   setup (props, {emit}) {
-    const visible = ref(false)
+    const {
+      visible,
+        isRefresh,
+        loading,
+    } = dialogOptions()
     const menuMoveTreeRef = ref()
+    const menuMoveTo = ref('')
     
     watch(
       () => props.show,
@@ -69,13 +93,50 @@ export default defineComponent({
     // 关闭窗口
     const handleClose = () => {
       menuMoveTreeRef.value?.cleanActiveMenu()
-      emit('close-dialog')
+      menuMoveTo.value = ''
+      loading.value = false
+      const refresh = isRefresh.value
+      isRefresh.value = false
+      emit('close-dialog', refresh)
+    }
+
+    const setCheckedKeys = (data: Map<string, number>) => {
+      if (data.size > 0) {
+        menuMoveTo.value = data.keys().next().value
+      } else {
+        menuMoveTo.value = ''
+      }
+    }
+
+    const submit = (message: string) => {
+      deleteConfirm(message).then(flag => {
+        if (flag) {
+          moveMenuTo(props.moveIds, menuMoveTo.value).then(res => {
+            if (res.code === 200) {
+              isRefresh.value = true
+              handleClose()
+            }
+            loading.value = false
+          }).catch(() => { loading.value = false })
+        } else {
+          loading.value = false
+        }
+      })
+    }
+
+    const submitBefore = () => {
+      loading.value = true
+      const message = menuMoveTo.value ? '你确定把选中的菜单移动到 [ 此 ] 目录下吗？' :
+          '你确定把选中的菜单移动到 [ 根 ] 目录下吗？'
+     submit(message)
     }
 
     return {
       visible,
+      loading,
+      submitBefore,
       menuMoveTreeRef,
-
+      setCheckedKeys,
       handleOpen,
       handleClose,
     }
@@ -84,4 +145,9 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+  .tree-move-tip{
+    text-indent: 2rem;
+    color: var(--color-black-secondary);
+    margin-top: 0;
+  }
 </style>

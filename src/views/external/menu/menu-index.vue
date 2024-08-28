@@ -121,7 +121,9 @@
     <menu-move-drawer
       :show="dialogMenuMove.show"
       :menu-list="menuList"
-      @close-dialog="dialogMenuMoveCloseAndRefresh($event, query)"
+      :move-ids="moveIds"
+      :disabled-ids="disabledIds"
+      @close-dialog="dialogMenuMoveCloseAndRefresh"
     />
   </div>
 </template>
@@ -160,9 +162,15 @@ export default defineComponent({
     }
 
     // 选中的菜单
-    let checkMap = new Map<string, number>
+    const checkMap = ref<Array<{
+      id: string
+      count: number
+    }>>([])
     const treeCheckMap = (data: Map<string, number>) => {
-      checkMap = data
+      checkMap.value = []
+      for (let key of data.keys()) {
+        checkMap.value.push({ id: key, count: data.get(key) as number })
+      }
     }
 
     // ————————删除————————start
@@ -217,30 +225,31 @@ export default defineComponent({
       message: string
       deleteIds: Array<string>
     } => {
-      if (checkMap.size === 0) {
+      if (checkMap.value.length === 0) {
         return {
           message: '未选中菜单！',
           deleteIds: [],
         }
       }
       const deleteIds: Array<string> = []
-      for (let key of checkMap.keys()) {
-        const val = checkMap.get(key) as number
+      const selectIds = checkMap.value.map(item => item.id)
+      for (let i = 0; i < checkMap.value.length; i++) {
+        const val = checkMap.value[i].count as number
         if (val <= 0) {
-          deleteIds.push(key)
+          deleteIds.push(checkMap.value[i].id)
           continue
         }
 
-        const childIds = findChildrenIds(menuList.value, key)
+        const childIds = findChildrenIds(menuList.value, checkMap.value[i].id)
         for (let i = 0; i < childIds.length; i++) {
-          if (!checkMap.has(childIds[i])) {
+          if (!selectIds.includes(childIds[i])) {
             return {
               message: '请一并选择要删除菜单的所有子菜单！',
               deleteIds: [],
             }
           }
         }
-        deleteIds.push(key)
+        deleteIds.push(checkMap.value[i].id)
       }
       return {
         message: '',
@@ -261,7 +270,7 @@ export default defineComponent({
               deleteIds.forEach(id => {
                 deleteNodeById(menuList.value, id)
               })
-              if (checkMap.has(activeMenu.id)) {
+              if (checkMap.value.map(item => item.id).includes(activeMenu.id)) {
                 menuIndexTreeRef.value!.cleanActiveMenu(true)
               }
             }
@@ -363,17 +372,35 @@ export default defineComponent({
     // ————————新增、编辑————————end
 
     // ————————菜单移动————————start
+    const moveIds = ref<Array<string>>([])
+    const disabledIds = ref<Array<string>>([])
     const {
       dialogEmpty: dialogMenuMove,
       dialogEmptyOpen,
-      dialogEmptyCloseAndRefresh: dialogMenuMoveCloseAndRefresh,
+      dialogEmptyClose,
     } = dialogEmptyContent()
     const dialogMenuMoveOpen = () => {
-      if (checkMap.size === 0) {
+      if (checkMap.value.length === 0) {
         ElMessage.warning('未选中菜单！')
         return
       }
+      const tmpSet = new Set<string>()
+      moveIds.value = checkMap.value.map(item => item.id)
+      checkMap.value.forEach(item => {
+        tmpSet.add(item.id)
+        const childrenIds = findChildrenIds(menuList.value, item.id)
+        childrenIds.forEach(item => tmpSet.add(item))
+      })
+      disabledIds.value = Array.of(...tmpSet)
       dialogEmptyOpen()
+    }
+    const dialogMenuMoveCloseAndRefresh = (refresh: boolean | undefined) => {
+      dialogEmptyClose()
+      moveIds.value = []
+      disabledIds.value = []
+      if (refresh) {
+        query()
+      }
     }
     // ————————菜单移动————————end
 
@@ -400,7 +427,6 @@ export default defineComponent({
 
         activeMenu,
         menuList,
-        query,
         deleteData,
 
         treeCheckChange,
@@ -411,6 +437,8 @@ export default defineComponent({
         dialogParamsOpen,
         dialogParamsCloseAndRefresh,
 
+        moveIds,
+        disabledIds,
         dialogMenuMove,
         dialogMenuMoveOpen,
         dialogMenuMoveCloseAndRefresh,

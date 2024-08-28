@@ -13,12 +13,13 @@
         />
       </template>
     </el-input>
+
     <el-tree
       ref="menuElTreeRef"
       class="menu-index-tree"
-      :class="{'tree-bd': menuList && menuList.length < 1}"
-      :data="menuList"
-      :props="{label: 'name', children: 'children'}"
+      :class="{'tree-bd': menuTreeList && menuTreeList.length < 1}"
+      :data="getMenuTreeList"
+      :props="{label: 'name', children: 'children', disabled: 'disabled', class: customNodeClass}"
       node-key="id"
       show-checkbox
       default-expand-all
@@ -50,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue'
+import {defineComponent, ref, toRef, computed} from 'vue'
 import {MenuBeanVO} from './menuModel'
 import {Search} from '@element-plus/icons-vue'
 
@@ -65,9 +66,19 @@ export default defineComponent({
       type: Number,
       default: 0,
     },
+    moveIds: {
+      type: Array<string>,
+      default: [],
+    },
+    disabledIds: {
+      type: Array<string>,
+      default: [],
+    },
   },
   emits: ['set-active-menu', 'set-checked-keys'],
   setup(props, { emit }) {
+    const menuTreeList = toRef(props, 'menuList')
+
     const menuElTreeRef = ref()
     const searchVal = ref('')
     const checkNodeMap = new Map<string, number>
@@ -98,6 +109,9 @@ export default defineComponent({
     }
 
     const treeNodeClick = (data: MenuBeanVO) => {
+      if (props.source === 1) {
+        return
+      }
       setActiveMenu(data)
     }
 
@@ -114,13 +128,44 @@ export default defineComponent({
       }
     }
 
+    const setDisabledMenu = (tree: Array<MenuBeanVO>) => {
+      tree.forEach(menu => {
+        if (props.disabledIds.includes(menu.id)) {
+          menu.disabled = true
+        }
+        if (menu.children) {
+          setDisabledMenu(menu.children)
+        }
+      })
+    }
+
+    const getMenuTreeList = computed(() => {
+      if (props.moveIds.length === 0) {
+        return menuTreeList.value
+      }
+      const newData = JSON.parse(JSON.stringify(menuTreeList.value))
+      setDisabledMenu(newData)
+      return newData
+    })
+
+    const customNodeClass = (data: MenuBeanVO) => {
+      if (props.moveIds.includes(data.id)) {
+        return 'tree-move-check'
+      }
+      return null
+    }
+
+
     return {
       Search,
+      menuTreeList,
+      getMenuTreeList,
       searchVal,
       menuElTreeRef,
       treeCheckChange,
       cleanActiveMenu,
       treeNodeClick,
+      customNodeClass,
     }
   },
 })
@@ -151,17 +196,16 @@ export default defineComponent({
     line-height: var(--size-default);
   }
 }
-.tree-bd{
-  border-bottom: var(--border-1);;
-}
 </style>
 <style lang="scss">
 .menu-index-tree{
-  & .el-tree-node__content{
-    border-bottom: var(--border-1);
-  }
-  & .el-tree__empty-block{
+  & .el-tree-node__content, .tree-bd, .el-tree__empty-block{
     border-bottom: var(--border-1);
   }
 }
+
+.tree-move-check > .el-tree-node__content:nth-of-type(1) {
+  color: var(--color-red);
+}
+
 </style>
