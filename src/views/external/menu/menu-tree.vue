@@ -118,6 +118,7 @@ export default defineComponent({
     const cleanActiveMenu = (cleanActive = false) => {
       menuElTreeRef.value.setCheckedKeys([])
       checkNodeMap.clear()
+      menuTreeList.value = []
       emit('set-checked-keys', checkNodeMap)
       if (cleanActive) {
         emit('set-active-menu', {

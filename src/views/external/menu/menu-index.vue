@@ -10,14 +10,15 @@
           创建一级菜单
         </el-button>
 
-        <el-button
+        <!--        <el-button
           :icon="Upload"
         >
           导入菜单
-        </el-button>
+        </el-button>-->
 
         <el-button
           :icon="Sort"
+          @click="dialogSortOpen(undefined)"
         >
           一级菜单排序
         </el-button>
@@ -69,7 +70,7 @@
             </el-button>
 
             <el-button
-              :disabled="!activeMenu.id || activeMenu.childrenCount > 0"
+              :disabled="!activeMenu.id"
               :icon="Edit"
               @click="dialogParamsOpen({ dataId: activeMenu.id, parentId: '', parentName: '' })"
             >
@@ -79,6 +80,7 @@
             <el-button
               :disabled="activeMenu.childrenCount < 1"
               :icon="Sort"
+              @click="dialogSortOpen(activeMenu.id)"
             >
               子菜单排序
             </el-button>
@@ -125,6 +127,11 @@
       :disabled-ids="disabledIds"
       @close-dialog="dialogMenuMoveCloseAndRefresh"
     />
+    
+    <menu-sort-dialog
+      v-bind="dialogSort"
+      @close-dialog="dialogSortCloseAndRefresh($event, query)"
+    />
   </div>
 </template>
 
@@ -132,12 +139,13 @@
 import {defineComponent, onMounted, reactive, ref} from 'vue'
 import {Delete, Edit, Link, Plus, PriceTag, Sort, Upload, Right} from '@element-plus/icons-vue'
 import MenuAddDialog from './menu-add-dialog.vue'
-import {dialogEmptyContent, dialogParamsContent} from '@utils/dialogOptions'
+import {dialogBaseContent, dialogEmptyContent, dialogParamsContent} from '@utils/dialogOptions'
 import {MenuBeanActive, MenuBeanVO} from './menuModel'
 import {deleteMenuById, getMenuById, getMenuByItemCode} from './menuOption'
 import {deleteConfirm} from '@utils/utils'
 import MenuTree from './menu-tree.vue'
 import MenuMoveDrawer from './menu-move-drawer.vue'
+import MenuSortDialog from './menu-sort-dialog.vue'
 import {ElMessage} from 'element-plus/es'
 
 export default defineComponent({
@@ -146,6 +154,7 @@ export default defineComponent({
     MenuAddDialog,
     MenuTree,
     MenuMoveDrawer,
+    MenuSortDialog,
   },
   setup() {
     const menuList = ref<Array<MenuBeanVO>>([])
@@ -404,13 +413,23 @@ export default defineComponent({
     }
     // ————————菜单移动————————end
 
+    // ————————菜单排序————————start
+    const {
+      dialogBase: dialogSort,
+        dialogBaseOpen: dialogSortOpen,
+        dialogBaseCloseAndRefresh: dialogSortCloseAndRefresh,
+    } = dialogBaseContent()
+
     const query = () => {
+      menuIndexTreeRef.value!.cleanActiveMenu(true)
       getMenuByItemCode().then(res => {
         if (res.code === 200) {
           menuList.value = res.data
         }
       })
     }
+    // ————————菜单排序————————end
+    
     onMounted(() => {
       query()
     })
@@ -442,6 +461,11 @@ export default defineComponent({
         dialogMenuMove,
         dialogMenuMoveOpen,
         dialogMenuMoveCloseAndRefresh,
+
+        query,
+        dialogSort,
+        dialogSortOpen,
+        dialogSortCloseAndRefresh,
       }
   },
 })

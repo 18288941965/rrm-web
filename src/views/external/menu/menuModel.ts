@@ -33,8 +33,14 @@ interface MenuBeanActive extends MenuBeanDefault{
     childrenCount: number
 }
 
+interface MenuSortBean{
+    id: string
+    sortOrder: number
+}
+
 export {
     type MenuBean,
     type MenuBeanVO,
     type MenuBeanActive,
+    type MenuSortBean,
 }

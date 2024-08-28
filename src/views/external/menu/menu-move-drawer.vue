@@ -4,6 +4,7 @@
     title="菜单移动"
     direction="rtl"
     :before-close="handleClose"
+    :close-on-click-modal="false"
     :size="560"
     @open="handleOpen"
   >

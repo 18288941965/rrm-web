@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {MenuBean} from './menuModel'
+import {MenuBean, MenuSortBean} from './menuModel'
 
 const getMenuById = (id: string) => {
     return axios.get(`/menu/${id}`).then((res: { data: AxiosResult }) => {
@@ -38,6 +38,17 @@ const moveMenuTo = (moveIds: Array<string>, parentId: string) => {
     })
 }
 
+const getMenuByParentId = (parentId: string) => {
+    return axios.get(`/menu/children/${parentId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const updateMenuSort = (menuList: Array<MenuSortBean>) => {
+    return axios.put('/menu/sort', menuList).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
 
 export {
     getMenuById,
@@ -46,4 +57,6 @@ export {
     deleteMenuById,
     getMenuByItemCode,
     moveMenuTo,
+    getMenuByParentId,
+    updateMenuSort,
 }
