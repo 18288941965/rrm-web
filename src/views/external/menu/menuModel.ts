@@ -38,9 +38,17 @@ interface MenuSortBean{
     sortOrder: number
 }
 
+interface MenuElementBean{
+    id: string
+    menuId: string
+    name: string
+    type: string
+}
+
 export {
     type MenuBean,
     type MenuBeanVO,
     type MenuBeanActive,
     type MenuSortBean,
+    type MenuElementBean,
 }

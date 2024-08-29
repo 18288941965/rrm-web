@@ -99,19 +99,8 @@
             绑定资源 763 / <span class="bind-source">210</span>
           </el-button>
         </div>
-        <div class="control-top control-top2">
-          <h5>菜单控件管理</h5>
-          <el-button
-            :icon="Plus"
-            :disabled="!activeMenu.id"
-          >
-            创建控件
-          </el-button>
-        </div>
 
-        <div class="control-main">
-          <p>控件管理包括菜单下的按钮、标签页、链接等，对各类控件绑定资源达到更精细的权限控制。</p>
-        </div>
+        <menu-element :active-menu="activeMenu" />
       </div>
     </main>
     
@@ -147,6 +136,7 @@ import MenuTree from './menu-tree.vue'
 import MenuMoveDrawer from './menu-move-drawer.vue'
 import MenuSortDialog from './menu-sort-dialog.vue'
 import {ElMessage} from 'element-plus/es'
+import MenuElement from './menu-element.vue'
 
 export default defineComponent({
   name: 'MenuIndex',
@@ -155,6 +145,7 @@ export default defineComponent({
     MenuTree,
     MenuMoveDrawer,
     MenuSortDialog,
+    MenuElement,
   },
   setup() {
     const menuList = ref<Array<MenuBeanVO>>([])
@@ -493,19 +484,16 @@ export default defineComponent({
       padding-left: var(--pd-medium);
       padding-right: var(--pd-ultra-small);
     }
-    & .control-top2{
-      border-top: var(--border-1);
-    }
     & .control-main{
       padding: var(--pd-medium);
+      & p{
+        text-indent: 2rem;
+        color: var(--color-black-secondary);
+      }
       & .bind-source{
         padding-left: var(--pd-ultra-small);
         font-weight: bolder;
         color: var(--color-blue);
-      }
-      & p{
-        text-indent: 2rem;
-        color: var(--color-black-secondary);
       }
     }
   }

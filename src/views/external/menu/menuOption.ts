@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {MenuBean, MenuSortBean} from './menuModel'
+import {MenuBean, MenuElementBean, MenuSortBean} from './menuModel'
 
 const getMenuById = (id: string) => {
     return axios.get(`/menu/${id}`).then((res: { data: AxiosResult }) => {
@@ -50,6 +50,37 @@ const updateMenuSort = (menuList: Array<MenuSortBean>) => {
     })
 }
 
+const getMenuElementByMenuId = (menuId: string) => {
+    return axios.get(`/menu-element/${menuId}/children`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const getMenuElementById = (id: string) => {
+    return axios.get(`/menu-element/${id}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const createMenuElement = (menuElement: MenuElementBean) => {
+    return axios.post('/menu-element', menuElement).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const updateMenuElement = (menuElement: MenuElementBean) => {
+    return axios.put('/menu-element', menuElement).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const deleteMenuElementById = (id: string) => {
+    return axios.delete(`/menu-element/${id}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
 export {
     getMenuById,
     createMenu,
@@ -59,4 +90,10 @@ export {
     moveMenuTo,
     getMenuByParentId,
     updateMenuSort,
+
+    getMenuElementByMenuId,
+    getMenuElementById,
+    createMenuElement,
+    updateMenuElement,
+    deleteMenuElementById,
 }
