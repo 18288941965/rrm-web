@@ -1,5 +1,5 @@
 import * as Mock from 'mockjs'
-import {MenuBean} from '../views/theme/menu/menuModels'
+import {RrmMenuBean} from '../views/theme/menu/menuModels'
 import {AxiosResult} from '@utils/interface'
 
 // 获取菜单列表：返回tree结构
@@ -33,7 +33,7 @@ Mock.mock('/api/admin/getMenus', 'post',() => {
         },
     ]
 
-    const menus: Array<MenuBean> = []
+    const menus: Array<RrmMenuBean> = []
     menus.push({
         label: 'RRM',
         icon: 'admin-temp.png',

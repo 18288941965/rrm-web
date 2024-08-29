@@ -40,7 +40,7 @@
 <script lang="ts">
 import {computed, defineComponent, onMounted, PropType, ref} from 'vue'
 import AdminLogo from '../../logo/admin-logo.vue'
-import {ActiveMenus, MenuBean} from '../menu/menuModels'
+import {ActiveMenus, RrmMenuBean} from '../menu/menuModels'
 import AppTheme from '../../../app-theme.vue'
 import UserAvatar from '../../../components/avatar/user-avatar.vue'
 import {Expand, PersonFill, Search} from '../../../components/svicon/publicIcon'
@@ -95,7 +95,7 @@ export default defineComponent({
       return menuBean ? menuBean.label : ''
     })
 
-    const pushRouter = (menu: MenuBean) => {
+    const pushRouter = (menu: RrmMenuBean) => {
       if (menu.id === props.activeMenus?.menuId) {
         return
       }

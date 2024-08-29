@@ -104,7 +104,7 @@
 <script lang="ts">
 import {defineComponent, ref} from 'vue'
 import AdminMenu from './menu/admin-menu.vue'
-import {MenuBean} from './menu/menuModels'
+import {RrmMenuBean} from './menu/menuModels'
 import {MenuStatusContent} from './menu/menuOptions'
 import AdminHeader from './header/admin-header.vue'
 import {themeBaseContext, updateBrowserTitle} from './adminThemeBase'
@@ -143,7 +143,7 @@ export default defineComponent({
       updateKeepAliveInclude,
     } = MenuStatusContent()
 
-    const pushRouter = async (menu: MenuBean) => {
+    const pushRouter = async (menu: RrmMenuBean) => {
       if (menu.cache && menu.name) {
         updateKeepAliveInclude(menu.name)
       }
@@ -168,7 +168,7 @@ export default defineComponent({
       }
       // 关闭当前打开窗口后：先右后左的切换
       if (!activeMenus.menuId) {
-        let temp: MenuBean | undefined
+        let temp: RrmMenuBean | undefined
         if (activeMenus.menus.length -1  >= index) {
           temp = activeMenus.menus[index]
         } else {

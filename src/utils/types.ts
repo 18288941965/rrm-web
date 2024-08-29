@@ -1,8 +1,8 @@
-import {MenuBean} from '../views/theme/menu/menuModels'
+import {RrmMenuBean} from '../views/theme/menu/menuModels'
 import {AxiosResult} from './interface'
 
 // 路由跳转
-export type PushRouter = (menu: MenuBean) => void
+export type PushRouter = (menu: RrmMenuBean) => void
 // 登录成功回调
 export type LoginSuccess = (data: AxiosResult) => void
 // 退出成功

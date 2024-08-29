@@ -41,13 +41,13 @@
 
 <script lang="ts">
 import {defineComponent, PropType} from 'vue'
-import {MenuBean} from './menuModels'
+import {RrmMenuBean} from './menuModels'
 
 export default defineComponent({
   name: 'AdminMenuChild',
   props: {
     menus: {
-      type: Array as PropType<MenuBean[]>,
+      type: Array as PropType<RrmMenuBean[]>,
       default: () => {
         return []
       },
@@ -61,7 +61,7 @@ export default defineComponent({
   setup (props, { emit }) {
     const menuGroupIcon = 'Dot'
 
-    const pushRouter = (menu: MenuBean) => {
+    const pushRouter = (menu: RrmMenuBean) => {
       if (menu.id === props.menuId) {
         return
       }

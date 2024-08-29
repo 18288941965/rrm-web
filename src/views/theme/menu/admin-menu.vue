@@ -62,7 +62,7 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue'
 import AdminMenuChild from './admin-menu-child.vue'
-import {MenuBean} from './menuModels'
+import {RrmMenuBean} from './menuModels'
 import {MenuOptions} from './menuOptions'
 import {useRouter} from 'vue-router'
 import {PushRouter} from '@utils/types'
@@ -116,7 +116,7 @@ export default defineComponent({
       scrollTarget()
     }
 
-    const pushRouter: PushRouter = (menu: MenuBean) => {
+    const pushRouter: PushRouter = (menu: RrmMenuBean) => {
       if (menu.id === props.menuId) {
         return
       }
