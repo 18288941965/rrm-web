@@ -8,8 +8,8 @@ const createUser = (bean: UserBean) => {
     })
 }
 
-const updateUserComment = (id: number, comment: string) => {
-    return axios.put('/user/comment', {id, comment}).then((res: { data: AxiosResult }) => {
+const updateUserDescription = (id: number, description: string) => {
+    return axios.put('/user/description', {id, description}).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
@@ -56,7 +56,7 @@ const getAllUserBase = () => {
 
 export {
     createUser,
-    updateUserComment,
+    updateUserDescription,
     getAllUser,
     getUserById,
     deleteUser,

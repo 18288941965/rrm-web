@@ -7,7 +7,7 @@ interface UserBeanBase{
 
 interface UserBean extends UserBeanBase{
     id: number
-    comment: string
+    description: string
 }
 
 interface UserPassBean{

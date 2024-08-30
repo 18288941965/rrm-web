@@ -46,10 +46,10 @@
 
       <el-form-item
         label="用户说明"
-        prop="comment"
+        prop="description"
       >
         <el-input
-          v-model.trim="form.comment"
+          v-model.trim="form.description"
           clearable
           placeholder=""
         />
@@ -113,7 +113,7 @@ export default defineComponent({
       id: 0,
       username: '',
       password: '',
-      comment: '',
+      description: '',
     })
 
     const validate = (rule: any, value: any, callback: any, message: string) => {
@@ -148,7 +148,7 @@ export default defineComponent({
         id: 0,
         username: '',
         password: '',
-        comment: '',
+        description: '',
       })
       const refresh = isRefresh.value
       isRefresh.value = false

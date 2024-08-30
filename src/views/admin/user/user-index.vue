@@ -38,8 +38,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="comment"
-        label="备注"
+        prop="description"
+        label="描述"
       />
       <el-table-column
         prop="itemList"
@@ -78,7 +78,7 @@
           <el-button
             type="primary"
             :icon="Edit"
-            @click="dialogParamsOpen({ dataId: scope.row.id, comment: scope.row.comment })"
+            @click="dialogParamsOpen({ dataId: scope.row.id, description: scope.row.description })"
           />
 
           <el-button

@@ -22,7 +22,7 @@
         <el-checkbox
           v-for="(user, index) in userList"
           :key="'xzz-' + index"
-          :label="user.comment ? user.username + '（' + user.comment + '）' : user.username"
+          :label="user.description ? user.username + '（' + user.description + '）' : user.username"
           :value="user.id"
           :disabled="user.id === params.userId"
           border

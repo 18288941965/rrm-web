@@ -20,11 +20,11 @@
       label-width="auto"
     >
       <el-form-item
-        label="用户说明"
-        prop="comment"
+        label="用户描述"
+        prop="description"
       >
         <el-input
-          v-model.trim="form.comment"
+          v-model.trim="form.description"
           clearable
           placeholder=""
         />
@@ -50,7 +50,7 @@
 import {defineComponent, PropType, reactive, watch} from 'vue'
 import {ElMessage} from 'element-plus/es'
 import {AxiosResult, PropPrams} from '@utils/interface'
-import {updateUserComment} from './userOption'
+import {updateUserDescription} from './userOption'
 import {dialogOptions} from '@utils/dialogOptions'
 import DialogHeader from '../../../components/dialog-header.vue'
 import DialogFooter from '../../../components/dialog-footer.vue'
@@ -64,7 +64,7 @@ export default defineComponent({
       default() {
         return {
           dataId: 0,
-          comment: '',
+          description: '',
         }
       },
     },
@@ -89,7 +89,7 @@ export default defineComponent({
 
     const form = reactive({
       id: 0,
-      comment: '',
+      description: '',
     })
 
 
@@ -97,7 +97,7 @@ export default defineComponent({
     const handleClose = () => {
       Object.assign(form, {
         id: 0,
-        comment: '',
+        description: '',
       })
       const refresh = isRefresh.value
       isRefresh.value = false
@@ -113,12 +113,12 @@ export default defineComponent({
     }
 
     const onSubmit = () => {
-      updateUserComment(form.id, form.comment).then(res => {handleCallback(res)})
+      updateUserDescription(form.id, form.description).then(res => {handleCallback(res)})
     }
 
     const handleOpen = () => {
       form.id = props.params?.dataId
-      form.comment = props.params?.comment
+      form.description = props.params?.description
     }
 
     return {
