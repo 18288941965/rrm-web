@@ -14,7 +14,14 @@ const updateResourceStatus = (id: string, status: number) => {
     })
 }
 
+const scannerRrmResource = () => {
+    return axios.get('/scanner').then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
 export {
     searchResourcePage,
     updateResourceStatus,
+    scannerRrmResource,
 }

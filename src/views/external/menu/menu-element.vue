@@ -21,9 +21,11 @@
           <div>
             <el-button
               :icon="Edit"
+              @click="dialogParamsOpen({ dataId: element.id, menuId: activeMenu.id })"
             />
             <el-button
               :icon="Delete"
+              @click="deleteData(element.id)"
             />
             <el-button
               :icon="Link"
@@ -48,7 +50,8 @@ import {Delete, Edit, Link, Plus} from '@element-plus/icons-vue'
 import {MenuBeanActive, MenuElementBean} from './menuModel'
 import MenuElementEditDialog from './menu-element-edit-dialog.vue'
 import {dialogParamsContent} from '@utils/dialogOptions'
-import {getMenuElementByMenuId} from './menuOption'
+import {deleteMenuElementById, getMenuElementByMenuId} from './menuOption'
+import {deleteConfirm} from '@utils/utils'
 
 export default defineComponent({
   name: 'MenuElement',
@@ -77,7 +80,24 @@ export default defineComponent({
         }
       })
     }
-    
+
+    const deleteData = (id: string) => {
+      deleteConfirm('你确定要删除此控件吗？关联的资源也将被清空').then(data => {
+        if (data) {
+          deleteMenuElementById(id).then(res => {
+            if (res.code === 200) {
+              for (let i = 0; i < dataList.value.length; i++) {
+                if (dataList.value[i].id === id) {
+                  dataList.value.splice(i, 1)
+                  break
+                }
+              }
+            }
+          })
+        }
+      })
+    }
+
     const {
       dialogParam,
         dialogParamsOpen,
@@ -97,6 +117,7 @@ export default defineComponent({
         Link,
         dataList,
         query,
+        deleteData,
         dialogParam,
         dialogParamsOpen,
         dialogParamsCloseAndRefresh,

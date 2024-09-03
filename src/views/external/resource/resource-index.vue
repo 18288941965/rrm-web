@@ -1,5 +1,14 @@
 <template>
   <div>
+    <el-button
+      class="mgb-medium"
+      type="success"
+      :icon="Reading"
+      @click="runScannerRrmResource"
+    >
+      扫描系统资源
+    </el-button>
+    
     <el-table
       :data="pager.list"
       border
@@ -82,8 +91,9 @@ import {defineComponent, reactive, onMounted} from 'vue'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import {Pagination} from '@utils/interface'
 import {ResourceBean, ResourceQuery} from './resourceModel'
-import {searchResourcePage, updateResourceStatus} from './resourceOption'
+import {scannerRrmResource, searchResourcePage, updateResourceStatus} from './resourceOption'
 import {ElMessage} from 'element-plus'
+import {Reading} from '@element-plus/icons-vue'
 
 export default defineComponent({
   name: 'ResourceIndex',
@@ -133,15 +143,26 @@ export default defineComponent({
         }
       })
     }
+    
+    const runScannerRrmResource = () => {
+      scannerRrmResource().then(res => {
+        if (res.code === 200) {
+          query(1)
+        }
+      })
+    }
 
     onMounted(() => {
       query(1)
     })
+    
     return {
+      Reading,
       queryParams,
       pager,
       query,
       setResourceStatus,
+      runScannerRrmResource,
     }
   },
 })

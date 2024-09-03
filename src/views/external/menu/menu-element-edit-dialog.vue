@@ -70,7 +70,7 @@ import DialogHeader from '../../../components/dialog-header.vue'
 import DialogFooter from '../../../components/dialog-footer.vue'
 import {
   createMenuElement,
-  getMenuElementByMenuId,
+  getMenuElementById,
   updateMenuElement,
 } from './menuOption'
 import {assignExistingFields} from '@utils/utils'
@@ -172,7 +172,7 @@ export default defineComponent({
       form.menuId = props.params.menuId
 
       if (props.params.dataId) {
-        getMenuElementByMenuId(props.params.dataId).then(res => {
+        getMenuElementById(props.params.dataId).then(res => {
           if (res.code === 200) {
             assignExistingFields(form, res.data)
           }
