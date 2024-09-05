@@ -37,6 +37,8 @@
             <Adjust />
           </button>
         </el-tooltip>
+
+        <div class="nav-block"></div>
       </div>
 
       <nav class="theme2-nav__right">
