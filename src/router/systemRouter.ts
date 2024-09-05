@@ -61,6 +61,18 @@ const systemRouter: RouteRecordRaw[] = [
     component: () => import('../views/external/dict/dict-index.vue'),
     meta: { title: 'DictIndex' },
   },
+  {
+    path: 'org/index',
+    name: 'OrgIndex',
+    component: () => import('../views/external/org/org-index.vue'),
+    meta: { title: 'OrgIndex' },
+  },
+  {
+    path: 'users/index',
+    name: 'UsersIndex',
+    component: () => import('../views/external/users/users-index.vue'),
+    meta: { title: 'UsersIndex' },
+  },
 ]
 
 export default systemRouter
