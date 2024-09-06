@@ -29,20 +29,6 @@
           clearable
         />
       </el-form-item>
-      <el-form-item
-        label="用户等级"
-        prop="level"
-      >
-        <el-input-number
-          v-model="form.level"
-          :min="1"
-          :step="1"
-          :max="99"
-        />
-        <div class="mgl-medium">
-          0 → 99（基础权限 → 超级管理员）
-        </div>
-      </el-form-item>
 
       <el-form-item
         label="用户描述"
@@ -114,10 +100,22 @@ export default defineComponent({
         },
     )
 
-    const form = reactive<any>({
+    const form = reactive<UsersBean>({
       id: '',
       name: '',
+      orgCode: '',
+      orgName: '',
+      username: '',
+      password: '',
+      gender: '',
+      nation: '',
+      idNumber: '',
+      dateOfBirth: null,
+      phoneNumber: '',
+      avatar: '',
+      type: '',
       description: '',
+      accountStatus: 1,
     })
 
     const rules = reactive<FormRules<UsersBean>>({

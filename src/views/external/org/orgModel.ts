@@ -10,8 +10,8 @@ interface OrgBean extends OrgBeanBase{
     parentCode: string
     abbrName: string
     type: string
-    isDeleted: number
-    deletedAt: Date
+    isDeleted?: number
+    deletedAt?: Date
     extendedField?: string
     extendedField2?: string
 }

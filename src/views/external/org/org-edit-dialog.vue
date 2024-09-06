@@ -21,6 +21,16 @@
       label-width="100px"
     >
       <el-form-item
+        label="机构代码"
+        prop="code"
+      >
+        <el-input
+          v-model.trim="form.code"
+          clearable
+        />
+      </el-form-item>
+      
+      <el-form-item
         label="机构名称"
         prop="name"
       >
@@ -29,29 +39,34 @@
           clearable
         />
       </el-form-item>
+
       <el-form-item
-        label="机构等级"
-        prop="level"
+        label="机构简称"
+        prop="abbrName"
       >
-        <el-input-number
-          v-model="form.level"
-          :min="1"
-          :step="1"
-          :max="99"
+        <el-input
+          v-model.trim="form.abbrName"
+          clearable
         />
-        <div class="mgl-medium">
-          0 → 99（基础权限 → 超级管理员）
-        </div>
       </el-form-item>
 
       <el-form-item
-        label="机构描述"
-        prop="description"
+        label="机构类型"
+        prop="type"
       >
         <el-input
-          v-model.trim="form.description"
-          type="textarea"
-          :rows="2"
+          v-model.trim="form.type"
+          clearable
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="上级机构代码"
+        prop="parentCode"
+      >
+        <el-input
+          v-model.trim="form.parentCode"
+          clearable
         />
       </el-form-item>
     </el-form>
@@ -114,13 +129,18 @@ export default defineComponent({
         },
     )
 
-    const form = reactive<any>({
+    const form = reactive<OrgBean>({
       id: '',
+      code: '',
       name: '',
+      parentCode: '',
+      abbrName: '',
+      type: '',
     })
 
     const rules = reactive<FormRules<OrgBean>>({
       name: [{ required: true, message: '机构名称为必填项', trigger: 'change'}],
+      code: [{ required: true, message: '机构名称为必填项', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {

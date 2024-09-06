@@ -80,10 +80,10 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, reactive} from 'vue'
-import {UsersBean, UsersBeanQuery} from '../users/usersModel'
+import {OrgBean, OrgBeanQuery} from './orgModel'
 import {Pagination} from '@utils/interface'
 import {dialogBaseContent} from '@utils/dialogOptions'
-import {deleteUsers, searchUsersPage} from '../users/usersOption'
+import {deleteOrg, searchOrgPage} from './orgOption'
 import {deleteConfirm} from '@utils/utils'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import OrgEditDialog from './org-edit-dialog.vue'
@@ -102,13 +102,12 @@ export default defineComponent({
   },
   setup(props, ctx) {
 
-    const queryParams = reactive<UsersBeanQuery>({
+    const queryParams = reactive<OrgBeanQuery>({
       name: '',
-      orgCode: '',
-      orgName: '',
+      code: '',
     })
 
-    const pager = reactive<Pagination<UsersBean>>({
+    const pager = reactive<Pagination<OrgBean>>({
       pageNum: 1,
       pageSize: 10,
       total: 0,
@@ -120,7 +119,7 @@ export default defineComponent({
         pageNum,
         pageSize,
       })
-      searchUsersPage({
+      searchOrgPage({
         pageNum: pager.pageNum,
         pageSize: pager.pageSize,
         ...queryParams,
@@ -140,7 +139,7 @@ export default defineComponent({
     const deleteData = (id: string) => {
       deleteConfirm('你确定要删除此用户吗？').then(flag => {
         if (flag) {
-          deleteUsers(id).then(res => {
+          deleteOrg(id).then(res => {
             if (res.code === 200) {
               query(1)
             }
