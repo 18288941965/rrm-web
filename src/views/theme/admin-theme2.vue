@@ -16,7 +16,7 @@
         class="theme2-nav__left"
       >
         <button
-          class="icon-button menu-collapse-icon"
+          class="icon-button icon-button-menu-top menu-collapse-icon"
           @click="setMenuCollapse(!menuCollapse)"
         >
           <MenuOpen
@@ -31,14 +31,12 @@
           :show-after="500"
         >
           <button
-            class="icon-button mgr-medium"
+            class="icon-button icon-button-menu-top mgr-medium"
             @click="menuOpen"
           >
             <Adjust />
           </button>
         </el-tooltip>
-
-        <div class="nav-block"></div>
       </div>
 
       <nav class="theme2-nav__right">

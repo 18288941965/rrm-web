@@ -8,6 +8,8 @@
     --bg-color-scrollbar-thumb: #E3E3E3;
     --bg-color-scrollbar-track: transparent;
 
+    --bg-image: linear-gradient(to right, rgb(255, 255, 255), rgb(250, 235, 236), rgb(255, 255, 255));
+
     --border-color: #D8DEE4;
     --border-1: 1px solid var(--border-color);
 
