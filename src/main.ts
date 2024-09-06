@@ -14,10 +14,6 @@ import '@assets/css/base/animation.css'
 import '@assets/scss/base/_base.scss'
 import '@assets/scss/components/_base-button.scss'
 
-// 模拟后端数据：在自己的项目中请删除此引用
-import './mocks/menuMock'
-import './mocks/listMock'
-
 import * as menuIcon from './components/svicon/menuIcon'
 
 const app = createApp(App)

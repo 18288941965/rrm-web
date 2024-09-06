@@ -114,7 +114,7 @@ export default defineComponent({
         },
     )
 
-    const form = reactive<OrgBean>({
+    const form = reactive<any>({
       id: '',
       name: '',
     })

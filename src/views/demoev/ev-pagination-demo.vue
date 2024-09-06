@@ -83,10 +83,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, onMounted, reactive} from 'vue'
+import {defineComponent, onMounted, reactive, ref} from 'vue'
 import EvPagination from '../../components/evcomp/ev-pagination.vue'
-import {AxiosResult, Pagination} from '@utils/interface'
-import axios from 'axios'
+import {Pagination} from '@utils/interface'
 
 export default defineComponent({
   name: 'EvPaginationDemo',
@@ -95,6 +94,36 @@ export default defineComponent({
   },
   setup () {
     const dataList = ref<Array<any>>([])
+
+    // ================== 模拟数据===================== start ===
+    const demoList: Array<any> = []
+    for (let i = 0; i < 107; i++) {
+      demoList.push({ name: `测试数据${i + 1}`, date: new Date().getTime() })
+    }
+    const demoData = (pageNum: number, pageSize: number) => {
+      return {
+        code: 200,
+        message: null,
+        data: {
+          list: demoList.slice((pageNum - 1) * pageSize, pageNum * pageSize),
+          total: 107,
+          pageNum,
+          pageSize,
+        },
+      }
+    }
+    const demoList2: Array<any> = []
+    for (let i = 0; i < 527; i++) {
+      demoList2.push({ name: `测试数据${i + 1}`, date: new Date().getTime() })
+    }
+    const demoData2 = () => {
+      return {
+        code: 200,
+        message: null,
+        data: demoList2,
+      }
+    }
+    // ================== 模拟数据===================== end ===
 
     // ================== 后端分页===================== start ===
     const pager = reactive<Pagination<any>>({
@@ -108,13 +137,11 @@ export default defineComponent({
         pageNum,
         pageSize,
       })
-     axios.post('/admin/getDataList', { pageNum, pageSize })
-       .then((res: { data: AxiosResult }) => {
-         if (res.data.code === 200) {
-           pager.total = res.data.data.total
-           pager.list = res.data.data.list
-         }
-       })
+      const data = demoData(pageNum, pageSize)
+      if (data.code === 200) {
+        pager.total = data.data.total
+        pager.list = data.data.list
+      }
     }
     // ================== 后端分页===================== end ===
 
@@ -160,14 +187,12 @@ export default defineComponent({
 
     // 加载测试数据
     const queryDataList = () => {
-      axios.post('/admin/getAllDataList', {})
-        .then((res: { data: AxiosResult }) => {
-          if (res.data.code === 200) {
-            dataList.value = res.data.data
-            query2(1)
-            query3(1)
-          }
-        })
+      const data = demoData2()
+      if (data.code === 200) {
+        dataList.value = data.data
+        query2(1)
+        query3(1)
+      }
     }
 
     onMounted(() => {

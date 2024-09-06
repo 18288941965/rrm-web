@@ -5,7 +5,8 @@ import LocalStorage from '../../class/LocalStorage'
 import {LogoutSuccess} from '@utils/types'
 
 export default function (logoutSuccess: LogoutSuccess) {
-    axios.defaults.baseURL = '/api'
+
+    axios.defaults.baseURL = import.meta.env.VITE_AXIOS_URL
 
     // Add a request interceptor
     axios.interceptors.request.use(function (config) {
@@ -13,6 +14,8 @@ export default function (logoutSuccess: LogoutSuccess) {
         if (token) {
             config.headers.Authorization = `Bearer ${token}`
         }
+        // 标志前端axios请求
+        config.headers.XRequestedWith = 'XMLHttpRequest'
         // Do something before request is sent
         return config
     }, function (error) {
