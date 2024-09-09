@@ -1,22 +1,23 @@
 <template>
-  <a
-    class="admin-logo"
-    :href="clickTo"
-  >
-    <img
-      :src="logo"
-      alt=" "
+  <div class="admin-logo">
+    <a
+      :href="clickTo"
     >
-    <Transition name="slide-fade">
-      <span
-        v-if="!menuCollapse"
-        id="admin-logo-text"
+      <img
+        :src="logo"
+        alt=" "
       >
-        {{ moduleLabel }}
-      </span>
-    </Transition>
-  </a>
-  <span v-if="moduleCode">（{{ moduleCode }}）</span>
+      <Transition name="slide-fade">
+        <span
+          v-if="!menuCollapse"
+          id="admin-logo-text"
+        >
+          {{ moduleLabel }}
+        </span>
+      </Transition>
+    </a>
+    <span v-if="moduleCode">（{{ moduleCode }}）</span>
+  </div>
 </template>
 
 <script lang="ts">

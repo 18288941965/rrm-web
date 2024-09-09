@@ -2,73 +2,45 @@
   <div>
     <div class="mgb-medium org-toolbar">
       <el-button
-        class="mgr-medium"
         type="success"
         :icon="Plus"
         @click="dialogBaseOpen(undefined)"
       >
-        创建机构
+        创建一级机构
       </el-button>
 
-      <el-input
-        v-model="queryParams.name"
-        placeholder="请输入机构名称"
-        clearable
-        style="max-width: 600px"
+      <el-button
+        :icon="Plus"
+        :disabled="!activeOrg.id"
+        @click="dialogBaseOpen(undefined)"
       >
-        <template #append>
-          <el-button
-            :icon="Search"
-            style="width: 100px"
-            @click="query(1)"
-          />
-        </template>
-      </el-input>
-    </div>
-    
-    <el-table
-      :data="pager.list"
-      border
-      style="width: 100%"
-    >
-      <el-table-column
-        prop="sortOrder"
-        label="顺序号"
-        width="80px"
-        align="center"
-      />
-      <el-table-column
-        prop="name"
-        label="机构名称"
-      />
-      <el-table-column
-        prop="level"
-        label="机构等级"
-      />
-      <el-table-column
-        prop="description"
-        label="机构描述"
-      />
-      <el-table-column width="140px">
-        <template #default="scope">
-          <el-button
-            type="primary"
-            :icon="Edit"
-            @click="dialogBaseOpen(scope.row.id)"
-          />
+        创建子机构
+      </el-button>
 
-          <el-button
-            type="danger"
-            :icon="Delete"
-            @click="deleteData(scope.row.id)"
-          />
-        </template>
-      </el-table-column>
-    </el-table>
-    
-    <ev-pagination
-      :pager="pager"
-      @query="query"
+      <el-button
+        :icon="Edit"
+        :disabled="!activeOrg.id"
+        @click="dialogBaseOpen(undefined)"
+      >
+        编辑选中机构
+      </el-button>
+      
+      <el-button
+        :icon="Delete"
+        :disabled="!activeOrg.id && activeOrg.childrenCount === 0"
+        @click="dialogBaseOpen(undefined)"
+      >
+        删除选中机构
+      </el-button>
+    </div>
+
+    {{ activeOrg }}
+
+    <org-tree
+      ref="orgIndexTreeRef"
+      :org-list="orgList"
+      @set-active-org="treeCheckChange"
+      @set-checked-keys="null"
     />
 
     <org-edit-dialog
@@ -79,56 +51,24 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive} from 'vue'
-import {OrgBean, OrgBeanQuery} from './orgModel'
-import {Pagination} from '@utils/interface'
+import {defineComponent, onMounted,reactive, ref} from 'vue'
+import {OrgBeanActive, OrgBeanVO} from './orgModel'
 import {dialogBaseContent} from '@utils/dialogOptions'
-import {deleteOrg, searchOrgPage} from './orgOption'
+import {deleteOrg, getOrgByItemCode} from './orgOption'
 import {deleteConfirm} from '@utils/utils'
-import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import OrgEditDialog from './org-edit-dialog.vue'
-import {
-  Search,
-  Plus,
-    Edit,
-    Delete,
-} from '@element-plus/icons-vue'
+import {Delete, Edit, Plus, Search} from '@element-plus/icons-vue'
+import OrgTree from './org-tree.vue'
 
 export default defineComponent({
   name: 'OrgIndex',
   components: {
     OrgEditDialog,
-    EvPagination,
+    OrgTree,
   },
   setup(props, ctx) {
-
-    const queryParams = reactive<OrgBeanQuery>({
-      name: '',
-      code: '',
-    })
-
-    const pager = reactive<Pagination<OrgBean>>({
-      pageNum: 1,
-      pageSize: 10,
-      total: 0,
-      list: [],
-    })
-
-    const query = (pageNum = pager.pageNum, pageSize = pager.pageSize) => {
-      Object.assign(pager, {
-        pageNum,
-        pageSize,
-      })
-      searchOrgPage({
-        pageNum: pager.pageNum,
-        pageSize: pager.pageSize,
-        ...queryParams,
-      }).then(res => {
-        if (res.code === 200) {
-          Object.assign(pager, res.data)
-        }
-      })
-    }
+    const orgIndexTreeRef = ref()
+    const orgList = ref<Array<OrgBeanVO>>([])
 
     const {
       dialogBase,
@@ -136,12 +76,32 @@ export default defineComponent({
       dialogBaseCloseAndRefresh,
     } = dialogBaseContent<string>()
 
+    // 右侧激活的菜单
+    const activeOrg = reactive<OrgBeanActive>({
+      id: '',
+      name: '',
+      code: '',
+      childrenCount: 0,
+    })
+    const treeCheckChange = (data: OrgBeanActive) => {
+      Object.assign(activeOrg, data)
+    }
+
+    const query = () => {
+      // orgIndexTreeRef.value!.cleanActiveMenu(true)
+      getOrgByItemCode().then(res => {
+        if (res.code === 200) {
+          orgList.value = res.data
+        }
+      })
+    }
+    
     const deleteData = (id: string) => {
       deleteConfirm('你确定要删除此用户吗？').then(flag => {
         if (flag) {
           deleteOrg(id).then(res => {
             if (res.code === 200) {
-              query(1)
+              query()
             }
           })
         }
@@ -149,7 +109,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      query(1)
+      query()
     })
 
       return {
@@ -157,10 +117,14 @@ export default defineComponent({
         Plus,
         Edit,
         Delete,
-        queryParams,
-        pager,
+
+        treeCheckChange,
+        orgIndexTreeRef,
+
         query,
+        orgList,
         deleteData,
+        activeOrg,
 
         dialogBase,
         dialogBaseOpen,

@@ -8,8 +8,8 @@ const createOrg = (bean: OrgBean) => {
     })
 }
 
-const searchOrgPage = (params: OrgBeanBase) => {
-    return axios.post('/org/page', params).then((res: { data: AxiosResult }) => {
+const getOrgByItemCode = () => {
+    return axios.get('/org/tree').then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
@@ -34,7 +34,7 @@ const updateOrg = (bean: OrgBean) => {
 
 export {
     createOrg,
-    searchOrgPage,
+    getOrgByItemCode,
     getOrgById,
     deleteOrg,
     updateOrg,

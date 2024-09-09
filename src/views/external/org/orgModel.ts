@@ -19,8 +19,21 @@ interface OrgBean extends OrgBeanBase{
 interface OrgBeanQuery extends OrgBeanBase, PaginationQr{
 }
 
+interface OrgBeanVO extends OrgBean{
+    typeName: string | null
+    children: Array<OrgBeanVO>
+    disabled?: boolean
+}
+
+interface OrgBeanActive extends OrgBeanBase{
+    id: string
+    childrenCount: number
+}
+
 export {
     type OrgBeanBase,
     type OrgBean,
     type OrgBeanQuery,
+    type OrgBeanVO,
+    type OrgBeanActive,
 }

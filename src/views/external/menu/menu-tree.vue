@@ -124,7 +124,7 @@ export default defineComponent({
         emit('set-active-menu', {
           id: '',
           name: '',
-          children: [],
+          childrenCount: 0,
         })
       }
     }

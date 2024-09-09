@@ -10,12 +10,6 @@
           创建一级菜单
         </el-button>
 
-        <!--        <el-button
-          :icon="Upload"
-        >
-          导入菜单
-        </el-button>-->
-
         <el-button
           :icon="Sort"
           @click="dialogSortOpen(undefined)"
@@ -410,6 +404,7 @@ export default defineComponent({
         dialogBaseOpen: dialogSortOpen,
         dialogBaseCloseAndRefresh: dialogSortCloseAndRefresh,
     } = dialogBaseContent()
+    // ————————菜单排序————————end
 
     const query = () => {
       menuIndexTreeRef.value!.cleanActiveMenu(true)
@@ -419,8 +414,7 @@ export default defineComponent({
         }
       })
     }
-    // ————————菜单排序————————end
-    
+
     onMounted(() => {
       query()
     })

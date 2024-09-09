@@ -2,20 +2,23 @@
 
 .admin-logo{
   @include flex-base();
-  position: relative;
-  z-index: var(--z-index-b);
-  border-radius: var(--border-radius-medium);
-  height: var(--size-default);
-  text-decoration: none;
-  & img{
-    width: 24px;
-    margin-right: var(--mg-small);
-  }
-  & #admin-logo-text{
-    line-height: var(--size-default);
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: clip;
+  & a{
+    @include flex-base();
+    position: relative;
+    z-index: var(--z-index-b);
+    border-radius: var(--border-radius-medium);
+    height: var(--size-default);
+    text-decoration: none;
+    & img{
+      width: 24px;
+      margin-right: var(--mg-small);
+    }
+    & #admin-logo-text{
+      line-height: var(--size-default);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: clip;
+    }
   }
 }
 
