@@ -15,8 +15,9 @@
       <div
         class="theme2-nav__left"
       >
+        <p>®权限管理平台</p>
         <button
-          class="icon-button icon-button-menu-top menu-collapse-icon"
+          class="icon-button menu-collapse-icon"
           @click="setMenuCollapse(!menuCollapse)"
         >
           <MenuOpen
@@ -31,7 +32,7 @@
           :show-after="500"
         >
           <button
-            class="icon-button icon-button-menu-top mgr-medium"
+            class="icon-button mgr-medium"
             @click="menuOpen"
           >
             <Adjust />

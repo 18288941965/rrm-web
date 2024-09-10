@@ -20,6 +20,11 @@
       overflow: clip;
     }
   }
+  & .module-code{
+    font-weight: bolder;
+    display: inline-block;
+    margin-left: var(--mg-small);
+  }
 }
 
 .slide-fade-enter-active {

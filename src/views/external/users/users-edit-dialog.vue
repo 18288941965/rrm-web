@@ -2,6 +2,7 @@
   <el-dialog
     v-model="visible"
     width="720"
+    top="100px"
     :before-close="handleClose"
     :close-on-click-modal="false"
     :destroy-on-close="true"
@@ -21,7 +22,7 @@
       label-width="100px"
     >
       <el-form-item
-        label="用户名称"
+        label="姓名"
         prop="name"
       >
         <el-input
@@ -29,6 +30,119 @@
           clearable
         />
       </el-form-item>
+
+      <el-form-item
+        label="所属机构"
+        prop="orgCode"
+      >
+        <el-input
+          v-model.trim="form.orgCode"
+          clearable
+          disabled
+          placeholder="请选择所属机构"
+        >
+          <template #append>
+            <el-button :icon="Select" />
+          </template>
+        </el-input>
+      </el-form-item>
+
+      <div class="form-item-grid">
+        <el-form-item
+          label="用户名"
+          prop="username"
+        >
+          <el-input
+            v-model.trim="form.username"
+            clearable
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="密码"
+          prop="password"
+        >
+          <el-input
+            v-model.trim="form.password"
+            type="password"
+            show-password
+          />
+        </el-form-item>
+      </div>
+
+      <div class="form-item-grid">
+        <el-form-item
+          label="身份证号"
+          prop="idNumber"
+        >
+          <el-input
+            v-model.trim="form.idNumber"
+            clearable
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="手机号码"
+          prop="phoneNumber"
+        >
+          <el-input
+            v-model.trim="form.phoneNumber"
+            clearable
+          />
+        </el-form-item>
+      </div>
+      
+      <div class="form-item-grid">
+        <el-form-item
+          label="性别"
+          prop="gender"
+        >
+          <ev-select
+            v-model="form.type"
+            dict-type="dic_users_gender"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="民族"
+          prop="nation"
+        >
+          <ev-select
+            v-model="form.type"
+            dict-type="dic_users_nation"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+      </div>
+      
+
+      <div class="form-item-grid">
+        <el-form-item
+          label="出生日期"
+          prop="dateOfBirth"
+        >
+          <el-date-picker
+            v-model="form.dateOfBirth"
+            type="date"
+            placeholder="Pick a day"
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="用户类型"
+          prop="type"
+        >
+          <ev-select
+            v-model="form.type"
+            dict-type="dic_users_type"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+      </div>
 
       <el-form-item
         label="用户描述"
@@ -39,6 +153,52 @@
           type="textarea"
           :rows="2"
         />
+      </el-form-item>
+
+      <el-form-item
+        label="账号状态"
+        prop="accountStatus"
+      >
+        <el-radio-group
+          v-model="form.accountStatus"
+          disabled
+        >
+          <el-radio
+            :value="1"
+            label="活跃"
+          />
+          <el-radio
+            :value="-1"
+            label="禁止"
+          />
+          <el-radio
+            :value="0"
+            label="锁定"
+          />
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item
+        label="审核状态"
+        prop="approvalStatus"
+      >
+        <el-radio-group
+          v-model="form.approvalStatus"
+          disabled
+        >
+          <el-radio
+            :value="-1"
+            label="审核中"
+          />
+          <el-radio
+            :value="1"
+            label="审核通过"
+          />
+          <el-radio
+            :value="0"
+            label="审核不通过"
+          />
+        </el-radio-group>
       </el-form-item>
     </el-form>
 
@@ -67,10 +227,13 @@ import DialogFooter from '../../../components/dialog-footer.vue'
 import {UsersBean} from './usersModel'
 import {createUsers, getUsersById, updateUsers} from './usersOption'
 import {assignExistingFields} from '@utils/utils'
+import {Select} from '@element-plus/icons-vue'
+import EvSelect from '../../../components/evcomp/ev-select.vue'
 
 export default defineComponent({
   name: 'UsersEditDialog',
   components: {
+    EvSelect,
     DialogHeader,
     DialogFooter,
   },
@@ -107,19 +270,25 @@ export default defineComponent({
       orgName: '',
       username: '',
       password: '',
-      gender: '',
-      nation: '',
+      gender: null,
+      nation: null,
       idNumber: '',
       dateOfBirth: null,
       phoneNumber: '',
-      avatar: '',
-      type: '',
+      avatar: null,
+      type: null,
       description: '',
       accountStatus: 1,
+      approvalStatus: -1,
     })
 
     const rules = reactive<FormRules<UsersBean>>({
       name: [{ required: true, message: '用户名称为必填项', trigger: 'change'}],
+      orgCode: [{ required: true, message: '所属机构为必填项', trigger: 'change'}],
+      username: [{ required: true, message: '用户名为必填项', trigger: 'change'}],
+      password: [{ required: true, message: '密码为必填项', trigger: 'change'}],
+      idNumber: [{ required: true, message: '身份证号为必填项', trigger: 'change'}],
+      phoneNumber: [{ required: true, message: '电话号码为必填项', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {
@@ -173,6 +342,7 @@ export default defineComponent({
     }
 
     return {
+      Select,
       visible,
       rules,
       form,
@@ -189,5 +359,8 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
-  
+  .form-item-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 </style>

@@ -14,8 +14,8 @@
       v-show="getMenuLabel"
       class="active-menu-label"
     >
-      <span>/</span>
-      <span>{{ getMenuLabel }}</span>
+      <!--      <span>/</span>
+      <span>{{ getMenuLabel }}</span>-->
     </div>
 
     <div class="empty-flex" />
@@ -43,7 +43,7 @@ import AdminLogo from '../../logo/admin-logo.vue'
 import {ActiveMenus, RrmMenuBean} from '../menu/menuModels'
 import AppTheme from '../../../app-theme.vue'
 import UserAvatar from '../../../components/avatar/user-avatar.vue'
-import {Expand, PersonFill, Search} from '../../../components/svicon/publicIcon'
+import {Expand, PersonFill} from '../../../components/svicon/publicIcon'
 import LocalStorage from '../../../class/LocalStorage'
 import {LocalUserInfoBean} from '@utils/interface'
 import {closeDetails} from '@utils/utils'

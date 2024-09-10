@@ -20,6 +20,10 @@
       @include flex-base();
       height: 100%;
       padding-left: var(--pd-large);
+      & p{
+        font-weight: bold;
+        width: 160px;
+      }
     }
 
     &__right{

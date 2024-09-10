@@ -16,7 +16,10 @@
         </span>
       </Transition>
     </a>
-    <span v-if="moduleCode">（{{ moduleCode }}）</span>
+    <span
+      v-if="moduleCode"
+      class="module-code"
+    > [ {{ moduleCode }} ]</span>
   </div>
 </template>
 

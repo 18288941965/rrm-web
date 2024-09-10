@@ -21,13 +21,13 @@ interface UsersBean extends UsersBeanBase, UsersBeanChoosable{
     id: string
     username: string
     password: string
-    gender: string
-    nation: string
+    gender: string | null
+    nation: string | null
     idNumber: string
     dateOfBirth: Date | null
     phoneNumber: string
-    avatar: string
-    type: string
+    avatar: string | null
+    type: string | null
     description: string
     accountStatus: number
 }
