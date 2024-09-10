@@ -24,7 +24,8 @@
       node-key="id"
       show-checkbox
       default-expand-all
-      :expand-on-click-node="true"
+      :expand-on-click-node="false"
+      :check-on-click-node="true"
       :check-strictly="true"
       @check-change="treeCheckChange"
     >
@@ -156,7 +157,19 @@ export default defineComponent({
       })
     }
 
+    const setDisabledMenu = (tree: Array<OrgBeanVO>) => {
+      tree.forEach(menu => {
+        if (menu.isDeleted) {
+          menu.disabled = true
+        }
+        if (menu.children) {
+          setDisabledMenu(menu.children)
+        }
+      })
+    }
+
     const getOrgTreeList = computed(() => {
+      setDisabledMenu(orgTreeList.value)
       return orgTreeList.value
     })
 

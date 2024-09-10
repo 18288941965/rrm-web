@@ -7,9 +7,9 @@ interface OrgBeanBase{
 
 interface OrgBean extends OrgBeanBase{
     id: string
-    parentCode: string
-    abbrName: string
-    type: string
+    parentCode: string | null
+    abbrName: string | null
+    type: string | null
     isDeleted?: number
     deletedAt?: Date
     extendedField?: string

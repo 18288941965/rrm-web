@@ -4,7 +4,7 @@
       <el-button
         type="success"
         :icon="Plus"
-        @click="dialogBaseOpen(undefined)"
+        @click="dialogParamsOpen({ dataId: '' })"
       >
         创建一级机构
       </el-button>
@@ -12,7 +12,7 @@
       <el-button
         :icon="Plus"
         :disabled="!activeOrg.id"
-        @click="dialogBaseOpen(undefined)"
+        @click="dialogParamsOpen({ dataId: '', parentCode: activeOrg.code, parentName: activeOrg.name })"
       >
         创建子机构
       </el-button>
@@ -20,21 +20,19 @@
       <el-button
         :icon="Edit"
         :disabled="!activeOrg.id"
-        @click="dialogBaseOpen(undefined)"
+        @click="dialogParamsOpen({ dataId: activeOrg.id })"
       >
         编辑选中机构
       </el-button>
       
       <el-button
         :icon="Delete"
-        :disabled="!activeOrg.id && activeOrg.childrenCount === 0"
-        @click="dialogBaseOpen(undefined)"
+        :disabled="!activeOrg.id || activeOrg.childrenCount > 0"
+        @click="deleteData"
       >
         删除选中机构
       </el-button>
     </div>
-
-    {{ activeOrg }}
 
     <org-tree
       ref="orgIndexTreeRef"
@@ -44,16 +42,16 @@
     />
 
     <org-edit-dialog
-      v-bind="dialogBase"
-      @close-dialog="dialogBaseCloseAndRefresh($event, query)"
+      v-bind="dialogParam"
+      @close-dialog="dialogParamsCloseAndRefresh($event, query)"
     />
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted,reactive, ref} from 'vue'
+import {defineComponent, onMounted, reactive, ref} from 'vue'
 import {OrgBeanActive, OrgBeanVO} from './orgModel'
-import {dialogBaseContent} from '@utils/dialogOptions'
+import {dialogParamsContent} from '@utils/dialogOptions'
 import {deleteOrg, getOrgByItemCode} from './orgOption'
 import {deleteConfirm} from '@utils/utils'
 import OrgEditDialog from './org-edit-dialog.vue'
@@ -71,10 +69,10 @@ export default defineComponent({
     const orgList = ref<Array<OrgBeanVO>>([])
 
     const {
-      dialogBase,
-      dialogBaseOpen,
-      dialogBaseCloseAndRefresh,
-    } = dialogBaseContent<string>()
+      dialogParam,
+      dialogParamsOpen,
+      dialogParamsCloseAndRefresh,
+    } = dialogParamsContent()
 
     // 右侧激活的菜单
     const activeOrg = reactive<OrgBeanActive>({
@@ -96,10 +94,10 @@ export default defineComponent({
       })
     }
     
-    const deleteData = (id: string) => {
-      deleteConfirm('你确定要删除此用户吗？').then(flag => {
+    const deleteData = () => {
+      deleteConfirm('你确定要删除此机构吗？').then(flag => {
         if (flag) {
-          deleteOrg(id).then(res => {
+          deleteOrg(activeOrg.id).then(res => {
             if (res.code === 200) {
               query()
             }
@@ -126,9 +124,9 @@ export default defineComponent({
         deleteData,
         activeOrg,
 
-        dialogBase,
-        dialogBaseOpen,
-        dialogBaseCloseAndRefresh,
+        dialogParam,
+        dialogParamsOpen,
+        dialogParamsCloseAndRefresh,
       }
   },
 })

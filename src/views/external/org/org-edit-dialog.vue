@@ -9,8 +9,9 @@
   >
     <template #header>
       <dialog-header
-        title="机构"
+        :title="params.parentCode ? '子机构' : '一级机构'"
         :type="form.id ? '编辑' : '新增'"
+        :name="params.parentName"
       />
     </template>
     <el-form
@@ -27,6 +28,8 @@
         <el-input
           v-model.trim="form.code"
           clearable
+          :disabled="form.id !== ''"
+          placeholder="机构代码在创建后就不可再编辑"
         />
       </el-form-item>
       
@@ -54,18 +57,10 @@
         label="机构类型"
         prop="type"
       >
-        <el-input
-          v-model.trim="form.type"
-          clearable
-        />
-      </el-form-item>
-
-      <el-form-item
-        label="上级机构代码"
-        prop="parentCode"
-      >
-        <el-input
-          v-model.trim="form.parentCode"
+        <ev-select
+          v-model="form.type"
+          dict-type="dic_org_type"
+          :default-attr="{ label: 'entryName', value: 'entryCode' }"
           clearable
         />
       </el-form-item>
@@ -87,26 +82,34 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, ref, watch} from 'vue'
+import {defineComponent, PropType, reactive, ref, watch} from 'vue'
 import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
-import {AxiosResult} from '@utils/interface'
+import {AxiosResult, PropPrams} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
 import DialogHeader from '../../../components/dialog-header.vue'
 import DialogFooter from '../../../components/dialog-footer.vue'
 import {OrgBean} from './orgModel'
 import {createOrg, getOrgById, updateOrg} from './orgOption'
 import {assignExistingFields} from '@utils/utils'
+import EvSelect from '../../../components/evcomp/ev-select.vue'
 
 export default defineComponent({
   name: 'OrgEditDialog',
   components: {
+    EvSelect,
     DialogHeader,
     DialogFooter,
   },
   props: {
-    dataId: {
-      type: String,
-      default: '',
+    params: {
+      type: Object as PropType<PropPrams>,
+      default() {
+        return {
+          dataId: '',
+          parentCode: null,
+          parentName: null,
+        }
+      },
     },
     show: {
       type: Boolean,
@@ -133,21 +136,21 @@ export default defineComponent({
       id: '',
       code: '',
       name: '',
-      parentCode: '',
-      abbrName: '',
-      type: '',
+      parentCode: null,
+      abbrName: null,
+      type: null,
     })
 
     const rules = reactive<FormRules<OrgBean>>({
       name: [{ required: true, message: '机构名称为必填项', trigger: 'change'}],
-      code: [{ required: true, message: '机构名称为必填项', trigger: 'change'}],
+      code: [{ required: true, message: '机构代码为必填项', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {
       if (!formEl) return
       Object.assign(form, {
         id: '',
-        status: 1,
+        parentCode: null,
       })
       formEl.resetFields()
     }
@@ -172,7 +175,7 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          if (props.dataId) {
+          if (props.params.dataId) {
             updateOrg(form).then(res => {handleCallback(res)})
           } else {
             createOrg(form).then(res => {handleCallback(res)})
@@ -184,8 +187,11 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
-      if (props.dataId) {
-        getOrgById(props.dataId).then(res => {
+      if (props.params.parentCode) {
+        form.parentCode = props.params.parentCode
+      }
+      if (props.params.dataId) {
+        getOrgById(props.params.dataId).then(res => {
           if (res.code === 200) {
             assignExistingFields(form, res.data)
           }
