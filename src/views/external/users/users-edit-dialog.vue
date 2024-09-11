@@ -121,7 +121,6 @@
         </el-form-item>
       </div>
       
-
       <div class="form-item-grid">
         <el-form-item
           label="出生日期"
@@ -131,6 +130,7 @@
             v-model="form.dateOfBirth"
             type="date"
             placeholder="Pick a day"
+            value-format="YYYY-MM-DD"
           />
         </el-form-item>
 
@@ -327,15 +327,31 @@ export default defineComponent({
       }
     }
 
+    const validOther = () => {
+      if (props.dataId) {
+        form.idNumber = form.idNumber.toUpperCase()
+        const valid = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]$/.test(form.idNumber)
+        if (!valid) {
+          ElMessage.error('无效的身份证号！')
+          return
+        }
+
+        const valid2 = /^1[3-9]\d{9}$/.test(form.phoneNumber)
+        if (!valid2) {
+          ElMessage.error('无效的手机号码！')
+          return
+        }
+        updateUsers(form).then(res => {handleCallback(res)})
+      } else {
+        createUsers(form).then(res => {handleCallback(res)})
+      }
+    }
+
     const onSubmit = (formEl: FormInstance | undefined) => {
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          if (props.dataId) {
-            updateUsers(form).then(res => {handleCallback(res)})
-          } else {
-            createUsers(form).then(res => {handleCallback(res)})
-          }
+          validOther()
         } else {
           ElMessage.error('请填写完整表单！')
         }

@@ -4,7 +4,7 @@
       v-model.trim="searchVal"
       class="mgb-medium"
       clearable
-      placeholder="一级机构过滤"
+      placeholder="机构过滤"
       style="max-width: 600px"
     >
       <template #append>
@@ -27,6 +27,7 @@
       :expand-on-click-node="false"
       :check-on-click-node="true"
       :check-strictly="true"
+      :filter-node-method="filterNode"
       @check-change="treeCheckChange"
     >
       <template #default="{ node, data }">
@@ -52,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, nextTick, reactive, ref, toRef} from 'vue'
+import {computed, defineComponent, nextTick, reactive, ref, toRef, watch} from 'vue'
 import {OrgBeanVO} from './orgModel'
 import {Search} from '@element-plus/icons-vue'
 
@@ -180,6 +181,15 @@ export default defineComponent({
       return orgTreeList.value
     })
 
+    const filterNode = (value: string, data: OrgBeanVO) => {
+      if (!value) return true
+      return data.name.includes(value)
+    }
+
+    watch(searchVal, (val) => {
+      orgElTreeRef.value!.filter(val)
+    })
+
     return {
       Search,
       orgTreeList,
@@ -189,6 +199,7 @@ export default defineComponent({
       treeCheckChange,
       cleanActiveOrg,
       setTreeCheckedKeys,
+      filterNode,
     }
   },
 })

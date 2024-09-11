@@ -64,7 +64,7 @@ export default defineComponent({
     OrgEditDialog,
     OrgTree,
   },
-  setup(props, ctx) {
+  setup() {
     const orgIndexTreeRef = ref()
     const orgList = ref<Array<OrgBeanVO>>([])
 

@@ -32,22 +32,48 @@
       style="width: 100%"
     >
       <el-table-column
-        prop="sortOrder"
-        label="顺序号"
-        width="80px"
-        align="center"
-      />
-      <el-table-column
         prop="name"
-        label="用户名称"
+        label="姓名"
       />
       <el-table-column
-        prop="level"
-        label="用户等级"
+        prop="orgName"
+        label="归属机构"
       />
       <el-table-column
-        prop="description"
-        label="用户描述"
+        prop="username"
+        label="用户名"
+      />
+      <el-table-column
+        prop="gender"
+        label="性别"
+      />
+      <el-table-column
+        prop="nation"
+        label="民族"
+      />
+      <el-table-column
+        prop="idNumber"
+        label="身份证号"
+      />
+      <el-table-column
+        prop="dateOfBirth"
+        label="出生日期"
+      />
+      <el-table-column
+        prop="phoneNumber"
+        label="手机号码"
+      />
+      <el-table-column
+        prop="accountStatus"
+        label="账号状态"
+      />
+      <el-table-column
+        prop="approvalStatus"
+        label="审核状态"
+      />
+      <el-table-column
+        prop="isDeleted"
+        label="删除状态"
       />
       <el-table-column width="140px">
         <template #default="scope">
@@ -100,7 +126,7 @@ export default defineComponent({
     UsersEditDialog,
     EvPagination,
   },
-  setup(props, ctx) {
+  setup() {
 
     const queryParams = reactive<UsersBeanQuery>({
       name: '',
