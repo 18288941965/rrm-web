@@ -86,7 +86,7 @@ export default defineComponent({
     }
 
     const query = () => {
-      // orgIndexTreeRef.value!.cleanActiveMenu(true)
+      orgIndexTreeRef.value!.cleanActiveOrg(true)
       getOrgByItemCode().then(res => {
         if (res.code === 200) {
           orgList.value = res.data

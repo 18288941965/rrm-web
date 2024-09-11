@@ -33,16 +33,19 @@
 
       <el-form-item
         label="所属机构"
-        prop="orgCode"
+        prop="orgName"
       >
         <el-input
-          v-model.trim="form.orgCode"
+          v-model.trim="form.orgName"
           clearable
           disabled
           placeholder="请选择所属机构"
         >
           <template #append>
-            <el-button :icon="Select" />
+            <el-button
+              :icon="Select"
+              @click="dialogParamsOpen({ code: form.orgCode, name: form.orgName })"
+            />
           </template>
         </el-input>
       </el-form-item>
@@ -214,6 +217,11 @@
         </template>
       </dialog-footer>
     </template>
+    
+    <org-select-one-drawer
+      v-bind="dialogParam"
+      @close-dialog="dialogParamsClose"
+    />
   </el-dialog>
 </template>
 
@@ -221,7 +229,7 @@
 import {defineComponent, reactive, ref, watch} from 'vue'
 import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
 import {AxiosResult} from '@utils/interface'
-import {dialogOptions} from '@utils/dialogOptions'
+import {dialogOptions, dialogParamsContent} from '@utils/dialogOptions'
 import DialogHeader from '../../../components/dialog-header.vue'
 import DialogFooter from '../../../components/dialog-footer.vue'
 import {UsersBean} from './usersModel'
@@ -229,6 +237,8 @@ import {createUsers, getUsersById, updateUsers} from './usersOption'
 import {assignExistingFields} from '@utils/utils'
 import {Select} from '@element-plus/icons-vue'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
+import OrgSelectOneDrawer from '../org/org-select-one-drawer.vue'
+import {OrgBeanBase} from '../org/orgModel'
 
 export default defineComponent({
   name: 'UsersEditDialog',
@@ -236,6 +246,7 @@ export default defineComponent({
     EvSelect,
     DialogHeader,
     DialogFooter,
+    OrgSelectOneDrawer,
   },
   props: {
     dataId: {
@@ -284,7 +295,7 @@ export default defineComponent({
 
     const rules = reactive<FormRules<UsersBean>>({
       name: [{ required: true, message: '用户名称为必填项', trigger: 'change'}],
-      orgCode: [{ required: true, message: '所属机构为必填项', trigger: 'change'}],
+      orgName: [{ required: true, message: '所属机构为必填项', trigger: 'change'}],
       username: [{ required: true, message: '用户名为必填项', trigger: 'change'}],
       password: [{ required: true, message: '密码为必填项', trigger: 'change'}],
       idNumber: [{ required: true, message: '身份证号为必填项', trigger: 'change'}],
@@ -295,7 +306,7 @@ export default defineComponent({
       if (!formEl) return
       Object.assign(form, {
         id: '',
-        status: 1,
+        orgCode: '',
       })
       formEl.resetFields()
     }
@@ -341,6 +352,20 @@ export default defineComponent({
       }
     }
 
+    const {
+      dialogParam,
+      dialogParamsOpen,
+      dialogParamsClose: dialogParamsCloses,
+    } = dialogParamsContent()
+
+    const dialogParamsClose = (obj: OrgBeanBase) => {
+      dialogParamsCloses()
+      if (obj && obj.name) {
+        form.orgCode = obj.code
+        form.orgName = obj.name
+      }
+    }
+
     return {
       Select,
       visible,
@@ -351,6 +376,10 @@ export default defineComponent({
       handleClose,
       onSubmit,
       resetForm,
+
+      dialogParam,
+      dialogParamsOpen,
+      dialogParamsClose,
     }
   },
 })

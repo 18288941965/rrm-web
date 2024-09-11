@@ -21,7 +21,7 @@
       :class="{'tree-bd': orgTreeList && orgTreeList.length < 1}"
       :data="getOrgTreeList"
       :props="{label: 'name', children: 'children', disabled: 'disabled'}"
-      node-key="id"
+      node-key="code"
       show-checkbox
       default-expand-all
       :expand-on-click-node="false"
@@ -42,7 +42,7 @@
               size="small"
               class="mgl-medium"
             >
-              删除
+              已删除
             </el-tag>
           </span>
         </span>
@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, reactive, ref, toRef} from 'vue'
+import {computed, defineComponent, nextTick, reactive, ref, toRef} from 'vue'
 import {OrgBeanVO} from './orgModel'
 import {Search} from '@element-plus/icons-vue'
 
@@ -117,7 +117,7 @@ export default defineComponent({
         setActiveOrg(data)
         checkVal.oldVal = checkVal.newVal
         checkVal.newVal = data.id
-        orgElTreeRef.value.setCheckedKeys([data.id])
+        orgElTreeRef.value.setCheckedKeys([data.code])
         return
       }
 
@@ -144,6 +144,13 @@ export default defineComponent({
       if (cleanActive) {
         cleanCheck()
       }
+    }
+
+    // 数据回显
+    const setTreeCheckedKeys = (code: string) => {
+      nextTick(() => {
+        orgElTreeRef.value.setCheckedKeys([code])
+      })
     }
 
     const setDisabledOrg = (tree: Array<OrgBeanVO>) => {
@@ -181,6 +188,7 @@ export default defineComponent({
       orgElTreeRef,
       treeCheckChange,
       cleanActiveOrg,
+      setTreeCheckedKeys,
     }
   },
 })

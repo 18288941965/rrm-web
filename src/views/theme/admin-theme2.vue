@@ -15,7 +15,7 @@
       <div
         class="theme2-nav__left"
       >
-        <p>®权限管理平台</p>
+        <p>权限管理平台 © </p>
         <button
           class="icon-button menu-collapse-icon"
           @click="setMenuCollapse(!menuCollapse)"
