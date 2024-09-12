@@ -8,14 +8,14 @@ interface ItemBean{
 
 interface ItemBeanVO extends ItemBean{
     createdAt: Date
-    userId: number
+    createdBy: number
     loginId: number
     userList: Array<UserBean>
 }
 
 interface ItemBeanAll extends ItemBean{
     createdAt: Date
-    userId: number
+    createdBy: number
 }
 
 export {

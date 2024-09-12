@@ -56,7 +56,7 @@
               :key="scope.$index + '_' + index"
             >
               <el-tag
-                v-if="scope.row.userId === item.id"
+                v-if="scope.row.createdBy === item.id"
                 size="small"
                 type="primary"
                 class="mgr-medium"
@@ -83,7 +83,7 @@
           <el-button
             type="primary"
             :icon="Edit"
-            :disabled="scope.row.userId !== scope.row.loginId"
+            :disabled="scope.row.createdBy !== scope.row.loginId"
             @click="dialogBaseOpen(scope.row.id)"
           />
 
@@ -92,13 +92,13 @@
             :icon="Delete"
             :disabled="scope.row.itemCode === activeItemCode
               ||
-              scope.row.userId !== scope.row.loginId"
+              scope.row.createdBy !== scope.row.loginId"
             @click="deleteData(scope.row.id)"
           />
           <el-button
             :icon="EditPen"
-            :disabled="scope.row.userId !== scope.row.loginId"
-            @click="dialogTeamOpen({ dataId: scope.row.id, userId: scope.row.userId })"
+            :disabled="scope.row.createdBy !== scope.row.loginId"
+            @click="dialogTeamOpen({ dataId: scope.row.id, createdBy: scope.row.createdBy })"
           >
             协作者
           </el-button>

@@ -29,7 +29,15 @@ export function useScrollSticky(domId: string) {
             let data = styles.getPropertyValue('--header-banner-height')
             let top = 0
             if (data) {
-                top =  parseInt(data.replace('px', '')) - window.scrollY
+                const strings = data.split('+')
+                let sum = 0
+                for (let string of strings) {
+                    let numbers = string.match(/\d+(\.\d+)?/g)
+                    if (numbers && numbers.length > 0) {
+                        sum += parseInt(numbers[0])
+                    }
+                }
+                top =  sum - window.scrollY
                 top = top > 0 ? top : 0
             }
             mainElement.style.setProperty('--sticky-pane-height', `calc(100vh - ${top}px)`)

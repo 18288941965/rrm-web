@@ -24,7 +24,7 @@
           :key="'xzz-' + index"
           :label="user.description ? user.username + '（' + user.description + '）' : user.username"
           :value="user.id"
-          :disabled="user.id === params.userId"
+          :disabled="user.id === params.createdBy"
           border
         />
       </el-checkbox-group>

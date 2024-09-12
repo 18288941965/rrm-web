@@ -52,7 +52,7 @@
               :key="scope.$index + '_' + index"
             >
               <el-tag
-                v-if="scope.row.id === item.userId"
+                v-if="scope.row.id === item.createdBy"
                 size="small"
                 type="primary"
                 round
@@ -148,7 +148,7 @@ export default defineComponent({
     const deleteData = (username: string, id: number) => {
       const userObj = userList.value.find(user => user.id === id)
       if (userObj) {
-        const find = userObj.itemList.find(item => item.userId === id)
+        const find = userObj.itemList.find(item => item.createdBy === id)
         if (find) {
           ElMessage.error('请先删除当前用户创建的项目，才能删除此用户！')
           return
