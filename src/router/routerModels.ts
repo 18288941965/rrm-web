@@ -4,7 +4,7 @@
  */
 export enum RUEnum {
     LOGIN = '/',
-    HOME = '/app/home',
+    HOME = '/app/home/dashboard',
     ITEM= '/app/item'
 }
 

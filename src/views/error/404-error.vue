@@ -5,7 +5,7 @@
       <h3>哎呀，出了点问题。</h3>
       <p>抱歉！您访问的页面不存在。</p>
       <router-link
-        to="/app/home"
+        to="/app/home/dashboard"
         class="to-app-home"
       >
         返回工作台

@@ -14,13 +14,32 @@
       />
     </template>
     <div class="drag-body">
+      <el-button-group class="mgb-medium">
+        <el-button
+          :icon="Sort"
+          :type="sortType === 0 ? 'primary' : 'info'"
+          @click="setSortType(0)"
+        >
+          顺序号
+        </el-button>
+        <el-button
+          :icon="Sort"
+          :type="sortType === 1 ? 'primary' : 'info'"
+          @click="setSortType(1)"
+        >
+          代码值
+        </el-button>
+      </el-button-group>
       <draggable
         v-model="dataList"
         item-key="id"
       >
         <template #item="{element, index}">
           <div class="drag-item">
-            <span>{{ index + 1 }}</span> {{ element.entryName }}
+            <span>{{ index + 1 }}</span>
+            [ {{ element.entryCode }} ]
+            {{ element.entryName }}
+            <span>{{ element.sortOrder }}</span>
           </div>
         </template>
       </draggable>
@@ -53,6 +72,7 @@ import {
 import draggable from 'vuedraggable'
 import DialogHeader from '../../../components/dialog-header.vue'
 import DialogFooter from '../../../components/dialog-footer.vue'
+import {Sort} from '@element-plus/icons-vue'
 
 export default defineComponent({
   name: 'DictItemSortDialog',
@@ -79,6 +99,7 @@ export default defineComponent({
         isRefresh,
     } = dialogOptions()
 
+    const sortType = ref(0)
     const dataList = ref<Array<DictEntryBean>>([])
     const bakMap = new Map<number, number>()
 
@@ -93,6 +114,7 @@ export default defineComponent({
     const handleClose = () => {
       dataList.value = []
       bakMap.clear()
+      sortType.value = 0
       const refresh = isRefresh.value
       isRefresh.value = false
       emit('close-dialog', refresh)
@@ -124,6 +146,23 @@ export default defineComponent({
       updateDictEntrySort(tmp).then(res => { handleCallback(res) })
     }
 
+    const setSortType = (type: number) => {
+      if (sortType.value === type) {
+        return
+      }
+      sortType.value = type
+      if (type === 1) {
+        dataList.value.sort((a, b) => {
+          return a.entryCode > b.entryCode ? 1 : -1
+        })
+        return
+      }
+
+      dataList.value.sort((a, b) => {
+        return a.sortOrder > b.sortOrder ? 1 : -1
+      })
+    }
+
     const handleOpen = () => {
       getDictEntryByTypeId(props.dataId).then(res => {
         if (res.code === 200) {
@@ -136,6 +175,10 @@ export default defineComponent({
     }
 
     return {
+      Sort,
+      sortType,
+      setSortType,
+
       visible,
       handleOpen,
       handleClose,
@@ -158,10 +201,19 @@ export default defineComponent({
     border: var(--border-1);
     border-bottom: 0;
     cursor: move;
+    display: flex;
     & span{
       display: inline-block;
-      padding-right: var(--pd-medium);
+    }
+    & span:first-child{
+      width: 80px;
       color: var(--color-purple);
+    }
+    & span:last-child{
+      flex: 1;
+      text-align: right;
+      padding-right: var(--pd-medium);
+      color: var(--border-color);
     }
   }
   .drag-item:first-of-type{

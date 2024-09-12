@@ -4,7 +4,7 @@ NProgress.configure({
     showSpinner: false,
 })
 
-const excludePath = ['/', '/app/home']
+const excludePath = ['/', '/app/home/dashboard']
 
 export default function () {
     const NProgressStart = (path: string) => {

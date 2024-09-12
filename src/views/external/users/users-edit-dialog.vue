@@ -102,7 +102,7 @@
         >
           <ev-select
             v-model="form.type"
-            dict-type="dic_users_gender"
+            dict-type="dic_user_gender"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
           />
@@ -114,7 +114,7 @@
         >
           <ev-select
             v-model="form.type"
-            dict-type="dic_users_nation"
+            dict-type="dic_user_nation"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
           />
@@ -140,7 +140,7 @@
         >
           <ev-select
             v-model="form.type"
-            dict-type="dic_users_type"
+            dict-type="dic_user_type"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
           />

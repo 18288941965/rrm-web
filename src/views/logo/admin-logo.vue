@@ -47,7 +47,7 @@ export default defineComponent({
     },
     clickTo: {
       type: String,
-      default: '/app/home',
+      default: '/app/home/dashboard',
     },
   },
   setup () {
