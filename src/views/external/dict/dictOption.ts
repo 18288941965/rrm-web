@@ -79,8 +79,8 @@ const updateDictEntryStatus = (id: number, status: number) => {
     })
 }
 
-const getDictEntryByTypeId = (typeId: number) => {
-    return axios.get(`/dict-entry/subitems/${typeId}`).then((res: { data: AxiosResult }) => {
+const getDictEntryByTypeCode = (typeCode: String) => {
+    return axios.get(`/dict-entry/subitems/${typeCode}`).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
@@ -104,6 +104,6 @@ export {
     updateDictEntry,
     deleteDictEntry,
     updateDictEntryStatus,
-    getDictEntryByTypeId,
+    getDictEntryByTypeCode,
     updateDictEntrySort,
 }

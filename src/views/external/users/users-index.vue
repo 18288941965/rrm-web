@@ -33,8 +33,26 @@
     >
       <el-table-column
         prop="name"
-        label="姓名"
-      />
+        label="姓名 / 性别 / 民族"
+      >
+        <template #default="scope">
+          {{ scope.row.name }}
+          <el-tag
+            color="#FAE8FF"
+            class="mgl-ultra-small"
+            round
+          >
+            {{ scope.row.gender }}
+          </el-tag>
+          <el-tag
+            color="#EBFBFC"
+            class="mgl-ultra-small"
+            round
+          >
+            {{ scope.row.nation }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="orgName"
         label="归属机构"
@@ -42,40 +60,108 @@
       <el-table-column
         prop="username"
         label="用户名"
-      />
-      <el-table-column
-        prop="gender"
-        label="性别"
-      />
-      <el-table-column
-        prop="nation"
-        label="民族"
+        width="130"
       />
       <el-table-column
         prop="idNumber"
         label="身份证号"
+        width="186"
       />
       <el-table-column
         prop="dateOfBirth"
         label="出生日期"
+        width="120"
       />
       <el-table-column
         prop="phoneNumber"
         label="手机号码"
+        width="120"
       />
       <el-table-column
         prop="accountStatus"
         label="账号状态"
-      />
+        width="100"
+        align="center"
+      >
+        <template #default="scope">
+          <el-tag
+            v-if="scope.row.accountStatus === 1"
+            type="success"
+            round
+          >
+            活跃
+          </el-tag>
+          <el-tag
+            v-else-if="scope.row.accountStatus === -1"
+            type="danger"
+            round
+          >
+            禁止
+          </el-tag>
+          <el-tag
+            v-else
+            type="warning"
+            round
+          >
+            锁定
+          </el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column
         prop="approvalStatus"
         label="审核状态"
-      />
+        width="120"
+        align="center"
+      >
+        <template #default="scope">
+          <el-tag
+            v-if="scope.row.approvalStatus === 1"
+            type="success"
+            round
+          >
+            审核通过
+          </el-tag>
+          <el-tag
+            v-else-if="scope.row.approvalStatus === -1"
+            type="info"
+            round
+          >
+            审核中
+          </el-tag>
+          <el-tag
+            v-else
+            type="danger"
+            round
+          >
+            审核不通过
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="isDeleted"
         label="删除状态"
-      />
-      <el-table-column width="140px">
+        width="100"
+        align="center"
+      >
+        <template #default="scope">
+          <el-tag
+            v-if="scope.row.isDeleted === 1"
+            type="danger"
+            round
+          >
+            是
+          </el-tag>
+          <el-tag
+            v-else
+            type="success"
+            round
+          >
+            否
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column width="130px">
         <template #default="scope">
           <el-button
             type="primary"
@@ -198,5 +284,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
+  .mgl-ultra-small{
+    margin-left: var(--mg-ultra-small)
+  }
 </style>

@@ -28,7 +28,7 @@ interface UsersBean extends UsersBeanBase, UsersBeanChoosable{
     phoneNumber: string
     avatar: string | null
     type: string | null
-    description: string
+    description: string | null
     accountStatus: number
 }
 

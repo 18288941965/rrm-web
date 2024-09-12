@@ -27,16 +27,15 @@ interface DictEntrySortBean{
 }
 
 interface DictEntryBean extends DictEntryBeanBase, DictEntrySortBean{
-    typeId: number
+    typeCode: string
     parentId: number
     status: number
     description: string
 }
 
 interface DictEntryBeanQuery extends DictEntryBeanBase, PaginationQr{
-    typeId: number
+    typeCode: string
 }
-
 
 export {
     type DictTypeBean,

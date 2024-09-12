@@ -115,7 +115,7 @@ export default defineComponent({
       default() {
         return {
           dataId: 0,
-          typeId: 0,
+          typeCode: '',
           typeName: '',
         }
       },
@@ -146,7 +146,7 @@ export default defineComponent({
       entryName: '',
 
       id: 0,
-      typeId: 0,
+      typeCode: '',
       parentId: 0,
       sortOrder: 0,
       status: 1,
@@ -161,7 +161,7 @@ export default defineComponent({
       if (!formEl) return
       Object.assign(form, {
         id: 0,
-        typeId: 0,
+        typeCode: '',
         sortOrder: 0,
       })
       formEl.resetFields()
@@ -199,14 +199,14 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
-      form.typeId = props.params.typeId
+      form.typeCode = props.params.typeCode
       if (props.params.dataId) {
         getDictEntryById(props.params.dataId).then(res => {
           if (res.code === 200) {
             const data = res.data
             Object.assign(form, {
               id: data.id,
-              typeId: data.typeId,
+              typeCode: data.typeCode,
               entryName: data.entryName,
               entryCode: data.entryCode,
               status: data.status,

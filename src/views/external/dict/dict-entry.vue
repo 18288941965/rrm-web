@@ -40,7 +40,7 @@
           class="mgb-medium"
           type="success"
           :icon="Plus"
-          @click="dialogItemOpen({ dataId: 0, typeId: selectDictType.id, typeName: selectDictType.typeName })"
+          @click="dialogItemOpen({ dataId: 0, typeCode: selectDictType.typeCode, typeName: selectDictType.typeName })"
         >
           创建字典项
         </el-button>
@@ -49,7 +49,7 @@
           :disabled="!selectDictType.typeCode || pager.list.length === 0"
           class="mgb-medium"
           :icon="Sort"
-          @click="dialogBaseOpen(selectDictType.id)"
+          @click="dialogBaseOpen(selectDictType.typeCode)"
         >
           字典项排序
         </el-button>
@@ -103,7 +103,7 @@
           <el-button
             type="primary"
             :icon="Edit"
-            @click="dialogItemOpen({ dataId: scope.row.id, typeId: selectDictType.id, typeName: selectDictType.typeName })"
+            @click="dialogItemOpen({ dataId: scope.row.id, typeCode: selectDictType.typeCode, typeName: selectDictType.typeName })"
           />
 
           <el-button
@@ -170,7 +170,7 @@ export default defineComponent({
   emits: ['set-entry-count'],
   setup(props, { emit }) {
     const queryParams = reactive<DictEntryBeanQuery>({
-      typeId: 0,
+      typeCode: '',
       entryName: '',
       entryCode: '',
     })
@@ -199,7 +199,7 @@ export default defineComponent({
 
     watchEffect(() => {
       if (props.selectDictType.id) {
-        queryParams.typeId = props.selectDictType.id
+        queryParams.typeCode = props.selectDictType.typeCode
         query(1)
       } else {
         Object.assign(pager, {
@@ -232,7 +232,7 @@ export default defineComponent({
       dialogBase,
         dialogBaseOpen,
         dialogBaseCloseAndRefresh,
-    } = dialogBaseContent<number>()
+    } = dialogBaseContent()
     
     const {
       dialogParam: dialogItem,

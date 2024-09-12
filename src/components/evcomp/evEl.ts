@@ -42,8 +42,6 @@ export const defaultProps = {
 export function getEvElContext () {
     const dictList = ref<LabelValue[]>([])
 
-
-
     /**
      * 根据请求地址获取数据。
      * 根据数据读取字段重构对象。

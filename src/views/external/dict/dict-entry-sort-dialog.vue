@@ -67,7 +67,7 @@ import {AxiosResult} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
 import {DictEntryBean, DictEntrySortBean} from './dictModel'
 import {
-  getDictEntryByTypeId, updateDictEntrySort,
+  getDictEntryByTypeCode, updateDictEntrySort,
 } from './dictOption'
 import draggable from 'vuedraggable'
 import DialogHeader from '../../../components/dialog-header.vue'
@@ -83,8 +83,8 @@ export default defineComponent({
   },
   props: {
     dataId: {
-      type: Number,
-      default: 0,
+      type: String,
+      default: '',
     },
     show: {
       type: Boolean,
@@ -164,7 +164,7 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
-      getDictEntryByTypeId(props.dataId).then(res => {
+      getDictEntryByTypeCode(props.dataId).then(res => {
         if (res.code === 200) {
           dataList.value = res.data
           dataList.value.forEach(item => {

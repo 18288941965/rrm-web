@@ -101,7 +101,7 @@
           prop="gender"
         >
           <ev-select
-            v-model="form.type"
+            v-model="form.gender"
             dict-type="dic_user_gender"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
@@ -113,7 +113,7 @@
           prop="nation"
         >
           <ev-select
-            v-model="form.type"
+            v-model="form.nation"
             dict-type="dic_user_nation"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
@@ -168,15 +168,15 @@
         >
           <el-radio
             :value="1"
-            label="活跃"
+            label="活跃 [1]"
           />
           <el-radio
             :value="-1"
-            label="禁止"
+            label="禁止 [-1]"
           />
           <el-radio
             :value="0"
-            label="锁定"
+            label="锁定 [0]"
           />
         </el-radio-group>
       </el-form-item>
@@ -191,15 +191,15 @@
         >
           <el-radio
             :value="-1"
-            label="审核中"
+            label="审核中 [-1]"
           />
           <el-radio
             :value="1"
-            label="审核通过"
+            label="审核通过 [1]"
           />
           <el-radio
             :value="0"
-            label="审核不通过"
+            label="审核不通过 [0]"
           />
         </el-radio-group>
       </el-form-item>
@@ -288,13 +288,14 @@ export default defineComponent({
       phoneNumber: '',
       avatar: null,
       type: null,
-      description: '',
+      description: null,
       accountStatus: 1,
       approvalStatus: -1,
     })
 
     const rules = reactive<FormRules<UsersBean>>({
       name: [{ required: true, message: '用户名称为必填项', trigger: 'change'}],
+      gender: [{ required: true, message: '性别必填项', trigger: 'change'}],
       orgName: [{ required: true, message: '所属机构为必填项', trigger: 'change'}],
       username: [{ required: true, message: '用户名为必填项', trigger: 'change'}],
       password: [{ required: true, message: '密码为必填项', trigger: 'change'}],
@@ -328,19 +329,25 @@ export default defineComponent({
     }
 
     const validOther = () => {
-      if (props.dataId) {
-        form.idNumber = form.idNumber.toUpperCase()
-        const valid = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]$/.test(form.idNumber)
-        if (!valid) {
-          ElMessage.error('无效的身份证号！')
-          return
-        }
+      form.idNumber = form.idNumber.toUpperCase()
+      const valid = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]$/.test(form.idNumber)
+      if (!valid) {
+        ElMessage.error('无效的身份证号！')
+        return
+      }
 
-        const valid2 = /^1[3-9]\d{9}$/.test(form.phoneNumber)
-        if (!valid2) {
-          ElMessage.error('无效的手机号码！')
-          return
-        }
+      const valid2 = /^1[3-9]\d{9}$/.test(form.phoneNumber)
+      if (!valid2) {
+        ElMessage.error('无效的手机号码！')
+        return
+      }
+
+      if (!props.dataId && form.password.length < 6) {
+        ElMessage.error('密码长度最少为 6 位！')
+        return
+      }
+
+      if (props.dataId) {
         updateUsers(form).then(res => {handleCallback(res)})
       } else {
         createUsers(form).then(res => {handleCallback(res)})
