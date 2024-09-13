@@ -18,6 +18,12 @@ interface ResourceBean extends ResourceBeanBase{
     status: number
 }
 
+interface ResourceBeanVO extends ResourceBean{
+    resourceTypeName: string | null
+    authCodeName: string | null
+    environmentName: string | null
+}
+
 interface ResourceQuery extends ResourceBeanBase, PaginationQr{
 }
 
@@ -25,4 +31,5 @@ export {
     type ResourceBeanBase,
     type ResourceBean,
     type ResourceQuery,
+    type ResourceBeanVO,
 }

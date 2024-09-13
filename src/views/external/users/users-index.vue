@@ -42,14 +42,14 @@
             class="mgl-ultra-small"
             round
           >
-            {{ scope.row.gender }}
+            {{ scope.row.genderName }}
           </el-tag>
           <el-tag
             color="#EBFBFC"
             class="mgl-ultra-small"
             round
           >
-            {{ scope.row.nation }}
+            {{ scope.row.nationName }}
           </el-tag>
         </template>
       </el-table-column>
@@ -192,7 +192,7 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, reactive} from 'vue'
-import {UsersBean, UsersBeanQuery} from './usersModel'
+import {UsersBeanVO, UsersBeanQuery} from './usersModel'
 import {Pagination} from '@utils/interface'
 import {dialogBaseContent} from '@utils/dialogOptions'
 import {deleteUsers, searchUsersPage} from './usersOption'
@@ -220,7 +220,7 @@ export default defineComponent({
       orgName: '',
     })
     
-    const pager = reactive<Pagination<UsersBean>>({
+    const pager = reactive<Pagination<UsersBeanVO>>({
       pageNum: 1,
       pageSize: 10,
       total: 0,

@@ -32,6 +32,12 @@ interface UsersBean extends UsersBeanBase, UsersBeanChoosable{
     accountStatus: number
 }
 
+interface UsersBeanVO extends UsersBean{
+    genderName: string | null
+    nationName: string | null
+    typeName: string | null
+}
+
 interface UsersBeanQuery extends UsersBeanBase, PaginationQr{
 }
 
@@ -39,4 +45,5 @@ export {
     type UsersBeanBase,
     type UsersBean,
     type UsersBeanQuery,
+    type UsersBeanVO,
 }

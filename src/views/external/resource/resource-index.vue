@@ -45,19 +45,22 @@
         label="资源名称"
       />
       <el-table-column
-        prop="resourceType"
+        prop="resourceTypeName"
         width="90"
         label="资源类型"
+        align="center"
       />
       <el-table-column
-        prop="authCode"
+        prop="authCodeName"
         width="90"
-        label="授权码"
+        label="授权类型"
+        align="center"
       />
       <el-table-column
-        prop="environment"
-        width="90"
+        prop="environmentName"
+        width="80"
         label="环境"
+        align="center"
       />
       <el-table-column
         prop="status"
@@ -90,7 +93,7 @@
 import {defineComponent, reactive, onMounted} from 'vue'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import {Pagination} from '@utils/interface'
-import {ResourceBean, ResourceQuery} from './resourceModel'
+import {ResourceBeanVO, ResourceQuery} from './resourceModel'
 import {scannerRrmResource, searchResourcePage, updateResourceStatus} from './resourceOption'
 import {ElMessage} from 'element-plus'
 import {Reading} from '@element-plus/icons-vue'
@@ -98,7 +101,7 @@ import {Reading} from '@element-plus/icons-vue'
 export default defineComponent({
   name: 'ResourceIndex',
   components: {EvPagination},
-  setup(props, ctx) {
+  setup() {
     
     const queryParams = reactive<ResourceQuery>({
       serviceName: '',
@@ -106,7 +109,7 @@ export default defineComponent({
       resourceName: '',
     })
 
-    const pager = reactive<Pagination<ResourceBean>>({
+    const pager = reactive<Pagination<ResourceBeanVO>>({
       pageNum: 1,
       pageSize: 10,
       total: 0,

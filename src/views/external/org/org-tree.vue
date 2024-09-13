@@ -37,6 +37,14 @@
           </span>
           <span>
             <el-tag
+              v-if="data.type"
+              type="info"
+              round
+              size="small"
+            >
+              {{ data.typeName }}
+            </el-tag>
+            <el-tag
               v-if="data.isDeleted"
               type="warning"
               round
@@ -232,6 +240,7 @@ export default defineComponent({
 </style>
 <style lang="scss">
 .org-index-tree{
+  max-width: 1000px;
   & .el-tree-node__content, .tree-bd, .el-tree__empty-block{
     border-bottom: var(--border-1);
   }
