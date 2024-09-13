@@ -6,7 +6,7 @@
       :icon="Plus"
       @click="dialogEmptyOpen"
     >
-      创建用户
+      创建账号
     </el-button>
 
     <el-button
@@ -23,7 +23,7 @@
     >
       <el-table-column
         prop="username"
-        label="用户名"
+        label="账号"
       >
         <template #default="scope">
           <span>{{ scope.row.username }}</span>
@@ -33,7 +33,7 @@
             class="mgl-medium"
             round
           >
-            登录用户
+            登录账号
           </el-tag>
         </template>
       </el-table-column>
@@ -84,7 +84,7 @@
           <el-button
             type="danger"
             :icon="Delete"
-            :disabled="scope.row.username === activeUsername"
+            :disabled="!scope.row.createdBy || scope.row.createdBy !== scope.row.loginId"
             @click="deleteData(scope.row.username, scope.row.id)"
           />
         </template>
@@ -150,12 +150,12 @@ export default defineComponent({
       if (userObj) {
         const find = userObj.itemList.find(item => item.createdBy === id)
         if (find) {
-          ElMessage.error('请先删除当前用户创建的项目，才能删除此用户！')
+          ElMessage.error('请先删除当前账号创建的项目，才能删除此账号！')
           return
         }
       }
 
-      ElMessageBox.prompt('请输入要删除用户的密码', 'Tip', {
+      ElMessageBox.prompt('请输入要删除账号的密码', 'Tip', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
       })

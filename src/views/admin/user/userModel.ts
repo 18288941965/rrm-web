@@ -7,7 +7,7 @@ interface UserBeanBase{
 
 interface UserBean extends UserBeanBase{
     id: number
-    description: string
+    description: string | null
 }
 
 interface UserPassBean{
@@ -16,6 +16,7 @@ interface UserPassBean{
 }
 
 interface UserItemBean extends UserBean{
+    loginId: number
     itemList: Array<ItemBeanAll>
 }
 

@@ -9,7 +9,7 @@
   >
     <template #header>
       <dialog-header
-        title="用户"
+        title="账号"
         type="新增"
       />
     </template>
@@ -21,14 +21,14 @@
       label-width="auto"
     >
       <el-form-item
-        label="用户名"
+        label="账号名"
         prop="username"
       >
         <el-input
           v-model.trim.number="form.username"
           clearable
           :disabled="form.id !== 0"
-          placeholder="请输入用户名"
+          placeholder="请输入账号名"
         />
       </el-form-item>
       <el-form-item
@@ -45,7 +45,7 @@
       </el-form-item>
 
       <el-form-item
-        label="用户说明"
+        label="账号说明"
         prop="description"
       >
         <el-input
@@ -113,7 +113,7 @@ export default defineComponent({
       id: 0,
       username: '',
       password: '',
-      description: '',
+      description: null,
     })
 
     const validate = (rule: any, value: any, callback: any, message: string) => {
@@ -127,12 +127,12 @@ export default defineComponent({
       }
     }
 
-    // 用户名自定义验证规则
+    // 账号名自定义验证规则
     const validateUsername = (rule: any, value: any, callback: any) => {
-      validate(rule, value, callback, '用户名')
+      validate(rule, value, callback, '账号名')
     }
 
-    // 用户名自定义验证规则
+    // 账号名自定义验证规则
     const validatePassword = (rule: any, value: any, callback: any) => {
       validate(rule, value, callback, '密码')
     }
@@ -148,7 +148,7 @@ export default defineComponent({
         id: 0,
         username: '',
         password: '',
-        description: '',
+        description: null,
       })
       const refresh = isRefresh.value
       isRefresh.value = false

@@ -8,7 +8,7 @@ const createUser = (bean: UserBean) => {
     })
 }
 
-const updateUserDescription = (id: number, description: string) => {
+const updateUserDescription = (id: number, description: string | null) => {
     return axios.put('/user/description', {id, description}).then((res: { data: AxiosResult }) => {
         return res.data
     })
@@ -26,7 +26,7 @@ const deleteUser = (id: number) => {
     })
 }
 
-// 根据id获取用户信息
+// 根据id获取账号信息
 const getUserById = (id: number) => {
     return axios.get(`/user/${id}`).then((res: { data: AxiosResult }) => {
         return res.data
@@ -47,7 +47,7 @@ const updatePass = (userPassBean: UserPassBean) => {
     })
 }
 
-// 获取所有用户的基本信息
+// 获取所有账号的基本信息
 const getAllUserBase = () => {
     return axios.get('/user/allUserBase').then((res: { data: AxiosResult }) => {
         return res.data

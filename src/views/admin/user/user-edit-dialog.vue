@@ -9,7 +9,7 @@
   >
     <template #header>
       <dialog-header
-        title="用户说明"
+        title="账号说明"
         type="编辑"
       />
     </template>
@@ -20,13 +20,12 @@
       label-width="auto"
     >
       <el-form-item
-        label="用户描述"
+        label="账号描述"
         prop="description"
       >
         <el-input
           v-model.trim="form.description"
           clearable
-          placeholder=""
         />
       </el-form-item>
     </el-form>
@@ -89,7 +88,7 @@ export default defineComponent({
 
     const form = reactive({
       id: 0,
-      description: '',
+      description: null,
     })
 
 
@@ -97,7 +96,7 @@ export default defineComponent({
     const handleClose = () => {
       Object.assign(form, {
         id: 0,
-        description: '',
+        description: null,
       })
       const refresh = isRefresh.value
       isRefresh.value = false

@@ -5,6 +5,7 @@
         v-model="queryParams.entryName"
         placeholder="请输入字典名称"
         clearable
+        @keyup.enter="query(1)"
       >
         <template #append>
           <el-button
@@ -30,7 +31,7 @@
           <span
             v-if="selectDictType.id"
             class="dict-type-code"
-          > {{ selectDictType.typeCode }}</span>
+          > [ {{ selectDictType.typeCode }} ]</span>
         </span>
       </h5>
 
@@ -133,7 +134,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType, reactive, watchEffect} from 'vue'
+import {defineComponent, PropType, reactive, watch} from 'vue'
 import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
 import {Delete, Edit, Plus, Search, Sort, FolderOpened} from '@element-plus/icons-vue'
 import DictEntryEditDialog from './dict-entry-edit-dialog.vue'
@@ -197,19 +198,27 @@ export default defineComponent({
       })
     }
 
-    watchEffect(() => {
-      if (props.selectDictType.id) {
-        queryParams.typeCode = props.selectDictType.typeCode
-        query(1)
-      } else {
-        Object.assign(pager, {
-          pageNum: 1,
-          pageSize: 10,
-          total: 0,
-          list: [],
-        })
-      }
-    })
+    const cleanPager = () => {
+      Object.assign(pager, {
+        pageNum: 1,
+        pageSize: 10,
+        total: 0,
+        list: [],
+      })
+    }
+
+    watch(
+        () => props.selectDictType,
+        (newVal, oldVal) => {
+          if (props.selectDictType.id) {
+            queryParams.typeCode = props.selectDictType.typeCode
+            query(1)
+          } else {
+            cleanPager()
+          }
+        },
+        { deep: true }, // 深度监听对象内部变化
+    )
 
     const setEntryCount = (flag: number) => {
       emit('set-entry-count', flag)
@@ -303,9 +312,7 @@ export default defineComponent({
       display: grid;
       grid-template-columns: 32px 1fr;
       align-items: center;
+      color: var(--color-black-primary);
     }
-  }
-  .dict-type-code{
-    color: var(--color-black-secondary);
   }
 </style>

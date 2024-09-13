@@ -32,7 +32,7 @@
         <el-input
           v-model.trim.number="form.itemCode"
           clearable
-          :disabled="form.id"
+          :disabled="form.id > 0"
           placeholder="请输入6位编码，只能包含数字，创建后不可修改"
         />
       </el-form-item>

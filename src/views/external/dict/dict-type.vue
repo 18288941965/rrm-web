@@ -5,6 +5,7 @@
       placeholder="请输入类型名称"
       class="mgb-medium"
       clearable
+      @keyup.enter="query(1)"
     >
       <template #append>
         <el-button
