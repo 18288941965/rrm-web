@@ -5,6 +5,9 @@
   height: 100vh;
   min-height: 560px;
   background-color: var(--color-white);
+  background-image: url("../../../assets/image/login-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .login-header{
@@ -15,22 +18,31 @@
   background-image: linear-gradient(to right, #e363be, #FFABE7, #34C201, #409eff);
 }
 
+.login-rrm-title{
+  font-size: var(--h1-size);
+  font-weight: bolder;
+  letter-spacing: 10px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: radial-gradient(at right top, rgb(112, 26, 117), rgb(190, 18, 60), rgb(157, 23, 77))
+}
+
 .login-main{
-  width: 420px;
-  padding: var(--pd-medium);
-  margin: calc(var(--mg-large) * 5) auto;
+  width: 460px;
+  padding: var(--pd-large);
+  margin-left: calc((100vw - 460px) / 1.4);
+  margin-top: calc((100vh - 540px) / 2);
   border-radius: var(--border-radius-ultra-large);
   color: var(--color-black-primary);
   background-color: rgba(255,255,255,0.6);
   backdrop-filter: blur(5px);
   border: 1px solid #E3E6E8;
-  box-shadow: 1px 1px 5px -4px #258A02;
   & .title{
     text-align: center;
-    font-size: var(--h2-size);
-    & img{
-      height: 100px;
-      margin-top: var(--mg-large);
+    line-height: var(--size-large);
+    & h5{
+      color: var(--color-black-secondary);
+      margin-bottom: var(--mg-ultra-large);
     }
   }
 

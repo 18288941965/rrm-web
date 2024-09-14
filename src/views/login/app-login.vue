@@ -2,13 +2,14 @@
   <div class="app-login">
     <header class="login-header" />
 
+    <p class="login-rrm-title">
+      权限管理系统
+    </p>
+
     <main class="login-main">
       <div class="title">
-        <img
-          :src="logo"
-          alt=" "
-        >
-        <p>权限管理系统</p>
+        <h3>登 录</h3>
+        <h5>项目初始创建请在数据库中<span style="color: skyblue">创建账号</span></h5>
       </div>
 
       <form>
@@ -45,7 +46,6 @@
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import {useRouter} from 'vue-router'
-import logo from '@assets/logo.png'
 import {AxiosResult} from '@utils/interface'
 import {doLogin} from './loginOptions'
 import {LoginSuccess} from '@utils/types'
