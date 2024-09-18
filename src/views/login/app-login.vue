@@ -8,8 +8,8 @@
 
     <main class="login-main">
       <div class="title">
-        <h3>登 录</h3>
-        <h5>项目初始创建请在数据库中<span style="color: skyblue">创建账号</span></h5>
+        <h3>欢迎登录</h3>
+        <h5>项目初始创建请在数据库中<span>创建账号</span></h5>
       </div>
 
       <form>
