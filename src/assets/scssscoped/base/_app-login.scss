@@ -19,20 +19,14 @@
 }
 
 .login-rrm-title{
-  font-size: var(--h1-size);
   margin-left: var(--mg-large);
-  letter-spacing: 2px;
-  font-weight: bolder;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-image: linear-gradient(to bottom, #ffffff, #E6E6E6)
 }
 
 .login-main{
   width: 460px;
   padding: calc(var(--pd-large) * 2) var(--pd-large);
   margin-left: calc((100vw - 460px) / 1.4);
-  margin-top: calc((100vh - 600px) / 2);
+  margin-top: calc((100vh - 640px) / 2);
   border-radius: var(--border-radius-ultra-large);
   color: var(--color-black-primary);
   background-color: rgba(255,255,255,0.9);

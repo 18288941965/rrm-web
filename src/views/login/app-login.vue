@@ -3,19 +3,19 @@
     <header class="login-header" />
 
     <p class="login-rrm-title">
-      权限管理系统
+      <img :src="loginAm" alt=" ">
     </p>
 
     <main class="login-main">
       <div class="title">
-        <h3>欢迎登录</h3>
-        <h5>项目初始创建请在数据库中<span>创建账号</span></h5>
+        <h3>Welcome to login</h3>
+        <h5>Contact the administrator to obtain the login account</h5>
       </div>
 
       <form>
         <input
           v-model.trim="userBeanBase.username"
-          placeholder="账号"
+          placeholder="account"
           autofocus
           autocomplete="current-username"
           @keyup.enter="login"
@@ -23,7 +23,7 @@
 
         <input
           v-model.trim="userBeanBase.password"
-          placeholder="密码"
+          placeholder="password"
           type="password"
           autocomplete="current-password"
           @keyup.enter="login"
@@ -36,7 +36,7 @@
           :loading="loading"
           @click="login"
         >
-          登录
+          Log in
         </el-button>
       </form>
     </main>
@@ -55,6 +55,7 @@ import {RUEnum} from '../../router/routerModels'
 import LocalStorage from '../../class/LocalStorage'
 import {LSEnum} from './loginModels'
 import {UserBeanBase} from '../admin/user/userModel'
+import loginAm from '@assets/image/login-am.svg'
 
 const router = useRouter()
 const loading = ref(false)
