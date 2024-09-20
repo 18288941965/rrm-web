@@ -1,5 +1,81 @@
 <template>
   <div>
+    <el-form
+      :model="queryParams"
+      label-width="100px"
+    >
+      <div class="resource-query-form-grid">
+        <el-form-item label="服务名称">
+          <el-input
+            v-model="queryParams.serviceName"
+            clearable
+            @keyup.enter="query(1)"
+          />
+        </el-form-item>
+        <el-form-item label="类名">
+          <el-input
+            v-model="queryParams.className"
+            clearable
+            @keyup.enter="query(1)"
+          />
+        </el-form-item>
+        <el-form-item label="资源名称">
+          <el-input
+            v-model="queryParams.resourceName"
+            clearable
+            @keyup.enter="query(1)"
+          />
+        </el-form-item>
+        <el-form-item label="请求类型">
+          <ev-select
+            v-model="queryParams.requestMethod"
+            dict-type="dic_axios_type"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+      </div>
+
+      <div class="resource-query-form-grid">
+        <el-form-item label="资源类型">
+          <ev-select
+            v-model="queryParams.resourceType"
+            dict-type="dic_res_type"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+
+        <el-form-item label="授权类型">
+          <ev-select
+            v-model="queryParams.authCode"
+            dict-type="dic_res_auth_code"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+
+        <el-form-item label="环境">
+          <ev-select
+            v-model="queryParams.environment"
+            dict-type="dic_res_environment"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+        
+        <el-form-item>
+          <el-button
+            type="primary"
+            :icon="Search"
+            @click="query(1)"
+          >
+            查询
+          </el-button>
+        </el-form-item>
+      </div>
+    </el-form>
+
     <el-button
       class="mgb-medium"
       type="success"
@@ -22,6 +98,7 @@
       <el-table-column
         prop="packageName"
         label="包名"
+        width="260px"
       />
       <el-table-column
         prop="className"
@@ -37,7 +114,7 @@
       />
       <el-table-column
         prop="requestMethod"
-        width="90"
+        width="86"
         label="请求方式"
       />
       <el-table-column
@@ -58,14 +135,14 @@
       />
       <el-table-column
         prop="environmentName"
-        width="80"
+        width="70"
         label="环境"
         align="center"
       />
       <el-table-column
         prop="status"
         label="状态"
-        width="100px"
+        width="90px"
         align="center"
       >
         <template #default="scope">
@@ -96,17 +173,22 @@ import {Pagination} from '@utils/interface'
 import {ResourceBeanVO, ResourceQuery} from './resourceModel'
 import {scannerRrmResource, searchResourcePage, updateResourceStatus} from './resourceOption'
 import {ElMessage} from 'element-plus'
-import {Reading} from '@element-plus/icons-vue'
+import {Reading, Search} from '@element-plus/icons-vue'
+import EvSelect from '../../../components/evcomp/ev-select.vue'
 
 export default defineComponent({
   name: 'ResourceIndex',
-  components: {EvPagination},
+  components: {EvSelect, EvPagination},
   setup() {
     
     const queryParams = reactive<ResourceQuery>({
       serviceName: '',
       className: '',
       resourceName: '',
+      requestMethod: '',
+      resourceType: '',
+      authCode: '',
+      environment: '',
     })
 
     const pager = reactive<Pagination<ResourceBeanVO>>({
@@ -161,6 +243,7 @@ export default defineComponent({
     
     return {
       Reading,
+      Search,
       queryParams,
       pager,
       query,
@@ -172,5 +255,9 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
+  .resource-query-form-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 20px;
+  }
 </style>

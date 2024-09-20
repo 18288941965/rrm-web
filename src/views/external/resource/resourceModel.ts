@@ -13,7 +13,7 @@ interface ResourceBean extends ResourceBeanBase{
     requestPath: string
     requestMethod: string
     resourceType: string
-    authCode: number
+    authCode: string
     environment: string
     status: number
 }
@@ -25,6 +25,10 @@ interface ResourceBeanVO extends ResourceBean{
 }
 
 interface ResourceQuery extends ResourceBeanBase, PaginationQr{
+    requestMethod: string
+    resourceType: string
+    authCode: string
+    environment: string
 }
 
 export {

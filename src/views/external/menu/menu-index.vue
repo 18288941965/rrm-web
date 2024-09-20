@@ -90,11 +90,14 @@
             :disabled="!activeMenu.id"
             :icon="Link"
           >
-            绑定资源 763 / <span class="bind-source">210</span>
+            绑定资源 {{ resourceCount }} / <span class="bind-source">{{ activeMenu.bindResourceCount }}</span>
           </el-button>
         </div>
 
-        <menu-element :active-menu="activeMenu" />
+        <menu-element
+          :active-menu="activeMenu"
+          :resource-count="resourceCount"
+        />
       </div>
     </main>
     
@@ -124,13 +127,14 @@ import {Delete, Edit, Link, Plus, PriceTag, Sort, Upload, Right} from '@element-
 import MenuAddDialog from './menu-add-dialog.vue'
 import {dialogBaseContent, dialogEmptyContent, dialogParamsContent} from '@utils/dialogOptions'
 import {MenuBeanActive, MenuBeanVO} from './menuModel'
-import {deleteMenuById, getMenuById, getMenuByItemCode} from './menuOption'
+import {countMenuBindResourceByMenuId, deleteMenuById, getMenuById, getMenuByItemCode} from './menuOption'
 import {deleteConfirm} from '@utils/utils'
 import MenuTree from './menu-tree.vue'
 import MenuMoveDrawer from './menu-move-drawer.vue'
 import MenuSortDialog from './menu-sort-dialog.vue'
 import {ElMessage} from 'element-plus/es'
 import MenuElement from './menu-element.vue'
+import {countResourceByItemCode} from '../resource/resourceOption'
 
 export default defineComponent({
   name: 'MenuIndex',
@@ -144,15 +148,26 @@ export default defineComponent({
   setup() {
     const menuList = ref<Array<MenuBeanVO>>([])
     const menuIndexTreeRef = ref()
+    const resourceCount = ref(0)
 
     // 右侧激活的菜单
     const activeMenu = reactive<MenuBeanActive>({
       id: '',
       name: '',
       childrenCount: 0,
+      bindResourceCount: 0,
     })
     const treeCheckChange = (data: MenuBeanActive) => {
       Object.assign(activeMenu, data)
+      if (!activeMenu.id) {
+        activeMenu.bindResourceCount = 0
+        return
+      }
+      countMenuBindResourceByMenuId(activeMenu.id).then(res => {
+        if (res.code === 200) {
+          activeMenu.bindResourceCount = res.data
+        }
+      })
     }
 
     // 选中的菜单
@@ -417,6 +432,12 @@ export default defineComponent({
 
     onMounted(() => {
       query()
+
+      countResourceByItemCode().then(res => {
+        if (res.code === 200) {
+          resourceCount.value = res.data
+        }
+      })
     })
 
       return {
@@ -451,6 +472,8 @@ export default defineComponent({
         dialogSort,
         dialogSortOpen,
         dialogSortCloseAndRefresh,
+
+        resourceCount,
       }
   },
 })
@@ -487,7 +510,6 @@ export default defineComponent({
       & .bind-source{
         padding-left: var(--pd-ultra-small);
         font-weight: bolder;
-        color: var(--color-blue);
       }
     }
   }

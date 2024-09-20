@@ -15,8 +15,16 @@ interface RoleBean extends RoleBeanBase{
 interface RoleBeanQuery extends RoleBeanBase, PaginationQr{
 }
 
+
+interface RoleMenuBean{
+    roleId: string
+    menuId: string
+    type: string
+}
+
 export {
     type RoleBeanBase,
     type RoleBean,
     type RoleBeanQuery,
+    type RoleMenuBean,
 }

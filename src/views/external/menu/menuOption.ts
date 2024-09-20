@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {MenuBean, MenuElementBean, MenuSortBean} from './menuModel'
+import {MenuBean, MenuElementBean, MenuResourceBean, MenuSortBean} from './menuModel'
 
 const getMenuById = (id: string) => {
     return axios.get(`/menu/${id}`).then((res: { data: AxiosResult }) => {
@@ -80,6 +80,29 @@ const deleteMenuElementById = (id: string) => {
     })
 }
 
+const getMenuBindResourceByMenuId = (menuId: string) => {
+    return axios.get(`/menu-resource/${menuId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const bindMenuResource = (menuResource: MenuResourceBean) => {
+    return axios.post('/menu-resource', menuResource).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const countMenuBindResourceByMenuId = (menuId: string) => {
+    return axios.get(`/menu-resource/count/${menuId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const unbindMenuResource = (menuId: string, resourceId: string) => {
+    return axios.delete(`/menu-resource/${menuId}/${resourceId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
 
 export {
     getMenuById,
@@ -96,4 +119,9 @@ export {
     createMenuElement,
     updateMenuElement,
     deleteMenuElementById,
+
+    getMenuBindResourceByMenuId,
+    bindMenuResource,
+    countMenuBindResourceByMenuId,
+    unbindMenuResource,
 }

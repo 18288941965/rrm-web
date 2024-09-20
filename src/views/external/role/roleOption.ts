@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {RoleBean, RoleBeanBase} from './roleModel'
+import {RoleBean, RoleBeanBase, RoleMenuBean} from './roleModel'
 
 const createRole = (bean: RoleBean) => {
     return axios.post('/role', bean).then((res: { data: AxiosResult }) => {
@@ -38,6 +38,24 @@ const updateRole = (bean: RoleBean) => {
     })
 }
 
+const bindRoleMenu = (bean: RoleMenuBean) => {
+    return axios.post('/role-menu', bean).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const getRoleBindMenuByRoleId = (roleId: string) => {
+    return axios.get(`/role-menu/${roleId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const unbindMenuResource = (roleId: string, menuId: string) => {
+    return axios.delete(`/role-menu/${roleId}/${menuId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
 export {
     createRole,
     searchRolePage,
@@ -45,4 +63,7 @@ export {
     deleteRole,
     updateRoleStatus,
     updateRole,
+    bindRoleMenu,
+    getRoleBindMenuByRoleId,
+    unbindMenuResource,
 }

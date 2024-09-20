@@ -31,6 +31,7 @@ interface MenuBeanActive extends MenuBeanDefault{
     id: string
     name: string
     childrenCount: number
+    bindResourceCount?: number
 }
 
 interface MenuSortBean{
@@ -43,6 +44,13 @@ interface MenuElementBean{
     menuId: string
     name: string
     type: string
+    bindResourceCount?: number
+}
+
+interface MenuResourceBean{
+    menuId: string
+    resourceId: string
+    type: string
 }
 
 export {
@@ -51,4 +59,5 @@ export {
     type MenuBeanActive,
     type MenuSortBean,
     type MenuElementBean,
+    type MenuResourceBean,
 }

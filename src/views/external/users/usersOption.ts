@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {UsersBean, UsersBeanBase} from './usersModel'
+import {UsersBean, UsersBeanBase, UsersRoleBean} from './usersModel'
 
 const createUsers = (bean: UsersBean) => {
     return axios.post('/users', bean).then((res: { data: AxiosResult }) => {
@@ -32,10 +32,32 @@ const updateUsers = (bean: UsersBean) => {
     })
 }
 
+const bindUsersRole = (bean: UsersRoleBean) => {
+    return axios.post('/users-role', bean).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const getUsersBindRoleByUserId = (usersId: string) => {
+    return axios.get(`/users-role/${usersId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const unbindUsersRole = (usersId: string, roleId: string) => {
+    return axios.delete(`/users-role/${usersId}/${roleId}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
 export {
     createUsers,
     searchUsersPage,
     getUsersById,
     deleteUsers,
     updateUsers,
+    bindUsersRole,
+    getUsersBindRoleByUserId,
+    unbindUsersRole,
 }

@@ -20,8 +20,15 @@ const scannerRrmResource = () => {
     })
 }
 
+const countResourceByItemCode = () => {
+    return axios.get('/resource/count').then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
 export {
     searchResourcePage,
     updateResourceStatus,
     scannerRrmResource,
+    countResourceByItemCode,
 }

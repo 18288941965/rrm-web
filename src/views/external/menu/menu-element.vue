@@ -30,7 +30,7 @@
             <el-button
               :icon="Link"
             >
-              绑定资源 763 / <span class="bind-source">210</span>
+              绑定资源 {{ resourceCount }} / <span class="bind-source">{{ element.bindResourceCount }}</span>
             </el-button>
           </div>
         </li>
@@ -50,7 +50,7 @@ import {Delete, Edit, Link, Plus} from '@element-plus/icons-vue'
 import {MenuBeanActive, MenuElementBean} from './menuModel'
 import MenuElementEditDialog from './menu-element-edit-dialog.vue'
 import {dialogParamsContent} from '@utils/dialogOptions'
-import {deleteMenuElementById, getMenuElementByMenuId} from './menuOption'
+import {countMenuBindResourceByMenuId, deleteMenuElementById, getMenuElementByMenuId} from './menuOption'
 import {deleteConfirm} from '@utils/utils'
 
 export default defineComponent({
@@ -69,14 +69,25 @@ export default defineComponent({
         }
       },
     },
+    resourceCount: {
+      type: Number,
+      default: 0,
+    },
   },
-  setup(props, ctx) {
+  setup(props) {
     const dataList = ref<Array<MenuElementBean>>([])
     
     const query = () => {
       getMenuElementByMenuId(props.activeMenu.id).then(res => {
         if (res.code === 200) {
           dataList.value = res.data
+          dataList.value.forEach(element => {
+            countMenuBindResourceByMenuId(element.id).then(res => {
+              if (res.code === 200) {
+                element.bindResourceCount = res.data
+              }
+            })
+          })
         }
       })
     }
@@ -157,7 +168,6 @@ export default defineComponent({
       & .bind-source{
         padding-left: var(--pd-ultra-small);
         font-weight: bolder;
-        color: var(--color-blue);
       }
       & p{
         text-indent: 2rem;

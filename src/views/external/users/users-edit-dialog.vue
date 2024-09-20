@@ -69,6 +69,7 @@
             v-model.trim="form.password"
             type="password"
             show-password
+            :disabled="form.id !== ''"
           />
         </el-form-item>
       </div>

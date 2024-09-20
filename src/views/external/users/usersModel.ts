@@ -41,9 +41,17 @@ interface UsersBeanVO extends UsersBean{
 interface UsersBeanQuery extends UsersBeanBase, PaginationQr{
 }
 
+
+interface UsersRoleBean{
+    usersId: string
+    roleId: string
+    orgCode: string
+}
+
 export {
     type UsersBeanBase,
     type UsersBean,
     type UsersBeanQuery,
     type UsersBeanVO,
+    type UsersRoleBean,
 }
