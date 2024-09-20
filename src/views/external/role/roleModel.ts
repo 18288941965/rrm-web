@@ -2,7 +2,7 @@ import {PaginationQr} from '@utils/interface'
 
 interface RoleBeanBase{
     name: string
-    level: number | undefined
+    type: string
 }
 
 interface RoleBean extends RoleBeanBase{

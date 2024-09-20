@@ -42,8 +42,8 @@
         label="角色名称"
       />
       <el-table-column
-        prop="level"
-        label="角色等级"
+        prop="typeName"
+        label="角色类型"
       />
       <el-table-column
         prop="description"
@@ -117,7 +117,7 @@ export default defineComponent({
   setup() {
     const queryParams = reactive<RoleBeanQuery>({
       name: '',
-      level: undefined,
+      type: '',
     })
 
     const pager = reactive<Pagination<RoleBean>>({

@@ -30,18 +30,15 @@
         />
       </el-form-item>
       <el-form-item
-        label="角色等级"
-        prop="level"
+        label="角色类型"
+        prop="type"
       >
-        <el-input-number
-          v-model="form.level"
-          :min="1"
-          :step="1"
-          :max="99"
+        <ev-select
+          v-model="form.type"
+          dict-type="dic_role_type"
+          :default-attr="{ label: 'entryName', value: 'entryCode' }"
+          clearable
         />
-        <div class="mgl-medium">
-          0 → 99（基础权限 → 超级管理员）
-        </div>
       </el-form-item>
 
       <el-form-item
@@ -81,10 +78,12 @@ import DialogFooter from '../../../components/dialog-footer.vue'
 import {RoleBean} from './roleModel'
 import {createRole, getRoleById, updateRole} from './roleOption'
 import {assignExistingFields} from '@utils/utils'
+import EvSelect from '../../../components/evcomp/ev-select.vue'
 
 export default defineComponent({
   name: 'RoleEditDialog',
   components: {
+    EvSelect,
     DialogHeader,
     DialogFooter,
   },
@@ -118,7 +117,7 @@ export default defineComponent({
       id: '',
       name: '',
       status: 1,
-      level: 1,
+      type: '',
       sortOrder: 0,
       description: '',
     })
