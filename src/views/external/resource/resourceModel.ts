@@ -29,6 +29,7 @@ interface ResourceQuery extends ResourceBeanBase, PaginationQr{
     resourceType: string
     authCode: string
     environment: string
+    status?:number
 }
 
 export {

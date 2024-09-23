@@ -1,6 +1,6 @@
 <template>
   <div class="pd-m">
-    <h2>菜单图标</h2>
+    <h4>菜单图标</h4>
     <div class="icon-demo">
       <div
         v-for="(item, index) in menuIcons"
@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <h2>其他图标</h2>
+    <h4>其他图标</h4>
     <div class="icon-demo">
       <div
         v-for="(item, index) in publicIcons"

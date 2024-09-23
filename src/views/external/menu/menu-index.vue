@@ -83,12 +83,13 @@
 
         <div class="control-main">
           <p>
-            唯一标识：{{ activeMenu.id }}。强烈建议资源绑定到具体的菜单上，否则容易造成权限的不可控影响。
+            ID：{{ activeMenu.id }}。强烈建议资源绑定到具体的菜单上，否则容易造成权限的不可控影响。
           </p>
           <el-button
             class="mgl-medium"
             :disabled="!activeMenu.id"
             :icon="Link"
+            @click="dialogBindResourceOpen({ dataId: activeMenu.id, name: activeMenu.name })"
           >
             绑定资源 {{ resourceCount }} / <span class="bind-source">{{ activeMenu.bindResourceCount }}</span>
           </el-button>
@@ -118,6 +119,11 @@
       v-bind="dialogSort"
       @close-dialog="dialogSortCloseAndRefresh($event, query)"
     />
+
+    <resource-select-dialog
+      v-bind="dialogBindResource"
+      @close-dialog="dialogBindResourceCloseAndRefresh"
+    />
   </div>
 </template>
 
@@ -135,6 +141,7 @@ import MenuSortDialog from './menu-sort-dialog.vue'
 import {ElMessage} from 'element-plus/es'
 import MenuElement from './menu-element.vue'
 import {countResourceByItemCode} from '../resource/resourceOption'
+import ResourceSelectDialog from '../resource/resource-select-dialog.vue'
 
 export default defineComponent({
   name: 'MenuIndex',
@@ -144,6 +151,7 @@ export default defineComponent({
     MenuMoveDrawer,
     MenuSortDialog,
     MenuElement,
+    ResourceSelectDialog,
   },
   setup() {
     const menuList = ref<Array<MenuBeanVO>>([])
@@ -421,6 +429,20 @@ export default defineComponent({
     } = dialogBaseContent()
     // ————————菜单排序————————end
 
+    // ————————菜单绑定资源————————start
+    const {
+      dialogParam: dialogBindResource,
+        dialogParamsOpen: dialogBindResourceOpen,
+        dialogParamsClose: dialogBindResourceClose,
+    } = dialogParamsContent()
+    const dialogBindResourceCloseAndRefresh = (refresh: boolean, size: number) => {
+      dialogBindResourceClose()
+      if (refresh) {
+        activeMenu.bindResourceCount = size
+      }
+    }
+    // ————————菜单绑定资源————————end
+
     const query = () => {
       menuIndexTreeRef.value!.cleanActiveMenu(true)
       getMenuByItemCode().then(res => {
@@ -472,6 +494,10 @@ export default defineComponent({
         dialogSort,
         dialogSortOpen,
         dialogSortCloseAndRefresh,
+
+        dialogBindResource,
+        dialogBindResourceOpen,
+        dialogBindResourceCloseAndRefresh,
 
         resourceCount,
       }

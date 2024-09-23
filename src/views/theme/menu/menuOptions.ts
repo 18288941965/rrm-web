@@ -161,7 +161,7 @@ export function MenuOptions() {
             children: [
                 { label: '首页', icon: 'Dashboard', url: '/app/home/dashboard', id: '02', pid: '01', sxh: 1, cache: true, name: 'AdminDashboard' },
                 { label: '图标', icon: 'Flag', url: '/app/home/icon/demo', id: '03', pid: '01', sxh: 2, cache: true, name: 'IconDemo' },
-                { label: '组件', icon: 'Plugins', url: undefined, id: '04', pid: '01', sxh: 3, cache: false, name: undefined, children: children },
+                /*{ label: '组件', icon: 'Plugins', url: undefined, id: '04', pid: '01', sxh: 3, cache: false, name: undefined, children: children },*/
                 { label: '字典管理', icon: 'Dict', url: '/app/home/dict/index', id: '10', pid: '01', sxh: 9, cache: true, name: 'DictIndex' },
                 { label: '项目管理', icon: 'System', url: '/app/home/item/index', id: '05', pid: '01', sxh: 4, cache: true, name: 'ItemIndex' },
                 { label: '平台账号', icon: 'Account', url: '/app/home/user/index', id: '06', pid: '01', sxh: 5, cache: true, name: 'UserIndex' },

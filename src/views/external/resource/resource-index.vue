@@ -26,12 +26,13 @@
             @keyup.enter="query(1)"
           />
         </el-form-item>
-        <el-form-item label="请求类型">
+        <el-form-item label="请求方式">
           <ev-select
             v-model="queryParams.requestMethod"
             dict-type="dic_axios_type"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
+            @change="query(1)"
           />
         </el-form-item>
       </div>
@@ -43,6 +44,7 @@
             dict-type="dic_res_type"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
+            @change="query(1)"
           />
         </el-form-item>
 
@@ -52,15 +54,17 @@
             dict-type="dic_res_auth_code"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
+            @change="query(1)"
           />
         </el-form-item>
 
-        <el-form-item label="环境">
+        <el-form-item label="生效环境">
           <ev-select
             v-model="queryParams.environment"
             dict-type="dic_res_environment"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
+            @change="query(1)"
           />
         </el-form-item>
         
@@ -135,8 +139,8 @@
       />
       <el-table-column
         prop="environmentName"
-        width="70"
-        label="环境"
+        width="90"
+        label="生效环境"
         align="center"
       />
       <el-table-column

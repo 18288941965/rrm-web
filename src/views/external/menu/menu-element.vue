@@ -29,6 +29,7 @@
             />
             <el-button
               :icon="Link"
+              @click="dialogBindResourceOpen({ dataId: element.id, name: activeMenu.name + '（' + element.name + '）' })"
             >
               绑定资源 {{ resourceCount }} / <span class="bind-source">{{ element.bindResourceCount }}</span>
             </el-button>
@@ -41,6 +42,11 @@
       v-bind="dialogParam"
       @close-dialog="dialogParamsCloseAndRefresh($event, query)"
     />
+
+    <resource-select-dialog
+      v-bind="dialogBindResource"
+      @close-dialog="dialogBindResourceCloseAndRefresh"
+    />
   </div>
 </template>
 
@@ -52,11 +58,13 @@ import MenuElementEditDialog from './menu-element-edit-dialog.vue'
 import {dialogParamsContent} from '@utils/dialogOptions'
 import {countMenuBindResourceByMenuId, deleteMenuElementById, getMenuElementByMenuId} from './menuOption'
 import {deleteConfirm} from '@utils/utils'
+import ResourceSelectDialog from '../resource/resource-select-dialog.vue'
 
 export default defineComponent({
   name: 'MenuElement',
   components: {
     MenuElementEditDialog,
+    ResourceSelectDialog,
   },
   props: {
     activeMenu: {
@@ -123,7 +131,28 @@ export default defineComponent({
       }
     })
 
+    // ————————菜单绑定资源————————start
+    const {
+      dialogParam: dialogBindResource,
+      dialogParamsOpen: dialogBindResourceOpen,
+      dialogParamsClose: dialogBindResourceClose,
+    } = dialogParamsContent()
+    const dialogBindResourceCloseAndRefresh = (refresh: boolean, size: number, id: string) => {
+      dialogBindResourceClose()
+      if (refresh) {
+        dataList.value.forEach(item => {
+          if (item.id === id) {
+            item.bindResourceCount = size
+            return
+          }
+        })
+      }
+    }
+    // ————————菜单绑定资源————————end
+
       return {
+        Edit,
+        Delete,
         Plus,
         Link,
         dataList,
@@ -132,15 +161,11 @@ export default defineComponent({
         dialogParam,
         dialogParamsOpen,
         dialogParamsCloseAndRefresh,
+
+        dialogBindResource,
+        dialogBindResourceOpen,
+        dialogBindResourceCloseAndRefresh,
       }
-  },
-  computed: {
-    Edit() {
-      return Edit
-    },
-    Delete() {
-      return Delete
-    },
   },
 })
 </script>
