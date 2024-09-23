@@ -26,9 +26,17 @@ const countResourceByItemCode = () => {
     })
 }
 
+const getServiceNameList = () => {
+    return axios.get('/resource/serviceNameList').then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
 export {
     searchResourcePage,
     updateResourceStatus,
     scannerRrmResource,
     countResourceByItemCode,
+    getServiceNameList,
 }
