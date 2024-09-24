@@ -89,7 +89,7 @@
             class="mgl-medium"
             :disabled="!activeMenu.id"
             :icon="Link"
-            @click="dialogBindResourceOpen({ dataId: activeMenu.id, name: activeMenu.name })"
+            @click="dialogBindResourceOpen({ dataId: activeMenu.id, name: activeMenu.name, type: '01' })"
           >
             绑定资源 {{ resourceCount }} / <span class="bind-source">{{ activeMenu.bindResourceCount }}</span>
           </el-button>

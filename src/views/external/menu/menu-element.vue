@@ -29,7 +29,7 @@
             />
             <el-button
               :icon="Link"
-              @click="dialogBindResourceOpen({ dataId: element.id, name: activeMenu.name + '（' + element.name + '）' })"
+              @click="dialogBindResourceOpen({ dataId: element.id, name: activeMenu.name + '（' + element.name + '）', type: '02' })"
             >
               绑定资源 {{ resourceCount }} / <span class="bind-source">{{ element.bindResourceCount }}</span>
             </el-button>

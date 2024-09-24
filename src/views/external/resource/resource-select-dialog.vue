@@ -149,6 +149,7 @@
             <template #default="scope">
               <el-button
                 class="al-hover"
+                :disabled="selectObj.selectId.includes(scope.row.id)"
                 @click="selectRow(scope.row)"
               >
                 <arrow-line />
@@ -187,7 +188,7 @@
             <template #default="scope">
               <el-button
                 :icon="Remove"
-                @click="selectRow(scope.row)"
+                @click="removeRow(scope.$index)"
               />
             </template>
           </el-table-column>
@@ -209,6 +210,8 @@ import EvSelect from '../../../components/evcomp/ev-select.vue'
 import {ArrowLine} from '../../../components/svicon/publicIcon'
 import {Remove, Search} from '@element-plus/icons-vue'
 import type Node from 'element-plus/es/components/tree/src/model/node'
+import {bindMenuResource, getMenuBindResourceByMenuId, unbindMenuResource} from '../menu/menuOption'
+import {ElMessage} from 'element-plus/es'
 
 export default defineComponent({
   name: 'ResourceSelectDialog',
@@ -225,6 +228,7 @@ export default defineComponent({
         return {
           dataId: '',
           name: '',
+          type: '',
         }
       },
     },
@@ -248,7 +252,6 @@ export default defineComponent({
         },
     )
     const treeData = ref<Array<PackageNameTree>>([])
-
     const serviceNameList = ref<Array<string>>([])
     const queryParams = reactive<ResourceQuery>({
       serviceName: '',
@@ -266,7 +269,7 @@ export default defineComponent({
     })
 
     const selectObj = reactive<{
-      selectId: Array<String>
+      selectId: Array<string>
       selectData: Array<ResourceBeanVO>
     }>({
       selectId: [],
@@ -296,35 +299,27 @@ export default defineComponent({
     }
 
     const selectRow = (row: ResourceBeanVO) => {
-      selectObj.selectId.push(row.id)
-      selectObj.selectData.push(row)
+      bindMenuResource({
+        menuId: props.params.dataId,
+        resourceId: row.id,
+        type: props.params.type,
+      }).then(res => {
+        if (res.code === 200) {
+          selectObj.selectId.push(row.id)
+          selectObj.selectData.push(row)
+          ElMessage.success('操作成功！')
+        }
+      })
     }
     const removeRow = (index: number) => {
-      selectObj.selectId.splice(index, 1)
-      selectObj.selectData.splice(index, 1)
-    }
-
-    // 关闭窗口
-    const handleClose = () => {
-      const refresh = isRefresh.value
-      isRefresh.value = false
-      emit('close-dialog', refresh)
-    }
-    
-    const handleOpen = () => {
-      getServiceNameList().then(res => {
+      const resourceId = selectObj.selectId[index]
+      unbindMenuResource(props.params.dataId, resourceId).then(res => {
         if (res.code === 200) {
-          serviceNameList.value = res.data
+          selectObj.selectId.splice(index, 1)
+          selectObj.selectData.splice(index, 1)
+          ElMessage.success('操作成功！')
         }
       })
-      getPackageNameByTree().then(res => {
-        if (res.code === 200) {
-          treeData.value = res.data
-        }
-      })
-      if (props.params.dataId) {
-        query(1)
-      }
     }
 
     const getNodePath = (node: Node) => {
@@ -336,13 +331,67 @@ export default defineComponent({
       }
       return path.filter(item => item)
     }
-    
+
     const handleNodeClick = (data: PackageNameTree, node: Node) => {
       const nodePath = getNodePath(node)
       queryParams.serviceName = nodePath[0]
       if (nodePath.length > 1) {
         nodePath.splice(0, 1)
         queryParams.packageName = nodePath.join('.')
+      }
+    }
+
+    // 关闭窗口, 清空相关数据
+    const handleClose = () => {
+      const size = selectObj.selectId.length
+      Object.assign(selectObj, {
+        selectId: [],
+        selectData: [],
+      })
+      Object.assign(pager, {
+        pageNum: 1,
+        pageSize: 10,
+        total: 0,
+        list: [],
+      })
+      Object.assign(queryParams, {
+        serviceName: '',
+        className: '',
+        resourceName: '',
+
+        packageName: '',
+        methodName: '',
+        requestPath: '',
+        requestMethod: '',
+        resourceType: '',
+        authCode: '',
+        environment: '',
+        status: 1,
+      })
+      treeData.value = []
+      serviceNameList.value = []
+      emit('close-dialog', true, size, props.params.dataId)
+    }
+
+    const handleOpen = () => {
+      getServiceNameList().then(res => {
+        if (res.code === 200) {
+          serviceNameList.value = res.data
+        }
+      })
+      getPackageNameByTree().then(res => {
+        if (res.code === 200) {
+          treeData.value = res.data
+        }
+      })
+      getMenuBindResourceByMenuId(props.params.dataId).then(res => {
+        if (res.code === 200) {
+          selectObj.selectData = res.data
+          selectObj.selectId = selectObj.selectData.map(item => item.id)
+        }
+      })
+      if (props.params.dataId) {
+        query(1)
       }
     }
 
