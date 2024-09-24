@@ -2,6 +2,7 @@
   <el-dialog
     v-model="visible"
     top="100px"
+    width="98%"
     :before-close="handleClose"
     :close-on-click-modal="false"
     :destroy-on-close="true"
@@ -15,7 +16,15 @@
     </template>
 
     <div class="res-select-main">
-      <div>
+      <el-tree
+        class="res-select-tree"
+        :data="treeData"
+        :props="{ label: 'name' }"
+        accordion
+        @node-click="handleNodeClick"
+      />
+      
+      <div class="wait-select-list">
         <div class="query-card">
           <el-select
             v-model="queryParams.serviceName"
@@ -29,6 +38,12 @@
               :label="item"
             />
           </el-select>
+          <el-input
+            v-model="queryParams.packageName"
+            clearable
+            placeholder="包名"
+            @keyup.enter="query(1)"
+          />
           <ev-select
             v-model="queryParams.resourceType"
             dict-type="dic_res_type"
@@ -53,22 +68,26 @@
             placeholder="生效环境"
             @change="query(1)"
           />
+          <div>
+            <el-button 
+              type="primary"
+              :icon="Search"
+              @click="query(1)"
+            >
+              检索
+            </el-button>
+          </div>
         </div>
         
         <el-table
           :data="pager.list"
           border
-          style="width: 100%"
+          size="small"
         >
-          <el-table-column
-            prop="packageName"
-            label="包名"
-            width="260px"
-          />
           <el-table-column
             prop="className"
             label="类名"
-            width="220px"
+            width="200"
           >
             <template #header>
               <el-input
@@ -82,17 +101,35 @@
           <el-table-column
             prop="methodName"
             label="方法名"
-            width="180"
-          />
+            width="200"
+          >
+            <template #header>
+              <el-input
+                v-model="queryParams.methodName"
+                clearable
+                placeholder="方法名"
+                @keyup.enter="query(1)"
+              />
+            </template>
+          </el-table-column>
           <el-table-column
             prop="requestPath"
             label="请求路径"
-            width="280px"
-          />
+            width="200"
+          >
+            <template #header>
+              <el-input
+                v-model="queryParams.requestPath"
+                clearable
+                placeholder="请求路径"
+                @keyup.enter="query(1)"
+              />
+            </template>
+          </el-table-column>
           <el-table-column
             prop="resourceName"
             label="资源名称"
-            width="240px"
+            width="200"
           >
             <template #header>
               <el-input
@@ -105,7 +142,7 @@
           </el-table-column>
           <el-table-column
             prop="sel_"
-            width="80px"
+            width="66"
             align="center"
             label="选择"
           >
@@ -126,24 +163,25 @@
         />
       </div>
 
-      <div class="mgl-medium">
+      <div class="select-list">
         <el-table
           :data="selectObj.selectData"
           border
-          style="width: 100%;"
+          size="small"
         >
           <el-table-column
             prop="methodName"
             label="方法名"
-            width="180"
+            width="200"
           />
           <el-table-column
             prop="resourceName"
             label="资源名称"
+            width="200"
           />
           <el-table-column
             prop="sel_"
-            width="80px"
+            width="66"
             align="center"
           >
             <template #default="scope">
@@ -160,16 +198,17 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType, reactive, watch, ref} from 'vue'
+import {defineComponent, PropType, reactive, ref, watch} from 'vue'
 import {dialogOptions} from '@utils/dialogOptions'
 import {Pagination, PropPrams} from '@utils/interface'
 import DialogHeader from '../../../components/dialog-header.vue'
-import {ResourceBeanVO, ResourceQuery} from './resourceModel'
-import {getServiceNameList, searchResourcePage} from './resourceOption'
+import {PackageNameTree, ResourceBeanVO, ResourceQuery} from './resourceModel'
+import {getPackageNameByTree, getServiceNameList, searchResourcePage} from './resourceOption'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
 import {ArrowLine} from '../../../components/svicon/publicIcon'
-import {Remove} from '@element-plus/icons-vue'
+import {Remove, Search} from '@element-plus/icons-vue'
+import type Node from 'element-plus/es/components/tree/src/model/node'
 
 export default defineComponent({
   name: 'ResourceSelectDialog',
@@ -208,16 +247,22 @@ export default defineComponent({
           visible.value = props.show
         },
     )
+    const treeData = ref<Array<PackageNameTree>>([])
+
     const serviceNameList = ref<Array<string>>([])
     const queryParams = reactive<ResourceQuery>({
-      status: 1,
       serviceName: '',
       className: '',
       resourceName: '',
+
+      packageName: '',
+      methodName: '',
+      requestPath: '',
       requestMethod: '',
       resourceType: '',
       authCode: '',
       environment: '',
+      status: 1,
     })
 
     const selectObj = reactive<{
@@ -272,13 +317,38 @@ export default defineComponent({
           serviceNameList.value = res.data
         }
       })
+      getPackageNameByTree().then(res => {
+        if (res.code === 200) {
+          treeData.value = res.data
+        }
+      })
       if (props.params.dataId) {
         query(1)
       }
     }
 
+    const getNodePath = (node: Node) => {
+      const path = []
+      let currentNode = node
+      while (currentNode) {
+        path.unshift(currentNode.label) // 假设节点的标签是 'label'
+        currentNode = currentNode.parent // 确保节点有父节点
+      }
+      return path.filter(item => item)
+    }
+    
+    const handleNodeClick = (data: PackageNameTree, node: Node) => {
+      const nodePath = getNodePath(node)
+      queryParams.serviceName = nodePath[0]
+      if (nodePath.length > 1) {
+        nodePath.splice(0, 1)
+        queryParams.packageName = nodePath.join('.')
+      }
+    }
+
     return {
       Remove,
+      Search,
       visible,
       handleOpen,
       handleClose,
@@ -290,6 +360,9 @@ export default defineComponent({
       selectRow,
       selectObj,
       removeRow,
+
+      treeData,
+      handleNodeClick,
     }
   },
 })
@@ -297,11 +370,21 @@ export default defineComponent({
 
 <style scoped lang="scss">
   .res-select-main{
-    display: flex;
+    display: grid;
+    grid-template-columns: 230px 866px 466px;
+    grid-gap: 10px;
+    max-width: 1584px;
+    margin: auto;
+    overflow: auto;
+    & .res-select-tree{
+      width: 230px;
+      border: var(--border-1);
+      border-radius: var(--border-radius-medium);
+    }
   }
   .query-card{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 10px;
     margin-bottom: var(--mg-medium);
   }

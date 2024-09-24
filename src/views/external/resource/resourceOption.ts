@@ -32,6 +32,11 @@ const getServiceNameList = () => {
     })
 }
 
+const getPackageNameByTree = () => {
+    return axios.get('/resource/packageNameByTree').then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
 
 export {
     searchResourcePage,
@@ -39,4 +44,5 @@ export {
     scannerRrmResource,
     countResourceByItemCode,
     getServiceNameList,
+    getPackageNameByTree,
 }

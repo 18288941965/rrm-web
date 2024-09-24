@@ -6,8 +6,7 @@ interface ResourceBeanBase{
     resourceName: string
 }
 
-interface ResourceBean extends ResourceBeanBase{
-    id: string
+interface ResourceQueryBean extends  ResourceBeanBase{
     packageName: string
     methodName: string
     requestPath: string
@@ -15,7 +14,11 @@ interface ResourceBean extends ResourceBeanBase{
     resourceType: string
     authCode: string
     environment: string
-    status: number
+    status: number | null
+}
+
+interface ResourceBean extends ResourceQueryBean{
+    id: string
 }
 
 interface ResourceBeanVO extends ResourceBean{
@@ -24,17 +27,20 @@ interface ResourceBeanVO extends ResourceBean{
     environmentName: string | null
 }
 
-interface ResourceQuery extends ResourceBeanBase, PaginationQr{
-    requestMethod: string
-    resourceType: string
-    authCode: string
-    environment: string
-    status?:number
+interface ResourceQuery extends ResourceQueryBean, PaginationQr{
+
 }
+
+interface PackageNameTree {
+    name: string
+    children?: PackageNameTree[]
+}
+
 
 export {
     type ResourceBeanBase,
     type ResourceBean,
     type ResourceQuery,
     type ResourceBeanVO,
+    type PackageNameTree,
 }

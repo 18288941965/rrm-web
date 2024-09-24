@@ -189,10 +189,15 @@ export default defineComponent({
       serviceName: '',
       className: '',
       resourceName: '',
+
+      packageName: '',
+      methodName: '',
+      requestPath: '',
       requestMethod: '',
       resourceType: '',
       authCode: '',
       environment: '',
+      status: null,
     })
 
     const pager = reactive<Pagination<ResourceBeanVO>>({
