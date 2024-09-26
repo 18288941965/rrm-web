@@ -67,7 +67,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column width="140px">
+      <el-table-column width="260">
         <template #default="scope">
           <el-button
             type="primary"
@@ -80,6 +80,13 @@
             :icon="Delete"
             @click="deleteData(scope.row.id)"
           />
+          
+          <el-button
+            :icon="Apps"
+            @click="dialogBindMenuOpen({ dataId: scope.row.id, name: scope.row.name })"
+          >
+            绑定菜单
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -93,26 +100,34 @@
       v-bind="dialogBase"
       @close-dialog="dialogBaseCloseAndRefresh($event, query)"
     />
+    
+    <menu-select-dialog
+      v-bind="dialogBindMenu"
+      @close-dialog="dialogBindMenuCloseAndRefresh"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, onMounted, reactive} from 'vue'
 import {Pagination} from '@utils/interface'
-import {RoleBean, RoleBeanQuery} from './roleModel'
+import {RoleBeanQuery, RoleBeanVO} from './roleModel'
 import {deleteRole, searchRolePage, updateRoleStatus} from './roleOption'
-import {dialogBaseContent} from '@utils/dialogOptions'
+import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
 import {Delete, Edit, Plus, Search} from '@element-plus/icons-vue'
 import RoleEditDialog from './role-edit-dialog.vue'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import {ElMessage} from 'element-plus'
 import {deleteConfirm} from '@utils/utils'
+import {Apps} from '../../../components/svicon/menuIcon'
+import MenuSelectDialog from '../menu/menu-select-dialog.vue'
 
 export default defineComponent({
   name: 'RoleIndex',
   components: {
     EvPagination,
     RoleEditDialog,
+    MenuSelectDialog,
   },
   setup() {
     const queryParams = reactive<RoleBeanQuery>({
@@ -120,7 +135,7 @@ export default defineComponent({
       type: '',
     })
 
-    const pager = reactive<Pagination<RoleBean>>({
+    const pager = reactive<Pagination<RoleBeanVO>>({
       pageNum: 1,
       pageSize: 10,
       total: 0,
@@ -176,6 +191,22 @@ export default defineComponent({
       })
     }
 
+    const {
+      dialogParam: dialogBindMenu,
+        dialogParamsOpen: dialogBindMenuOpen,
+        dialogParamsClose: dialogBindMenuClose,
+    } = dialogParamsContent()
+
+    const dialogBindMenuCloseAndRefresh = (menuSize: number, elementSize: number,  roleId: string) => {
+      dialogBindMenuClose()
+      pager.list.forEach(item => {
+        if (item.id === roleId) {
+          item.bindMenuCount = menuSize
+          item.bindElementCount = elementSize
+          return
+        }
+      })
+    }
 
     onMounted(() => {
       query(1)
@@ -186,6 +217,7 @@ export default defineComponent({
       Plus,
       Edit,
       Delete,
+      Apps,
       queryParams,
       pager,
       query,
@@ -196,6 +228,10 @@ export default defineComponent({
       dialogBase,
       dialogBaseOpen,
       dialogBaseCloseAndRefresh,
+
+      dialogBindMenu,
+      dialogBindMenuOpen,
+      dialogBindMenuCloseAndRefresh,
     }
   },
 })

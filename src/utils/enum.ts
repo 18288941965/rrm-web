@@ -9,3 +9,8 @@ export enum UserFieldEnum{
     THEME_MODEL = 'themeModel',
     TOKEN = 'token'
 }
+
+export enum BindType{
+    MENU = '01',
+    ELEMENT = '02',
+}

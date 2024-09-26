@@ -15,6 +15,10 @@ interface RoleBean extends RoleBeanBase{
 interface RoleBeanQuery extends RoleBeanBase, PaginationQr{
 }
 
+interface RoleBeanVO extends RoleBean{
+    bindMenuCount: number
+    bindElementCount: number
+}
 
 interface RoleMenuBean{
     roleId: string
@@ -27,4 +31,5 @@ export {
     type RoleBean,
     type RoleBeanQuery,
     type RoleMenuBean,
+    type RoleBeanVO,
 }

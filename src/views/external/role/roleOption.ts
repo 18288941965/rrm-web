@@ -50,8 +50,8 @@ const getRoleBindMenuByRoleId = (roleId: string) => {
     })
 }
 
-const unbindMenuResource = (roleId: string, menuId: string) => {
-    return axios.delete(`/role-menu/${roleId}/${menuId}`).then((res: { data: AxiosResult }) => {
+const unbindRoleMenu = (roleId: string, menuId: string, type: string) => {
+    return axios.delete(`/role-menu/${roleId}/${menuId}/${type}`).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
@@ -65,5 +65,5 @@ export {
     updateRole,
     bindRoleMenu,
     getRoleBindMenuByRoleId,
-    unbindMenuResource,
+    unbindRoleMenu,
 }

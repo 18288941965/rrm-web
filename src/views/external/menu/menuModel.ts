@@ -45,6 +45,7 @@ interface MenuElementBean{
     name: string
     type: string
     bindResourceCount?: number
+    checked?: boolean
 }
 
 interface MenuResourceBean{
