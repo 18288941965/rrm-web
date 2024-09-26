@@ -67,7 +67,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column width="260">
+      <el-table-column width="340">
         <template #default="scope">
           <el-button
             type="primary"
@@ -86,6 +86,10 @@
             @click="dialogBindMenuOpen({ dataId: scope.row.id, name: scope.row.name })"
           >
             绑定菜单
+            <span>{{ countObj.menuCount }}</span> /
+            <span>{{ scope.row.bindMenuCount }}</span> /
+            <span>{{ countObj.elementCount }}</span> /
+            <span>{{ scope.row.bindElementCount }}</span> /
           </el-button>
         </template>
       </el-table-column>
@@ -121,6 +125,7 @@ import {ElMessage} from 'element-plus'
 import {deleteConfirm} from '@utils/utils'
 import {Apps} from '../../../components/svicon/menuIcon'
 import MenuSelectDialog from '../menu/menu-select-dialog.vue'
+import {countElement, countMenu} from '../menu/menuOption'
 
 export default defineComponent({
   name: 'RoleIndex',
@@ -140,6 +145,14 @@ export default defineComponent({
       pageSize: 10,
       total: 0,
       list: [],
+    })
+
+    const countObj = reactive<{
+      menuCount: number
+      elementCount: number
+    }>({
+      menuCount: 0,
+      elementCount: 0,
     })
 
     const query = (pageNum = pager.pageNum, pageSize = pager.pageSize) => {
@@ -210,6 +223,18 @@ export default defineComponent({
 
     onMounted(() => {
       query(1)
+
+      countMenu().then(res => {
+        if (res.code === 200) {
+          countObj.menuCount = res.data
+        }
+      })
+
+      countElement().then(res => {
+        if (res.code === 200) {
+          countObj.elementCount = res.data
+        }
+      })
     })
     
     return {
@@ -221,6 +246,7 @@ export default defineComponent({
       queryParams,
       pager,
       query,
+      countObj,
 
       deleteData,
       setRoleStatus,

@@ -44,6 +44,12 @@ const getMenuByParentId = (parentId: string) => {
     })
 }
 
+const countMenu = () => {
+    return axios.get('/menu/count').then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
 const updateMenuSort = (menuList: Array<MenuSortBean>) => {
     return axios.put('/menu/sort', menuList).then((res: { data: AxiosResult }) => {
         return res.data
@@ -58,6 +64,12 @@ const getMenuElementByMenuId = (menuId: string) => {
 
 const getMenuElementById = (id: string) => {
     return axios.get(`/menu-element/${id}`).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+const countElement = () => {
+    return axios.get('/menu-element/count').then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
@@ -110,12 +122,14 @@ export {
     updateMenu,
     deleteMenuById,
     getMenuByItemCode,
+    countMenu,
     moveMenuTo,
     getMenuByParentId,
     updateMenuSort,
 
     getMenuElementByMenuId,
     getMenuElementById,
+    countElement,
     createMenuElement,
     updateMenuElement,
     deleteMenuElementById,
