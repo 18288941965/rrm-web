@@ -29,12 +29,12 @@
     <el-table
       :data="pager.list"
       border
-      style="width: 100%"
+      table-layout="auto"
     >
       <el-table-column
         prop="sortOrder"
+        width="80"
         label="顺序号"
-        width="80px"
         align="center"
       />
       <el-table-column
@@ -51,8 +51,8 @@
       />
       <el-table-column
         prop="statusName"
+        width="100"
         label="角色状态"
-        width="100px"
         align="center"
       >
         <template #default="scope">
@@ -67,7 +67,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column width="400">
+      <el-table-column>
         <template #default="scope">
           <el-button
             type="primary"
@@ -80,7 +80,7 @@
             :icon="Delete"
             @click="deleteData(scope.row.id)"
           />
-          
+
           <el-button
             :icon="Apps"
             @click="dialogBindMenuOpen({ dataId: scope.row.id, name: scope.row.name })"

@@ -34,23 +34,16 @@
       <el-table-column
         prop="name"
         label="姓名 / 性别 / 民族"
+        width="200"
       >
         <template #default="scope">
-          {{ scope.row.name }}
-          <el-tag
-            color="#FAE8FF"
-            class="mgl-ultra-small"
-            round
-          >
-            {{ scope.row.genderName }}
-          </el-tag>
-          <el-tag
-            color="#EBFBFC"
-            class="mgl-ultra-small"
-            round
-          >
-            {{ scope.row.nationName }}
-          </el-tag>
+          <div>
+            {{ scope.row.name }}
+          </div>
+          <div class="users-g-n">
+            <span>{{ scope.row.genderName }}</span>
+            <span>{{ scope.row.nationName }}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -70,7 +63,7 @@
       <el-table-column
         prop="dateOfBirth"
         label="出生日期"
-        width="120"
+        width="110"
       />
       <el-table-column
         prop="phoneNumber"
@@ -111,7 +104,7 @@
       <el-table-column
         prop="approvalStatus"
         label="审核状态"
-        width="120"
+        width="110"
         align="center"
       >
         <template #default="scope">
@@ -141,7 +134,7 @@
       <el-table-column
         prop="isDeleted"
         label="删除状态"
-        width="100"
+        width="90"
         align="center"
       >
         <template #default="scope">
@@ -161,13 +154,18 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column width="130px">
+      <el-table-column
+        width="76"
+        align="center"
+      >
         <template #default="scope">
-          <el-button
-            type="primary"
-            :icon="Edit"
-            @click="dialogBaseOpen(scope.row.id)"
-          />
+          <div class="mgb-medium">
+            <el-button
+              type="primary"
+              :icon="Edit"
+              @click="dialogBaseOpen(scope.row.id)"
+            />
+          </div>
 
           <el-button
             type="danger"
@@ -284,7 +282,24 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  .mgl-ultra-small{
-    margin-left: var(--mg-ultra-small)
+  .users-g-n{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 2px;
+    margin-top: var(--mg-ultra-small);
+    & span{
+      border: var(--border-1);
+      background-color: var(--bg-color-banner);
+      color: var(--color-black-secondary);
+      text-align: center;
+    }
+    & span:first-child{
+      border-top-left-radius: var(--border-radius-large);
+      border-bottom-left-radius: var(--border-radius-large);
+    }
+    & span:last-child{
+      border-top-right-radius: var(--border-radius-large);
+      border-bottom-right-radius: var(--border-radius-large);
+    }
   }
 </style>

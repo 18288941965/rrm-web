@@ -20,6 +20,7 @@
     <el-table
       :data="itemList"
       border
+      table-layout="auto"
     >
       <el-table-column
         prop="itemName"
@@ -40,10 +41,12 @@
       <el-table-column
         prop="itemCode"
         label="项目代码"
+        width="100"
       />
       <el-table-column
         prop="createdAt"
         label="创建时间"
+        width="180"
       />
       <el-table-column
         prop="userList"

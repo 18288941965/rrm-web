@@ -19,6 +19,7 @@
         >
           <span>{{ element.name }}</span>
           <div>
+            <span class="element-key">ID：{{ element.id }}</span>
             <el-button
               :icon="Edit"
               @click="dialogParamsOpen({ dataId: element.id, menuId: activeMenu.id })"
@@ -196,6 +197,11 @@ export default defineComponent({
       }
       & p{
         text-indent: 2rem;
+        color: var(--color-black-secondary);
+      }
+      & .element-key{
+        display: inline-block;
+        margin-right: var(--mg-medium);
         color: var(--color-black-secondary);
       }
       & ul li{

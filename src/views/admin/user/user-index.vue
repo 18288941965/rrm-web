@@ -20,10 +20,12 @@
     <el-table
       :data="userList"
       border
+      table-layout="auto"
     >
       <el-table-column
         prop="username"
         label="账号"
+        width="220"
       >
         <template #default="scope">
           <span>{{ scope.row.username }}</span>
