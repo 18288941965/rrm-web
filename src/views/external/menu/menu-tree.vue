@@ -194,7 +194,6 @@ export default defineComponent({
     align-items: center;
     justify-content: space-between;
     padding-right: 8px;
-    line-height: var(--size-default);
   }
 }
 </style>

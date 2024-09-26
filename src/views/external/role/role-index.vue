@@ -67,7 +67,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column width="340">
+      <el-table-column width="400">
         <template #default="scope">
           <el-button
             type="primary"
@@ -86,10 +86,12 @@
             @click="dialogBindMenuOpen({ dataId: scope.row.id, name: scope.row.name })"
           >
             绑定菜单
-            <span>{{ countObj.menuCount }}</span> /
-            <span>{{ scope.row.bindMenuCount }}</span> /
-            <span>{{ countObj.elementCount }}</span> /
-            <span>{{ scope.row.bindElementCount }}</span> /
+            <span class="role-count-all">⟨ {{ countObj.menuCount }}</span>
+            <span class="role-count-split">/</span>
+            <span class="role-count-bind">{{ scope.row.bindMenuCount }} ⟩</span>
+            <span class="role-count-all">⟨ {{ countObj.elementCount }}</span>
+            <span class="role-count-split">/</span>
+            <span class="role-count-bind">{{ scope.row.bindElementCount }} ⟩</span>
           </el-button>
         </template>
       </el-table-column>
@@ -267,5 +269,17 @@ export default defineComponent({
   .role-toolbar{
     display: flex;
     align-items: center;
+  }
+  .role-count-all{
+    display: inline-block;
+    margin-left: var(--mg-ultra-small);
+    font-weight: bold;
+  }
+  .role-count-split{
+    padding: 0 var(--pd-ultra-small);
+  }
+  .role-count-bind{
+    font-weight: bold;
+    color: var(--color-orange);
   }
 </style>

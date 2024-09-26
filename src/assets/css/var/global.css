@@ -99,6 +99,6 @@
     --menu-level-padding: var(--pd-medium);
 
     .el-tree{
-        --el-tree-node-content-height: var(--size-medium);
+        --el-tree-node-content-height: var(--size-medium) !important;
     }
 }
