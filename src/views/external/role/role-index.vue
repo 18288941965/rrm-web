@@ -78,7 +78,7 @@
           <el-button
             type="danger"
             :icon="Delete"
-            @click="deleteData(scope.row.id)"
+            @click="deleteData(scope.row.id, scope.row.name)"
           />
 
           <el-button
@@ -88,10 +88,10 @@
             绑定菜单
             <span class="role-count-all">⟨ {{ countObj.menuCount }}</span>
             <span class="role-count-split">/</span>
-            <span class="role-count-bind">{{ scope.row.bindMenuCount }} ⟩</span>
+            <span :class="scope.row.bindMenuCount > 0 ? 'role-count-bind' : 'role-count-unbind'">{{ scope.row.bindMenuCount }} ⟩</span>
             <span class="role-count-all">⟨ {{ countObj.elementCount }}</span>
             <span class="role-count-split">/</span>
-            <span class="role-count-bind">{{ scope.row.bindElementCount }} ⟩</span>
+            <span :class="scope.row.bindElementCount > 0 ? 'role-count-bind' : 'role-count-unbind'">{{ scope.row.bindElementCount }} ⟩</span>
           </el-button>
         </template>
       </el-table-column>
@@ -124,7 +124,7 @@ import {Delete, Edit, Plus, Search} from '@element-plus/icons-vue'
 import RoleEditDialog from './role-edit-dialog.vue'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import {ElMessage} from 'element-plus'
-import {deleteConfirm} from '@utils/utils'
+import {deleteConfirmContent} from '@utils/utils'
 import {Apps} from '../../../components/svicon/menuIcon'
 import MenuSelectDialog from '../menu/menu-select-dialog.vue'
 import {countElement, countMenu} from '../menu/menuOption'
@@ -194,8 +194,8 @@ export default defineComponent({
       })
     }
 
-    const deleteData = (id: string) => {
-      deleteConfirm('你确定要删除此角色吗？').then(flag => {
+    const deleteData = (id: string, name: string) => {
+      deleteConfirmContent('建议停用角色而不是删除，删除后将不可恢复，是否确认执行删除操作？', name).then(flag => {
         if (flag) {
           deleteRole(id).then(res => {
             if (res.code === 200) {
@@ -273,13 +273,14 @@ export default defineComponent({
   .role-count-all{
     display: inline-block;
     margin-left: var(--mg-ultra-small);
-    font-weight: bold;
   }
   .role-count-split{
     padding: 0 var(--pd-ultra-small);
   }
   .role-count-bind{
-    font-weight: bold;
     color: var(--color-orange);
+  }
+  .role-count-unbind{
+    color: var(--color-black-secondary);
   }
 </style>

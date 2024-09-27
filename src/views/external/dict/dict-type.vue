@@ -50,7 +50,7 @@
             type="danger"
             :icon="Delete"
             :disabled="scope.row.entryCount > 0"
-            @click="deleteData(scope.row.id)"
+            @click="deleteData(scope.row.id, scope.row.typeCode, scope.row.typeName)"
           />
         </template>
       </el-table-column>
@@ -85,14 +85,14 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, onMounted, ref} from 'vue'
+import {defineComponent, reactive, onMounted} from 'vue'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import {DictTypeBeanQuery, DictTypeBeanVO} from './dictModel'
 import {Pagination} from '@utils/interface'
 import {deleteDictType, searchDictTypePage} from './dictOption'
 import {dialogBaseContent} from '@utils/dialogOptions'
 import {Delete, Edit, Plus, Search} from '@element-plus/icons-vue'
-import {deleteConfirm} from '@utils/utils'
+import {deleteConfirmContent} from '@utils/utils'
 import DictTypeEditDialog from './dict-type-edit-dialog.vue'
 import {ArrowLine} from '../../../components/svicon/publicIcon'
 
@@ -143,8 +143,8 @@ export default defineComponent({
       dialogBaseCloseAndRefresh: dialogTypeCloseAndRefresh,
     } = dialogBaseContent<number>()
 
-    const deleteData = (id: number) => {
-      deleteConfirm('你确定要删除此字典类型吗？').then(flag => {
+    const deleteData = (id: number, typeCode: string, typeName: string) => {
+      deleteConfirmContent('删除前请仔细确认此字典未被使用，删除后将不可恢复，是否确认执行删除操作？', `${typeName}：${typeCode}`).then(flag => {
         if (flag) {
           deleteDictType(id).then(res => {
             if (res.code === 200) {

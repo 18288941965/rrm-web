@@ -129,8 +129,10 @@ import LocalStorage from '../../../class/LocalStorage'
 import AppItemEditDialog from './app-item-edit-dialog.vue'
 import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
 import {Plus, Delete, Edit, EditPen,Refresh} from '@element-plus/icons-vue'
-import {deleteConfirm} from '@utils/utils'
 import ItemTeamworkerDialog from './item-teamworker-dialog.vue'
+import {ElMessageBox} from 'element-plus'
+import {h} from 'vue'
+import {ElMessage} from 'element-plus/es'
 
 export default defineComponent({
   name: 'ItemIndex',
@@ -163,17 +165,35 @@ export default defineComponent({
     } = dialogParamsContent()
 
     const deleteData = (id: number) => {
-      // TODO 验证项目绑定的角色
-      // TODO 验证项目绑定的资源等
-      deleteConfirm('你确定要删除此项目吗').then(data => {
-        if (data) {
-          deleteItem(id).then(res => {
-            if (res.code == 200) {
-              query()
-            }
-          })
-        }
+      const findObj = itemList.value.find(item => item.id === id)
+      if (!findObj) {
+        return
+      }
+      // TODO 清空所有表
+      ElMessageBox.prompt(
+          h('div', { style: '' }, [
+            h('p', { style: 'font-weight: bold;' },`【${findObj.itemName} / ${findObj.itemCode}】`),
+            h('p', { style: 'color: red; font-weight: bold;' },'• 删除项目将会清空一切项目下相关的数据'),
+            h('p', { style: '' }, '请在输入框中输入项目名称和代码，用“,”号分割'),
+            h('span', { style: 'color: red; font-weight: bold;' }, '• 删除后不可恢复！！！！！！！！！！！！'),
+          ]),
+          '删除确认', {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+            type: 'warning',
       })
+          .then(({ value }) => {
+            if (value !== findObj.itemName+','+findObj.itemCode) {
+              ElMessage.warning('删除失败！输入有误！')
+              return
+            }
+            deleteItem(id).then(res => {
+              if (res.code == 200) {
+                query()
+              }
+            })
+          })
+          .catch(() => {})
     }
     
     onMounted(() => {

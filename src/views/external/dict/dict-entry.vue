@@ -110,7 +110,7 @@
           <el-button
             type="danger"
             :icon="Delete"
-            @click="deleteData(scope.row.id)"
+            @click="deleteData(scope.row.id, scope.row.entryName)"
           />
         </template>
       </el-table-column>
@@ -142,7 +142,7 @@ import {DictEntryBean, DictEntryBeanQuery, DictTypeBeanVO} from './dictModel'
 import {Pagination} from '@utils/interface'
 import {deleteDictEntry, searchDictEntryPage, updateDictEntryStatus} from './dictOption'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
-import {deleteConfirm} from '@utils/utils'
+import {deleteConfirmContent} from '@utils/utils'
 import {ElMessage} from 'element-plus/es'
 import DictEntrySortDialog from './dict-entry-sort-dialog.vue'
 
@@ -224,8 +224,8 @@ export default defineComponent({
       emit('set-entry-count', flag)
     }
 
-    const deleteData = (id: number) => {
-      deleteConfirm('你确定要删除此字典项吗？').then(flag => {
+    const deleteData = (id: number, entryName: string) => {
+      deleteConfirmContent('建议停用字典项而不是删除，删除后将不可恢复，是否确认执行删除操作？', entryName).then(flag => {
         if (flag) {
           deleteDictEntry(id).then(res => {
             if (res.code === 200) {
