@@ -23,16 +23,28 @@
         >
           移动选中菜单
         </el-button>
-
-        <el-button
-          :icon="Delete"
-          @click="deleteData"
-        >
-          删除选中菜单
-        </el-button>
       </div>
 
       <div class="empty-flex" />
+
+      <div>
+        <el-button
+          :disabled="!activeMenu.id"
+          :icon="Plus"
+          type="success"
+          @click="dialogParamsOpen({ dataId: '', parentId: activeMenu.id, parentName: activeMenu.name })"
+        >
+          添加子菜单
+        </el-button>
+        
+        <el-button
+          :disabled="activeMenu.childrenCount < 1"
+          :icon="Sort"
+          @click="dialogSortOpen(activeMenu.id)"
+        >
+          子菜单排序
+        </el-button>
+      </div>
     </div>
 
     <main class="menu-main">
@@ -49,18 +61,29 @@
             <span
               v-if="!activeMenu.id"
               class="no-data"
-            >请点击左侧菜单名称选择要操作的菜单</span>
+            >请点击左侧菜单名称进行后续操作</span>
             {{ activeMenu.name }}
           </h4>
 
           <div>
+            <el-switch
+              v-model="activeMenu.status"
+              :disabled="!activeMenu.id || activeMenu.childrenCount > 1"
+              inline-prompt
+              :active-value="1"
+              :inactive-value="0"
+              active-text="启用"
+              inactive-text="停用"
+              class="mgr-medium"
+              @change="updateStatus"
+            />
+            
             <el-button
-              :disabled="!activeMenu.id"
-              :icon="Plus"
-              type="success"
-              @click="dialogParamsOpen({ dataId: '', parentId: activeMenu.id, parentName: activeMenu.name })"
+              :disabled="!activeMenu.id || activeMenu.childrenCount > 1"
+              :icon="Delete"
+              @click="deleteData"
             >
-              添加子菜单
+              删除菜单
             </el-button>
 
             <el-button
@@ -69,14 +92,6 @@
               @click="dialogParamsOpen({ dataId: activeMenu.id, parentId: '', parentName: '' })"
             >
               编辑菜单
-            </el-button>
-
-            <el-button
-              :disabled="activeMenu.childrenCount < 1"
-              :icon="Sort"
-              @click="dialogSortOpen(activeMenu.id)"
-            >
-              子菜单排序
             </el-button>
           </div>
         </div>
@@ -133,8 +148,14 @@ import {Delete, Edit, Link, Plus, PriceTag, Sort, Upload, Right} from '@element-
 import MenuAddDialog from './menu-add-dialog.vue'
 import {dialogBaseContent, dialogEmptyContent, dialogParamsContent} from '@utils/dialogOptions'
 import {MenuBeanActive, MenuBeanVO} from './menuModel'
-import {countMenuBindResourceByMenuId, deleteMenuById, getMenuById, getMenuByItemCode} from './menuOption'
-import {deleteConfirm} from '@utils/utils'
+import {
+  countMenuBindResourceByMenuId,
+  deleteMenuById,
+  getMenuById,
+  getMenuByItemCode,
+  updateMenuStatus,
+} from './menuOption'
+import {deleteConfirmContent} from '@utils/utils'
 import MenuTree from './menu-tree.vue'
 import MenuMoveDrawer from './menu-move-drawer.vue'
 import MenuSortDialog from './menu-sort-dialog.vue'
@@ -162,6 +183,7 @@ export default defineComponent({
     const activeMenu = reactive<MenuBeanActive>({
       id: '',
       name: '',
+      status: 0,
       childrenCount: 0,
       bindResourceCount: 0,
     })
@@ -238,58 +260,15 @@ export default defineComponent({
       }
       return false // 返回 false 表示未找到节点
     }
-    const deleteValid = (): {
-      message: string
-      deleteIds: Array<string>
-    } => {
-      if (checkMap.value.length === 0) {
-        return {
-          message: '未选中菜单！',
-          deleteIds: [],
-        }
-      }
-      const deleteIds: Array<string> = []
-      const selectIds = checkMap.value.map(item => item.id)
-      for (let i = 0; i < checkMap.value.length; i++) {
-        const val = checkMap.value[i].count as number
-        if (val <= 0) {
-          deleteIds.push(checkMap.value[i].id)
-          continue
-        }
 
-        const childIds = findChildrenIds(menuList.value, checkMap.value[i].id)
-        for (let i = 0; i < childIds.length; i++) {
-          if (!selectIds.includes(childIds[i])) {
-            return {
-              message: '请一并选择要删除菜单的所有子菜单！',
-              deleteIds: [],
-            }
-          }
-        }
-        deleteIds.push(checkMap.value[i].id)
-      }
-      return {
-        message: '',
-        deleteIds,
-      }
-    }
     const deleteData = () => {
-      const { message, deleteIds } = deleteValid()
-      if (message) {
-        ElMessage.warning(message)
-        return
-      }
-
-      deleteConfirm('你确定要删除所有选中菜单吗？菜单关联项也将被一并删除').then(data => {
+      deleteConfirmContent('建议停用菜单而不是删除，删除后将不可恢复，是否确认执行删除操作', activeMenu.name).then(data => {
         if (data) {
-          deleteMenuById(deleteIds.join(',')).then(res => {
+          deleteMenuById(activeMenu.id).then(res => {
             if (res.code == 200) {
-              deleteIds.forEach(id => {
-                deleteNodeById(menuList.value, id)
-              })
-              if (checkMap.value.map(item => item.id).includes(activeMenu.id)) {
-                menuIndexTreeRef.value!.cleanActiveMenu(true)
-              }
+              deleteNodeById(menuList.value, activeMenu.id)
+
+              menuIndexTreeRef.value!.cleanActiveMenu(true)
             }
           })
         }
@@ -370,21 +349,31 @@ export default defineComponent({
         recursiveInsert(tree)
       }
     }
+    const updateTreeNode = (editId: string) => {
+      getMenuById(editId).then(res => {
+        if (res.code === 200) {
+          const data: MenuBeanVO = res.data
+          updateOrInsertNode(menuList.value, editId, data, data.parentId)
+          if (editId === activeMenu.id) {
+            Object.assign(activeMenu, {
+              name: data.name,
+            })
+          }
+        }
+      })
+    }
     const dialogParamsCloseAndRefresh = (refresh: boolean, editId: string) => {
       dialogParamsClose()
       if (refresh) {
-        getMenuById(editId).then(res => {
-          if (res.code === 200) {
-            const data: MenuBeanVO = res.data
-            updateOrInsertNode(menuList.value, editId, data, data.parentId)
-            if (editId === activeMenu.id) {
-              Object.assign(activeMenu, {
-                name: data.name,
-              })
-            }
-          }
-        })
+        updateTreeNode(editId)
       }
+    }
+    const updateStatus = () => {
+      updateMenuStatus(activeMenu.status, activeMenu.id).then(res => {
+        if (res.code === 200) {
+          updateTreeNode(activeMenu.id)
+        }
+      })
     }
     // ————————新增、编辑————————end
 
@@ -475,6 +464,7 @@ export default defineComponent({
         activeMenu,
         menuList,
         deleteData,
+        updateStatus,
 
         treeCheckChange,
         treeCheckMap,

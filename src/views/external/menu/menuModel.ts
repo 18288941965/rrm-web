@@ -25,11 +25,13 @@ interface MenuBeanVO extends MenuBeanBase {
     typeName: string | null
     children: Array<MenuBeanVO>
     disabled?: boolean
+    status: number
 }
 
 interface MenuBeanActive extends MenuBeanDefault{
     id: string
     name: string
+    status: number
     childrenCount: number
     bindResourceCount?: number
 }
@@ -44,9 +46,13 @@ interface MenuElementBean{
     menuId: string
     name: string
     type: string
+}
+interface MenuElementBeanVO extends MenuElementBean{
+    status: number
     bindResourceCount?: number
     checked?: boolean
 }
+
 
 interface MenuResourceBean{
     menuId: string
@@ -59,6 +65,9 @@ export {
     type MenuBeanVO,
     type MenuBeanActive,
     type MenuSortBean,
-    type MenuElementBean,
+
     type MenuResourceBean,
+
+    type MenuElementBean,
+    type MenuElementBeanVO,
 }

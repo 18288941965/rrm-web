@@ -20,6 +20,13 @@ const updateMenu = (menu: MenuBean) => {
     })
 }
 
+const updateMenuStatus = (status: number, id: string) => {
+    return axios.put('/menu', { status, id }).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
 const deleteMenuById = (id: string) => {
     return axios.delete(`/menu/${id}`).then((res: { data: AxiosResult }) => {
         return res.data
@@ -86,6 +93,12 @@ const updateMenuElement = (menuElement: MenuElementBean) => {
     })
 }
 
+const updateMenuElementStatus = (status: number, id: string) => {
+    return axios.put('/menu-element', { status, id }).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
 const deleteMenuElementById = (id: string) => {
     return axios.delete(`/menu-element/${id}`).then((res: { data: AxiosResult }) => {
         return res.data
@@ -120,6 +133,7 @@ export {
     getMenuById,
     createMenu,
     updateMenu,
+    updateMenuStatus,
     deleteMenuById,
     getMenuByItemCode,
     countMenu,
@@ -132,6 +146,7 @@ export {
     countElement,
     createMenuElement,
     updateMenuElement,
+    updateMenuElementStatus,
     deleteMenuElementById,
 
     getMenuBindResourceByMenuId,

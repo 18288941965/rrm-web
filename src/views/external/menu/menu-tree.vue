@@ -43,6 +43,16 @@
             >
               不可见
             </el-tag>
+            
+            <el-tag
+              v-if="data.status !== 1"
+              type="danger"
+              round
+              size="small"
+              class="mgl-medium"
+            >
+              停用
+            </el-tag>
           </span>
         </span>
       </template>
@@ -87,6 +97,7 @@ export default defineComponent({
       emit('set-active-menu', {
         id: data.id,
         name: data.name,
+        status: data.status,
         childrenCount: data.children ? data.children.length : 0,
       })
     }
@@ -124,6 +135,7 @@ export default defineComponent({
         emit('set-active-menu', {
           id: '',
           name: '',
+          status: 0,
           childrenCount: 0,
         })
       }

@@ -20,13 +20,24 @@
           <span>{{ element.name }}</span>
           <div>
             <span class="element-key">ID：{{ element.id }}</span>
+            <el-switch
+              v-model="element.status"
+              inline-prompt
+              :active-value="1"
+              :inactive-value="0"
+              active-text="启用"
+              inactive-text="停用"
+              class="mgr-medium"
+              @change="updateStatus($event, element.id)"
+            />
+
             <el-button
               :icon="Edit"
               @click="dialogParamsOpen({ dataId: element.id, menuId: activeMenu.id })"
             />
             <el-button
               :icon="Delete"
-              @click="deleteData(element.id)"
+              @click="deleteData(element.id, element.name)"
             />
             <el-button
               :icon="Link"
@@ -54,12 +65,18 @@
 <script lang="ts">
 import {defineComponent, PropType, ref, watchEffect} from 'vue'
 import {Delete, Edit, Link, Plus} from '@element-plus/icons-vue'
-import {MenuBeanActive, MenuElementBean} from './menuModel'
+import {MenuBeanActive, MenuElementBeanVO} from './menuModel'
 import MenuElementEditDialog from './menu-element-edit-dialog.vue'
 import {dialogParamsContent} from '@utils/dialogOptions'
-import {countMenuBindResourceByMenuId, deleteMenuElementById, getMenuElementByMenuId} from './menuOption'
-import {deleteConfirm} from '@utils/utils'
+import {
+  countMenuBindResourceByMenuId,
+  deleteMenuElementById,
+  getMenuElementByMenuId,
+  updateMenuElementStatus,
+} from './menuOption'
+import {deleteConfirmContent} from '@utils/utils'
 import ResourceSelectDialog from '../resource/resource-select-dialog.vue'
+import {ElMessage} from 'element-plus/es'
 
 export default defineComponent({
   name: 'MenuElement',
@@ -84,7 +101,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const dataList = ref<Array<MenuElementBean>>([])
+    const dataList = ref<Array<MenuElementBeanVO>>([])
     
     const query = () => {
       getMenuElementByMenuId(props.activeMenu.id).then(res => {
@@ -101,8 +118,8 @@ export default defineComponent({
       })
     }
 
-    const deleteData = (id: string) => {
-      deleteConfirm('你确定要删除此控件吗？关联的资源也将被清空').then(data => {
+    const deleteData = (id: string, name: string) => {
+      deleteConfirmContent('建议停用控件而不是删除，删除后将不可恢复，是否确认执行删除操作？', name).then(data => {
         if (data) {
           deleteMenuElementById(id).then(res => {
             if (res.code === 200) {
@@ -151,6 +168,14 @@ export default defineComponent({
     }
     // ————————菜单绑定资源————————end
 
+    const updateStatus = (status: number, id: string) => {
+      updateMenuElementStatus(status, id).then(res => {
+        if (res.code === 200) {
+          ElMessage.success('操作成功！')
+        }
+      }).catch(() => query())
+    }
+
       return {
         Edit,
         Delete,
@@ -159,6 +184,8 @@ export default defineComponent({
         dataList,
         query,
         deleteData,
+        updateStatus,
+
         dialogParam,
         dialogParamsOpen,
         dialogParamsCloseAndRefresh,
