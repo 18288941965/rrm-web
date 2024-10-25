@@ -39,10 +39,32 @@
           </el-tag>
         </template>
       </el-table-column>
+
+      <el-table-column
+        prop="createdAt"
+        label="创建时间"
+        width="170"
+      />
+
+      <el-table-column
+        prop="createdUsername"
+        label="创建人"
+        width="180"
+      >
+        <template #default="scope">
+          <span v-if="scope.row.createdUsername">{{ scope.row.createdUsername }}</span>
+          <span
+            v-else
+            class="user-root-tag"
+          >root</span>
+        </template>
+      </el-table-column>
+
       <el-table-column
         prop="description"
         label="描述"
       />
+      
       <el-table-column
         prop="itemList"
         label="关联项目"
@@ -209,5 +231,8 @@ export default defineComponent({
     display: flex;
     align-items: center;
     line-height: var(--size-medium);
+  }
+  .user-root-tag{
+    color: var(--color-purple);
   }
 </style>

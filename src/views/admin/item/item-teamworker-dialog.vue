@@ -13,7 +13,7 @@
         type="编辑"
       />
     </template>
-    
+
     <main class="item-team-main rrm-form">
       <el-checkbox-group
         v-model="selectUserId"
@@ -57,6 +57,7 @@ export default defineComponent({
         return {
           dataId: 0,
           userId: 0,
+          itemCode: '',
         }
       },
     },
@@ -95,7 +96,7 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
-      getCorrelationUserId(props.params.dataId).then(res => {
+      getCorrelationUserId(props.params.itemCode).then(res => {
         if (res.code === 200) {
           selectUserId.value = res.data
           selectUserIdBak.value = res.data
@@ -116,11 +117,11 @@ export default defineComponent({
     }
     
     const create = (userId: number) => {
-      createUserItem(userId, props.params.dataId).then(res => {handleCallback(res)})
+      createUserItem(userId, props.params.itemCode).then(res => {handleCallback(res)})
     }
 
     const remove = (userId: number) => {
-      deleteUserItem(userId, props.params.dataId).then(res => {handleCallback(res)})
+      deleteUserItem(userId, props.params.itemCode).then(res => {handleCallback(res)})
     }
 
     const teamChange = () => {

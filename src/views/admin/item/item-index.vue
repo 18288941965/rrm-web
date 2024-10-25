@@ -101,7 +101,7 @@
           <el-button
             :icon="EditPen"
             :disabled="scope.row.createdBy !== scope.row.loginId"
-            @click="dialogTeamOpen({ dataId: scope.row.id, createdBy: scope.row.createdBy })"
+            @click="dialogTeamOpen({ dataId: scope.row.id, createdBy: scope.row.createdBy, itemCode: scope.row.itemCode })"
           >
             协作者
           </el-button>
@@ -174,8 +174,8 @@ export default defineComponent({
           h('div', { style: '' }, [
             h('p', { style: 'font-weight: bold;' },`【${findObj.itemName} / ${findObj.itemCode}】`),
             h('p', { style: 'color: red; font-weight: bold;' },'• 删除项目将会清空一切项目下相关的数据'),
-            h('p', { style: '' }, '请在输入框中输入项目名称和代码，用“,”号分割'),
-            h('span', { style: 'color: red; font-weight: bold;' }, '• 删除后不可恢复！！！！！！！！！！！！'),
+            h('p', { style: 'color: red; font-weight: bold;' }, '• 删除后不可恢复！！！！！！！！！！！！'),
+            h('span', { style: '' }, '请在输入框中输入项目名称和代码，用“,”号分割'),
           ]),
           '删除确认', {
         confirmButtonText: '确定删除',
@@ -189,6 +189,7 @@ export default defineComponent({
             }
             deleteItem(id).then(res => {
               if (res.code == 200) {
+                ElMessage.success(res.message)
                 query()
               }
             })

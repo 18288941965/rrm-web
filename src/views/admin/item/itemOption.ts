@@ -33,20 +33,20 @@ const deleteItem = (id: number) => {
     })
 }
 
-const getCorrelationUserId = (itemId: number) => {
-    return axios.get(`/item/correlationUserId/${itemId}`).then((res: { data: AxiosResult }) => {
+const getCorrelationUserId = (itemCode: string) => {
+    return axios.get(`/item/correlationUserId/${itemCode}`).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
 
-const deleteUserItem = (userId: number, itemId: number) => {
-    return axios.delete(`/user-item/${userId}/${itemId}`).then((res: { data: AxiosResult }) => {
+const deleteUserItem = (userId: number, itemCode: string) => {
+    return axios.delete(`/user-item/${userId}/${itemCode}`).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
 
-const createUserItem = (userId: number, itemId: number) => {
-    return axios.post('/user-item', { userId, itemId }).then((res: { data: AxiosResult }) => {
+const createUserItem = (userId: number, itemCode: string) => {
+    return axios.post('/user-item', { userId, itemCode }).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
