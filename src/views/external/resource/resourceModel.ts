@@ -36,6 +36,12 @@ interface PackageNameTree {
     children?: PackageNameTree[]
 }
 
+interface ResourceScanBean{
+    url: string
+    token: string
+    microservice: string
+    axiosType: string
+}
 
 export {
     type ResourceBeanBase,
@@ -43,4 +49,5 @@ export {
     type ResourceQuery,
     type ResourceBeanVO,
     type PackageNameTree,
+    type ResourceScanBean,
 }

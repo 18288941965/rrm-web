@@ -84,7 +84,7 @@
       class="mgb-medium"
       type="success"
       :icon="Reading"
-      @click="runScannerRrmResource"
+      @click="dialogEmptyOpen"
     >
       扫描系统资源
     </el-button>
@@ -167,6 +167,11 @@
       :pager="pager"
       @query="query"
     />
+    
+    <resource-scan-dialog
+      v-bind="dialogEmpty"
+      @close-dialog="dialogEmptyCloseAndRefresh($event, query)"
+    />
   </div>
 </template>
 
@@ -175,14 +180,20 @@ import {defineComponent, reactive, onMounted} from 'vue'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import {Pagination} from '@utils/interface'
 import {ResourceBeanVO, ResourceQuery} from './resourceModel'
-import {scannerRrmResource, searchResourcePage, updateResourceStatus} from './resourceOption'
+import {searchResourcePage, updateResourceStatus} from './resourceOption'
 import {ElMessage} from 'element-plus'
 import {Reading, Search} from '@element-plus/icons-vue'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
+import {dialogEmptyContent} from '@utils/dialogOptions'
+import ResourceScanDialog from './resource-scan-dialog.vue'
 
 export default defineComponent({
   name: 'ResourceIndex',
-  components: {EvSelect, EvPagination},
+  components: {
+    EvSelect, 
+    EvPagination,
+    ResourceScanDialog,
+  },
   setup() {
     
     const queryParams = reactive<ResourceQuery>({
@@ -238,13 +249,11 @@ export default defineComponent({
       })
     }
     
-    const runScannerRrmResource = () => {
-      scannerRrmResource().then(res => {
-        if (res.code === 200) {
-          query(1)
-        }
-      })
-    }
+    const {
+      dialogEmpty,
+      dialogEmptyOpen,
+      dialogEmptyCloseAndRefresh,
+    } = dialogEmptyContent()
 
     onMounted(() => {
       query(1)
@@ -257,7 +266,10 @@ export default defineComponent({
       pager,
       query,
       setResourceStatus,
-      runScannerRrmResource,
+
+      dialogEmpty,
+      dialogEmptyOpen,
+      dialogEmptyCloseAndRefresh,
     }
   },
 })
