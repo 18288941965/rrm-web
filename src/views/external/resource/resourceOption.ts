@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {ResourceQuery} from './resourceModel'
+import {ResourceQuery, ResourceScanBean} from './resourceModel'
 
 const searchResourcePage = (params: ResourceQuery) => {
     return axios.post('/resource/page', params).then((res: { data: AxiosResult }) => {
@@ -14,8 +14,8 @@ const updateResourceStatus = (id: string, status: number) => {
     })
 }
 
-const scannerRrmResource = () => {
-    return axios.get('/scanner').then((res: { data: AxiosResult }) => {
+const scannerRrmResource = (params: ResourceScanBean) => {
+    return axios.post('/scanner/run', params).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }

@@ -41,6 +41,7 @@ interface ResourceScanBean{
     token: string
     microservice: string
     axiosType: string
+    apiKey: string
 }
 
 export {

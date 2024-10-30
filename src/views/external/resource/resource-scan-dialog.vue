@@ -54,7 +54,7 @@
           />
         </el-form-item>
         <el-form-item
-          label="验证token"
+          label="token验证"
           prop="token"
         >
           <el-input
@@ -62,6 +62,15 @@
             clearable
             type="textarea"
             :rows="4"
+          />
+        </el-form-item>
+        <el-form-item
+            label="apiKey验证"
+            prop="apiKey"
+        >
+          <el-input
+              v-model.trim="form.apiKey"
+              clearable
           />
         </el-form-item>
       </el-form>
@@ -120,6 +129,7 @@ export default defineComponent({
       token: '',
       microservice: '',
       axiosType: 'post',
+      apiKey: '',
     })
 
     watch(
@@ -136,6 +146,7 @@ export default defineComponent({
         token: '',
         microservice: '',
         axiosType: 'post',
+        apiKey: '',
       })
       const refresh = isRefresh.value
       isRefresh.value = false
@@ -146,7 +157,7 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          scannerRrmResource().then(res => {
+          scannerRrmResource(form).then(res => {
             if (res.code === 200) {
               isRefresh.value = true
               ElMessage.success('扫描成功')
