@@ -83,10 +83,10 @@
     <el-button
       class="mgb-medium"
       type="success"
-      :icon="Reading"
+      :icon="Plus"
       @click="dialogEmptyOpen"
     >
-      扫描系统资源
+      扫描资源
     </el-button>
     
     <el-table
@@ -188,7 +188,7 @@ import {Pagination} from '@utils/interface'
 import {ResourceBeanVO, ResourceQuery} from './resourceModel'
 import {searchResourcePage, updateResourceStatus} from './resourceOption'
 import {ElMessage} from 'element-plus'
-import {Reading, Search} from '@element-plus/icons-vue'
+import {Plus, Search} from '@element-plus/icons-vue'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
 import {dialogEmptyContent} from '@utils/dialogOptions'
 import ResourceScanDialog from './resource-scan-dialog.vue'
@@ -266,7 +266,7 @@ export default defineComponent({
     })
     
     return {
-      Reading,
+      Plus,
       Search,
       queryParams,
       pager,
