@@ -38,6 +38,7 @@ interface Pagination<T> {
  * 本次存储的用户对象
  */
 interface LocalUserInfoBean{
+    id: number
     userName: string
     loginStatus: string
     fontType: string

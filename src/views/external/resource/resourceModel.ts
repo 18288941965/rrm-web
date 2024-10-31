@@ -39,9 +39,11 @@ interface PackageNameTree {
 interface ResourceScanBean{
     url: string
     token: string
-    microservice: string
+    serviceName: string
     axiosType: string
     apiKey: string
+    createdBy: number
+    itemCode: string
 }
 
 export {

@@ -73,9 +73,10 @@ const local = new LocalStorage()
 
 // 登录成功回调
 const loginSuccess: LoginSuccess = (data: AxiosResult) => {
-  local.setToken(data.data)
+  const cache = data.data
+  local.setToken(cache.token)
   local.setLoginStatus(LSEnum.LOG_ITEM)
-  local.setLoginUsername(userBeanBase.username)
+  local.setLoginUsername(userBeanBase.username, cache.id)
   postMessage({ code: BCEnum.LOGIN, message: '登录成功' })
   router.replace(RUEnum.ITEM)
 }

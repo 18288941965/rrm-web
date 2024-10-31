@@ -144,6 +144,12 @@
         align="center"
       />
       <el-table-column
+        prop="createdAt"
+        width="180"
+        label="创建时间"
+        align="center"
+      />
+      <el-table-column
         prop="status"
         label="状态"
         width="90px"

@@ -7,6 +7,7 @@ export default class LocalStorage {
 
     getUserInfoObj () {
         const userInfo: LocalUserInfoBean = {
+            id: -1,
             fontType: '',
             loginStatus: '',
             themeModel: '',
@@ -38,6 +39,7 @@ export default class LocalStorage {
     cleanUserInfoObj () {
         const userInfoObj = this.getUserInfoObj()
         const userInfo: LocalUserInfoBean = {
+            id: -1,
             fontType: userInfoObj.fontType,
             loginStatus: '',
             themeModel: userInfoObj.themeModel,
@@ -57,9 +59,10 @@ export default class LocalStorage {
     }
 
 
-    setLoginUsername(username: string) {
+    setLoginUsername(username: string, id: number) {
         const userInfoObj = this.getUserInfoObj()
         userInfoObj.userName = username
+        userInfoObj.id = id
         this.setUserInfo(userInfoObj)
     }
 

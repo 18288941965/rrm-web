@@ -35,11 +35,11 @@
         </el-form-item>
         <el-form-item
           label="扫描微服务"
-          prop="microservice"
+          prop="serviceName"
         >
           <ev-select
-            v-model="form.microservice"
-            dict-type="dic_microservice"
+            v-model="form.serviceName"
+            dict-type="dic_service_name"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
           />
         </el-form-item>
@@ -65,12 +65,12 @@
           />
         </el-form-item>
         <el-form-item
-            label="apiKey验证"
-            prop="apiKey"
+          label="apiKey验证"
+          prop="apiKey"
         >
           <el-input
-              v-model.trim="form.apiKey"
-              clearable
+            v-model.trim="form.apiKey"
+            clearable
           />
         </el-form-item>
       </el-form>
@@ -101,6 +101,7 @@ import EvSelect from '../../../components/evcomp/ev-select.vue'
 import {FormInstance, FormRules} from 'element-plus'
 import {ResourceScanBean} from './resourceModel'
 import DialogFooter from '../../../components/dialog-footer.vue'
+import LocalStorage from '../../../class/LocalStorage'
 
 export default defineComponent({
   name: 'ResourceScanDialog',
@@ -127,9 +128,11 @@ export default defineComponent({
     const form = reactive<ResourceScanBean>({
       url: '',
       token: '',
-      microservice: '',
+      serviceName: '',
       axiosType: 'post',
       apiKey: '',
+      createdBy: -1,
+      itemCode: '',
     })
 
     watch(
@@ -144,9 +147,11 @@ export default defineComponent({
       Object.assign(form, {
         url: '',
         token: '',
-        microservice: '',
+        serviceName: '',
         axiosType: 'post',
         apiKey: '',
+        createdBy: -1,
+        itemCode: '',
       })
       const refresh = isRefresh.value
       isRefresh.value = false
@@ -172,10 +177,14 @@ export default defineComponent({
 
     const rules = reactive<FormRules<ResourceScanBean>>({
       url: [{required: true, message: '请输入请求地址', trigger: 'change'}],
-      microservice: [{required: true, message: '请选择微服务', trigger: 'change'}],
+      serviceName: [{required: true, message: '请选择微服务', trigger: 'change'}],
     })
 
     const handleOpen = () => {
+      const local = new LocalStorage()
+      const userInfoObj = local.getUserInfoObj()
+      form.itemCode = userInfoObj.itemCode
+      form.createdBy = userInfoObj.id
     }
 
     return {
