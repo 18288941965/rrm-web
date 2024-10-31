@@ -95,13 +95,14 @@
 import {defineComponent, reactive, ref, watch} from 'vue'
 import {dialogOptions} from '@utils/dialogOptions'
 import DialogHeader from '../../../components/dialog-header.vue'
-import {scannerRrmResource} from './resourceOption'
 import {ElMessage} from 'element-plus/es'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
 import {FormInstance, FormRules} from 'element-plus'
 import {ResourceScanBean} from './resourceModel'
 import DialogFooter from '../../../components/dialog-footer.vue'
 import LocalStorage from '../../../class/LocalStorage'
+import axios from 'axios'
+import {AxiosResult} from '@utils/interface'
 
 export default defineComponent({
   name: 'ResourceScanDialog',
@@ -158,17 +159,26 @@ export default defineComponent({
       emit('close-dialog', true, refresh)
     }
 
+    // 扫描资源
+    const scannerRrmResource = () => {
+      axios.create().post(form.url, form ).then((res: { data: AxiosResult }) => {
+        if (res.data.code === 200) {
+          isRefresh.value = true
+          ElMessage.success('扫描成功')
+          handleClose()
+        } else {
+          ElMessage.error(res.data.message)
+        }
+      }).catch((error: Error) => {
+        ElMessage.error(error.message)
+      })
+    }
+
     const runScannerRrmResource = (formEl: FormInstance | undefined) => {
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          scannerRrmResource(form).then(res => {
-            if (res.code === 200) {
-              isRefresh.value = true
-              ElMessage.success('扫描成功')
-              handleClose()
-            }
-          })
+          scannerRrmResource()
         } else {
           ElMessage.error('请填写完整表单！')
         }

@@ -7,6 +7,8 @@ import {LogoutSuccess} from '@utils/types'
 export default function (logoutSuccess: LogoutSuccess) {
 
     axios.defaults.baseURL = import.meta.env.VITE_AXIOS_URL
+    // 标志前端axios请求
+    axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
     // Add a request interceptor
     axios.interceptors.request.use(function (config) {
@@ -14,9 +16,6 @@ export default function (logoutSuccess: LogoutSuccess) {
         if (token) {
             config.headers.Authorization = `Bearer ${token}`
         }
-        // 标志前端axios请求
-        config.headers.XRequestedWith = 'XMLHttpRequest'
-        // Do something before request is sent
         return config
     }, function (error) {
         // Do something with request error

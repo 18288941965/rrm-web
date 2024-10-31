@@ -14,12 +14,6 @@ const updateResourceStatus = (id: string, status: number) => {
     })
 }
 
-const scannerRrmResource = (params: ResourceScanBean) => {
-    return axios.post('/scanner/run', params).then((res: { data: AxiosResult }) => {
-        return res.data
-    })
-}
-
 const countResourceByItemCode = () => {
     return axios.get('/resource/count').then((res: { data: AxiosResult }) => {
         return res.data
@@ -41,7 +35,6 @@ const getPackageNameByTree = () => {
 export {
     searchResourcePage,
     updateResourceStatus,
-    scannerRrmResource,
     countResourceByItemCode,
     getServiceNameList,
     getPackageNameByTree,
