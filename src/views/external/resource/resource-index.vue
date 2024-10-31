@@ -12,13 +12,6 @@
             @keyup.enter="query(1)"
           />
         </el-form-item>
-        <el-form-item label="类名">
-          <el-input
-            v-model="queryParams.className"
-            clearable
-            @keyup.enter="query(1)"
-          />
-        </el-form-item>
         <el-form-item label="资源名称">
           <el-input
             v-model="queryParams.resourceName"
@@ -26,6 +19,17 @@
             @keyup.enter="query(1)"
           />
         </el-form-item>
+        
+        <el-form-item label="资源类型">
+          <ev-select
+            v-model="queryParams.resourceType"
+            dict-type="dic_res_type"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+            @change="query(1)"
+          />
+        </el-form-item>
+        
         <el-form-item label="请求方式">
           <ev-select
             v-model="queryParams.requestMethod"
@@ -38,10 +42,28 @@
       </div>
 
       <div class="resource-query-form-grid">
-        <el-form-item label="资源类型">
+        <el-form-item label="类名">
+          <el-input
+            v-model="queryParams.className"
+            clearable
+            @keyup.enter="query(1)"
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <el-button
+            type="primary"
+            :icon="Search"
+            @click="query(1)"
+          >
+            查询
+          </el-button>
+        </el-form-item>
+
+        <el-form-item label="生效环境">
           <ev-select
-            v-model="queryParams.resourceType"
-            dict-type="dic_res_type"
+            v-model="queryParams.environment"
+            dict-type="dic_res_environment"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
             @change="query(1)"
@@ -56,26 +78,6 @@
             clearable
             @change="query(1)"
           />
-        </el-form-item>
-
-        <el-form-item label="生效环境">
-          <ev-select
-            v-model="queryParams.environment"
-            dict-type="dic_res_environment"
-            :default-attr="{ label: 'entryName', value: 'entryCode' }"
-            clearable
-            @change="query(1)"
-          />
-        </el-form-item>
-        
-        <el-form-item>
-          <el-button
-            type="primary"
-            :icon="Search"
-            @click="query(1)"
-          >
-            查询
-          </el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -96,63 +98,82 @@
     >
       <el-table-column
         prop="serviceName"
-        width="90"
+        width="100"
         label="服务名称"
       />
       <el-table-column
         prop="packageName"
-        label="包名"
-        width="260px"
-      />
-      <el-table-column
-        prop="className"
-        label="类名"
-      />
+        label="类信息"
+      >
+        <template #default="scope">
+          <div class="text-color">
+            {{ scope.row.packageName }}
+          </div>
+          {{ scope.row.className }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="methodName"
-        label="方法名"
-      />
-      <el-table-column
-        prop="requestPath"
-        label="请求路径"
-      />
-      <el-table-column
-        prop="requestMethod"
-        width="86"
-        label="请求方式"
-      />
+        label="方法信息"
+      >
+        <template #default="scope">
+          <div class="text-color">
+            {{ scope.row.methodName }}
+          </div>
+          {{ scope.row.requestPath }}
+        </template>
+      </el-table-column>
+
       <el-table-column
         prop="resourceName"
-        label="资源名称"
-      />
-      <el-table-column
-        prop="resourceTypeName"
-        width="90"
-        label="资源类型"
-        align="center"
-      />
-      <el-table-column
-        prop="authCodeName"
-        width="90"
-        label="授权类型"
-        align="center"
-      />
+        label="资源信息"
+        width="280"
+      >
+        <template #default="scope">
+          <div class="text-color">
+            {{ scope.row.resourceName }}
+          </div>
+          
+          <el-tag
+            round
+            type="success"
+          >
+            {{ scope.row.authCodeName }}
+          </el-tag>
+          
+          <el-tag
+            round
+            class="mgl-medium"
+          >
+            {{ scope.row.requestMethod }}
+          </el-tag>
+
+          <el-tag
+            round
+            class="mgl-medium"
+            type="warning"
+          >
+            {{ scope.row.resourceTypeName }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column
         prop="environmentName"
-        width="90"
+        width="86"
         label="生效环境"
         align="center"
       />
       <el-table-column
         prop="createdAt"
-        width="180"
+        width="170"
         label="创建时间"
         align="center"
       />
       <el-table-column
         prop="status"
         label="状态"
-        width="90px"
+        width="80px"
         align="center"
       >
         <template #default="scope">
@@ -219,7 +240,7 @@ export default defineComponent({
 
     const pager = reactive<Pagination<ResourceBeanVO>>({
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 5,
       total: 0,
       list: [],
     })
@@ -286,5 +307,11 @@ export default defineComponent({
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 20px;
+  }
+  .text-color{
+    color: var(--text-color-placeholder);
+    &:hover{
+      color: var(--text-color-primary);
+    }
   }
 </style>
