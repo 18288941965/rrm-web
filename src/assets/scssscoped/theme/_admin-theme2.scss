@@ -28,6 +28,7 @@
     }
 
     &__right{
+      margin-right: var(--mg-large);
       ul{
         @include flex-base();
         height: 100%;

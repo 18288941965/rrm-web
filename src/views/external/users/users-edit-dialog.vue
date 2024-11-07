@@ -169,38 +169,19 @@
         >
           <el-radio
             :value="1"
-            label="活跃 [1]"
+            label="正常 [1]"
           />
           <el-radio
-            :value="-1"
-            label="禁止 [-1]"
+            :value="2"
+            label="锁定 [2]"
           />
           <el-radio
-            :value="0"
-            label="锁定 [0]"
-          />
-        </el-radio-group>
-      </el-form-item>
-
-      <el-form-item
-        label="审核状态"
-        prop="approvalStatus"
-      >
-        <el-radio-group
-          v-model="form.approvalStatus"
-          disabled
-        >
-          <el-radio
-            :value="-1"
-            label="审核中 [-1]"
-          />
-          <el-radio
-            :value="1"
-            label="审核通过 [1]"
+            :value="3"
+            label="禁止 [3]"
           />
           <el-radio
             :value="0"
-            label="审核不通过 [0]"
+            label="注销 [0]"
           />
         </el-radio-group>
       </el-form-item>
@@ -291,7 +272,6 @@ export default defineComponent({
       type: null,
       description: null,
       accountStatus: 1,
-      approvalStatus: -1,
     })
 
     const rules = reactive<FormRules<UsersBean>>({

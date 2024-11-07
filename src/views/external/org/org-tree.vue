@@ -45,13 +45,12 @@
               {{ data.typeName }}
             </el-tag>
             <el-tag
-              v-if="data.isDeleted"
               type="warning"
               round
               size="small"
               class="mgl-medium"
             >
-              已删除
+              {{ data.orgStatus }}
             </el-tag>
           </span>
         </span>
@@ -175,7 +174,7 @@ export default defineComponent({
 
     const setDisabledMenu = (tree: Array<OrgBeanVO>) => {
       tree.forEach(menu => {
-        if (menu.isDeleted) {
+        if (menu.orgStatus === 0) {
           menu.disabled = true
         }
         if (menu.children) {

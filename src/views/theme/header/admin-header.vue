@@ -78,6 +78,7 @@ export default defineComponent({
   emits: ['push-router'],
   setup (props, {emit}) {
     const userInfoObj = ref<LocalUserInfoBean>({
+      id: -1,
       fontType: '',
       loginStatus: '',
       themeModel: '',

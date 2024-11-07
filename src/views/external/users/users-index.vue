@@ -26,70 +26,27 @@
       </el-input>
     </div>
 
-    <el-table
-      :data="pager.list"
-      border
-      style="width: 100%"
+    <div
+      v-for="(user, index) in pager.list"
+      :key="'user-' + index"
+      style="display: grid;grid-template-columns: 240px 200px 1fr 1fr;border: 1px solid;margin-bottom: var(--mg-small)"
     >
-      <el-table-column
-        prop="name"
-        label="姓名 / 性别 / 民族"
-        width="200"
-      >
-        <template #default="scope">
-          <div>
-            {{ scope.row.name }}
-          </div>
-          <div class="users-g-n">
-            <span>{{ scope.row.genderName }}</span>
-            <span>{{ scope.row.nationName }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="orgName"
-        label="归属机构"
-      />
-      <el-table-column
-        prop="username"
-        label="用户名"
-        width="130"
-      />
-      <el-table-column
-        prop="idNumber"
-        label="身份证号"
-        width="186"
-      />
-      <el-table-column
-        prop="dateOfBirth"
-        label="出生日期"
-        width="110"
-      />
-      <el-table-column
-        prop="phoneNumber"
-        label="手机号码"
-        width="120"
-      />
-      <el-table-column
-        prop="accountStatus"
-        label="账号状态"
-        width="100"
-        align="center"
-      >
-        <template #default="scope">
+      <div style="display: grid;grid-template-columns: 32px 1fr; align-items: center;">
+        <PersonFill :size="32" />
+        <div>
           <el-tag
-            v-if="scope.row.accountStatus === 1"
+            v-if="user.accountStatus === 1"
             type="success"
             round
           >
-            活跃
+            正常
           </el-tag>
           <el-tag
-            v-else-if="scope.row.accountStatus === -1"
+            v-else-if="user.accountStatus === -1"
             type="danger"
             round
           >
-            禁止
+            禁用
           </el-tag>
           <el-tag
             v-else
@@ -98,83 +55,41 @@
           >
             锁定
           </el-tag>
-        </template>
-      </el-table-column>
+          <div>{{ user.name }}</div>
+          <div>{{ user.idNumber }}</div>
+        </div>
+      </div>
+      <div>
+        <div>出生日期：{{ user.dateOfBirth }}</div>
+        <div>性别：{{ user.genderName }}</div>
+        <div>民族：{{ user.nationName }}</div>
+        <div>手机号码：{{ user.phoneNumber }}</div>
+      </div>
+      <div>
+        <div>用户名：{{ user.username }}</div>
+        <div>所属机构：{{ user.orgName }}</div>
+      </div>
+      <div>
+        <el-button
+          :icon="Link"
+          @click="dialogBaseOpen(user.id)"
+        >
+          绑定角色
+        </el-button>
+        
+        <el-button
+          type="primary"
+          :icon="Edit"
+          @click="dialogBaseOpen(user.id)"
+        />
 
-      <el-table-column
-        prop="approvalStatus"
-        label="审核状态"
-        width="110"
-        align="center"
-      >
-        <template #default="scope">
-          <el-tag
-            v-if="scope.row.approvalStatus === 1"
-            type="success"
-            round
-          >
-            审核通过
-          </el-tag>
-          <el-tag
-            v-else-if="scope.row.approvalStatus === -1"
-            type="info"
-            round
-          >
-            审核中
-          </el-tag>
-          <el-tag
-            v-else
-            type="danger"
-            round
-          >
-            审核不通过
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="isDeleted"
-        label="删除状态"
-        width="90"
-        align="center"
-      >
-        <template #default="scope">
-          <el-tag
-            v-if="scope.row.isDeleted === 1"
-            type="danger"
-            round
-          >
-            是
-          </el-tag>
-          <el-tag
-            v-else
-            type="success"
-            round
-          >
-            否
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        width="76"
-        align="center"
-      >
-        <template #default="scope">
-          <div class="mgb-medium">
-            <el-button
-              type="primary"
-              :icon="Edit"
-              @click="dialogBaseOpen(scope.row.id)"
-            />
-          </div>
-
-          <el-button
-            type="danger"
-            :icon="Delete"
-            @click="deleteData(scope.row.id)"
-          />
-        </template>
-      </el-table-column>
-    </el-table>
+        <el-button
+          type="danger"
+          :icon="Delete"
+          @click="deleteData(user.id)"
+        />
+      </div>
+    </div>
 
     <ev-pagination
       :pager="pager"
@@ -202,13 +117,16 @@ import {
   Plus,
   Edit,
   Delete,
+    Link,
 } from '@element-plus/icons-vue'
+import {PersonFill} from '../../../components/svicon/publicIcon'
 
 export default defineComponent({
   name: 'UsersIndex',
   components: {
     UsersEditDialog,
     EvPagination,
+    PersonFill,
   },
   setup() {
 
@@ -268,6 +186,7 @@ export default defineComponent({
       Plus,
       Edit,
       Delete,
+      Link,
       queryParams,
       pager,
       query,
@@ -292,6 +211,7 @@ export default defineComponent({
       background-color: var(--bg-color-banner);
       color: var(--color-black-secondary);
       text-align: center;
+      font-size: var(--h6-size);
     }
     & span:first-child{
       border-top-left-radius: var(--border-radius-large);

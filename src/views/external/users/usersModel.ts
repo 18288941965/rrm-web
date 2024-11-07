@@ -10,10 +10,6 @@ interface UsersBeanChoosable{
     lastLoginTime?: Date
     failedLoginAttempts?: number
     loginCount?: number
-    approvalStatus?: number
-    approvalAt?: Date
-    isDeleted?: number
-    deletedAt?: Date
     extendedField?: string
     extendedField2?: string
 }

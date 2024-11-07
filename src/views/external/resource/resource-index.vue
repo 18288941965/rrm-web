@@ -19,7 +19,16 @@
             @keyup.enter="query(1)"
           />
         </el-form-item>
-        
+        <el-form-item label="类名">
+          <el-input
+            v-model="queryParams.className"
+            clearable
+            @keyup.enter="query(1)"
+          />
+        </el-form-item>
+      </div>
+
+      <div class="resource-query-form-grid">
         <el-form-item label="资源类型">
           <ev-select
             v-model="queryParams.resourceType"
@@ -29,7 +38,7 @@
             @change="query(1)"
           />
         </el-form-item>
-        
+
         <el-form-item label="请求方式">
           <ev-select
             v-model="queryParams.requestMethod"
@@ -38,26 +47,6 @@
             clearable
             @change="query(1)"
           />
-        </el-form-item>
-      </div>
-
-      <div class="resource-query-form-grid">
-        <el-form-item label="类名">
-          <el-input
-            v-model="queryParams.className"
-            clearable
-            @keyup.enter="query(1)"
-          />
-        </el-form-item>
-
-        <el-form-item>
-          <el-button
-            type="primary"
-            :icon="Search"
-            @click="query(1)"
-          >
-            查询
-          </el-button>
         </el-form-item>
 
         <el-form-item label="生效环境">
@@ -90,7 +79,16 @@
     >
       扫描资源
     </el-button>
-    
+
+    <el-button
+      class="mgb-medium"
+      type="primary"
+      :icon="Search"
+      @click="query(1)"
+    >
+      查询
+    </el-button>
+
     <el-table
       :data="pager.list"
       border
