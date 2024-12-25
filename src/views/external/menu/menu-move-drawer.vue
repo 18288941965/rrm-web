@@ -40,7 +40,7 @@
 <script lang="ts">
 import {defineComponent,ref, watch} from 'vue'
 import MenuTree from './menu-tree.vue'
-import {MenuBeanActive, MenuBeanVO} from './menuModel'
+import {MenuBeanVO} from './menuModel'
 import DialogFooter from '../../../components/dialog-footer.vue'
 import {operationConfirm} from '@utils/utils'
 import {dialogOptions} from '@utils/dialogOptions'
@@ -93,7 +93,7 @@ export default defineComponent({
 
     // 关闭窗口
     const handleClose = () => {
-      menuMoveTreeRef.value?.cleanActiveMenu()
+      menuMoveTreeRef.value?.cleanClickMenuId()
       menuMoveTo.value = ''
       loading.value = false
       const refresh = isRefresh.value
@@ -102,7 +102,7 @@ export default defineComponent({
     }
 
 
-    const treeCheckChange = (data: MenuBeanActive) => {
+    const treeCheckChange = (data: MenuBeanVO) => {
       menuMoveTo.value = data.id
     }
 

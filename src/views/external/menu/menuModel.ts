@@ -31,8 +31,9 @@ interface MenuDicName {
 
 interface MenuBeanVO extends MenuBeanBase, MenuDicName {
     children: Array<MenuBeanVO>
-    disabled?: boolean
     status: number
+    disabled?: boolean
+    childrenCount?: number
 }
 
 interface MenuBeanActive extends MenuBeanDefault, MenuDicName{

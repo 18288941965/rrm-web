@@ -4,7 +4,7 @@
       v-model.trim="searchVal"
       class="mgb-medium"
       clearable
-      placeholder="一级菜单过滤"
+      placeholder="菜单过滤"
     >
       <template #append>
         <el-button
@@ -24,6 +24,7 @@
       default-expand-all
       :expand-on-click-node="false"
       :check-strictly="true"
+      :filter-node-method="filterNode"
       @node-click="treeNodeClick"
     >
       <template #default="{ node, data }">
@@ -82,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, ref, toRef} from 'vue'
+import {computed, defineComponent, watch, ref, toRef} from 'vue'
 import {MenuBeanVO} from './menuModel'
 import {Search} from '@element-plus/icons-vue'
 
@@ -111,18 +112,10 @@ export default defineComponent({
     const clickMenuId = ref('')
 
     const setActiveMenu = (data: MenuBeanVO) => {
-      emit('set-active-menu', {
-        id: data.id,
-        name: data.name,
-        status: data.status,
-        visibility: data.visibility,
-        typeName: data.typeName,
-        terminal: data.terminal,
-        terminalName: data.terminalName,
-        netType: data.netType,
-        netTypeName: data.netTypeName,
-        childrenCount: data.children ? data.children.length : 0,
-      })
+      // 深拷贝去掉 children
+      const childrenCount = data.children ? data.children.length : 0
+      const nodeCopy: MenuBeanVO = { ...data, children: [], childrenCount }
+      emit('set-active-menu', nodeCopy)
       clickMenuId.value = data.id
     }
 
@@ -137,18 +130,8 @@ export default defineComponent({
       setActiveMenu(data)
     }
 
-    const cleanActiveMenu = (cleanActive = false) => {
-      menuElTreeRef.value.setCheckedKeys([])
-      menuTreeList.value = []
-      if (cleanActive) {
-        emit('set-active-menu', {
-          id: '',
-          name: '',
-          status: 0,
-          childrenCount: 0,
-        })
-        clickMenuId.value = ''
-      }
+    const cleanClickMenuId = () => {
+      clickMenuId.value = ''
     }
 
     const setDisabledMenu = (tree: Array<MenuBeanVO>) => {
@@ -181,6 +164,14 @@ export default defineComponent({
       return null
     }
 
+    watch(searchVal, (val) => {
+      menuElTreeRef.value!.filter(val)
+    })
+
+    const filterNode = (value: string, data: MenuBeanVO) => {
+      if (!value) return true
+      return data.name.includes(value)
+    }
 
     return {
       Search,
@@ -189,9 +180,10 @@ export default defineComponent({
       getMenuTreeList,
       searchVal,
       menuElTreeRef,
-      cleanActiveMenu,
+      cleanClickMenuId,
       treeNodeClick,
       customNodeClass,
+      filterNode,
     }
   },
 })

@@ -74,7 +74,7 @@
       <menu-tree
         ref="menuIndexTreeRef"
         :menu-list="menuList"
-        @set-active-menu="treeCheckChange"
+        @set-active-menu="treeClickChange"
       />
       
       <div class="menu-index-control">
@@ -214,7 +214,7 @@ export default defineComponent({
     const menuIndexTreeRef = ref()
     const resourceCount = ref(0)
 
-    // 右侧激活的菜单
+    // ————————树节点点击事件————————start
     const activeMenu = reactive<MenuBeanActive>({
       id: '',
       name: '',
@@ -228,18 +228,42 @@ export default defineComponent({
       childrenCount: 0,
       bindResourceCount: 0,
     })
-    const treeCheckChange = (data: MenuBeanActive) => {
-      Object.assign(activeMenu, data)
-      if (!activeMenu.id) {
-        activeMenu.bindResourceCount = 0
-        return
-      }
+    const cleanActiveMenu = () => {
+      Object.assign(activeMenu, {
+        id: '',
+        name: '',
+        status: 0,
+        visibility: 0,
+        typeName: '',
+        terminal: '',
+        terminalName: '',
+        netType: '',
+        netTypeName: '',
+        childrenCount: 0,
+        bindResourceCount: 0,
+      })
+    }
+    const treeClickChange = (data: MenuBeanVO) => {
+      Object.assign(activeMenu, {
+        id: data.id,
+        name: data.name,
+        status: data.status,
+        visibility: data.visibility,
+        typeName: data.typeName,
+        terminal: data.terminal,
+        terminalName: data.terminalName,
+        netType: data.netType,
+        netTypeName: data.netTypeName,
+        childrenCount: data.childrenCount,
+        bindResourceCount: 0,
+      })
       countMenuBindResourceByMenuId(activeMenu.id).then(res => {
         if (res.code === 200) {
           activeMenu.bindResourceCount = res.data
         }
       })
     }
+    // ————————树节点点击事件————————end
 
     // ————————删除————————start
     const findChildrenIds = (tree: Array<MenuBeanVO>, targetId: string) => {
@@ -297,7 +321,8 @@ export default defineComponent({
             if (res.code == 200) {
               deleteNodeById(menuList.value, activeMenu.id)
 
-              menuIndexTreeRef.value!.cleanActiveMenu(true)
+              cleanActiveMenu()
+              menuIndexTreeRef.value!.cleanClickMenuId()
             }
           })
         }
@@ -318,6 +343,8 @@ export default defineComponent({
         for (let node of tree) {
           // 如果找到匹配的节点，更新它的数据
           if (node.id === id) {
+            // 后端仅返回当前节点的信息，子节点信息使用历史数据
+            newData.children = node.children
             Object.assign(node, newData)
             found = true
             return true // 返回 true 表示成功更新
@@ -383,15 +410,9 @@ export default defineComponent({
         if (res.code === 200) {
           const data: MenuBeanVO = res.data
           updateOrInsertNode(menuList.value, editId, data, data.parentId)
+          // 编辑菜单更新右侧内容
           if (editId === activeMenu.id) {
-            Object.assign(activeMenu, {
-              name: data.name,
-              visibility: data.visibility,
-              terminal: data.terminal,
-              terminalName: data.terminalName,
-              netType: data.netType,
-              netTypeName: data.netTypeName,
-            })
+            treeClickChange(data)
           }
         }
       })
@@ -464,7 +485,8 @@ export default defineComponent({
     // ————————菜单绑定资源————————end
 
     const query = () => {
-      menuIndexTreeRef.value!.cleanActiveMenu(true)
+      cleanActiveMenu()
+      menuIndexTreeRef.value!.cleanClickMenuId()
       getMenuByItemCode().then(res => {
         if (res.code === 200) {
           menuList.value = res.data
@@ -497,7 +519,7 @@ export default defineComponent({
         deleteData,
         updateStatus,
 
-        treeCheckChange,
+        treeClickChange,
         menuIndexTreeRef,
 
         dialogParam,
