@@ -50,6 +50,14 @@
         label="角色描述"
       />
       <el-table-column
+        prop="terminalName"
+        label="终端"
+      />
+      <el-table-column
+        prop="netTypeName"
+        label="网络类型"
+      />
+      <el-table-column
         prop="statusName"
         width="100"
         label="角色状态"

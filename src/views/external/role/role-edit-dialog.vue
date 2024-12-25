@@ -42,6 +42,30 @@
       </el-form-item>
 
       <el-form-item
+        label="所属终端"
+        prop="terminal"
+      >
+        <ev-select
+          v-model="form.terminal"
+          dict-type="dic_terminal"
+          :default-attr="{ label: 'entryName', value: 'entryCode' }"
+          clearable
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="网络类型"
+        prop="netType"
+      >
+        <ev-select
+          v-model="form.netType"
+          dict-type="dic_net_type"
+          :default-attr="{ label: 'entryName', value: 'entryCode' }"
+          clearable
+        />
+      </el-form-item>
+
+      <el-form-item
         label="角色描述"
         prop="description"
       >
@@ -120,6 +144,8 @@ export default defineComponent({
       type: '',
       sortOrder: 0,
       description: '',
+      terminal: '',
+      netType: '',
     })
 
     const rules = reactive<FormRules<RoleBean>>({

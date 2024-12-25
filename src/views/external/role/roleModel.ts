@@ -10,12 +10,17 @@ interface RoleBean extends RoleBeanBase{
     status: number
     sortOrder: number
     description: string
+    terminal: string
+    netType: string
 }
 
 interface RoleBeanQuery extends RoleBeanBase, PaginationQr{
 }
 
 interface RoleBeanVO extends RoleBean{
+    typeName: string
+    terminalName: string
+    netTypeName: string
     bindMenuCount: number
     bindElementCount: number
 }
