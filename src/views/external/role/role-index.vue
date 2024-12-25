@@ -75,6 +75,24 @@
           />
         </template>
       </el-table-column>
+      <el-table-column
+        prop="_bindMenu"
+        label="绑定菜单"
+      >
+        <template #default="scope">
+          {{ countObj.menuCount }} /
+          <span :class="scope.row.bindMenuCount > 0 ? 'role-count-bind' : 'role-count-unbind'">{{ scope.row.bindMenuCount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="_bindElement"
+        label="绑定控件"
+      >
+        <template #default="scope">
+          {{ countObj.elementCount }} /
+          <span :class="scope.row.bindElementCount > 0 ? 'role-count-bind' : 'role-count-unbind'">{{ scope.row.bindElementCount }}</span>
+        </template>
+      </el-table-column>
       <el-table-column>
         <template #default="scope">
           <el-button
@@ -89,17 +107,12 @@
             @click="deleteData(scope.row.id, scope.row.name)"
           />
 
+
           <el-button
             :icon="Apps"
             @click="dialogBindMenuOpen({ dataId: scope.row.id, name: scope.row.name })"
           >
-            绑定菜单
-            <span class="role-count-all">⟨ {{ countObj.menuCount }}</span>
-            <span class="role-count-split">/</span>
-            <span :class="scope.row.bindMenuCount > 0 ? 'role-count-bind' : 'role-count-unbind'">{{ scope.row.bindMenuCount }} ⟩</span>
-            <span class="role-count-all">⟨ {{ countObj.elementCount }}</span>
-            <span class="role-count-split">/</span>
-            <span :class="scope.row.bindElementCount > 0 ? 'role-count-bind' : 'role-count-unbind'">{{ scope.row.bindElementCount }} ⟩</span>
+            绑定菜单和控件
           </el-button>
         </template>
       </el-table-column>
@@ -277,13 +290,6 @@ export default defineComponent({
   .role-toolbar{
     display: flex;
     align-items: center;
-  }
-  .role-count-all{
-    display: inline-block;
-    margin-left: var(--mg-ultra-small);
-  }
-  .role-count-split{
-    padding: 0 var(--pd-ultra-small);
   }
   .role-count-bind{
     color: var(--color-orange);

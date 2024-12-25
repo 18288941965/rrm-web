@@ -163,7 +163,7 @@
         >
           <ev-select
             v-model="form.terminal"
-            :disabled="params.parentId != ''"
+            :disabled="params.parentId != '' || form.id"
             dict-type="dic_terminal"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
@@ -176,7 +176,7 @@
         >
           <ev-select
             v-model="form.netType"
-            :disabled="params.parentId != ''"
+            :disabled="params.parentId != '' || form.id"
             dict-type="dic_net_type"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable

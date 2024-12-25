@@ -9,7 +9,7 @@
   >
     <template #header>
       <dialog-header
-        title="绑定菜单"
+        title="绑定菜单和控件"
         :name="params.name"
       />
     </template>

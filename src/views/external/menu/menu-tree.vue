@@ -6,12 +6,6 @@
       clearable
       placeholder="菜单过滤"
     >
-      <template #append>
-        <el-button
-          :icon="Search"
-          style="width: 120px"
-        />
-      </template>
     </el-input>
 
     <el-tree
@@ -85,7 +79,6 @@
 <script lang="ts">
 import {computed, defineComponent, watch, ref, toRef} from 'vue'
 import {MenuBeanVO} from './menuModel'
-import {Search} from '@element-plus/icons-vue'
 
 export default defineComponent({
   name: 'MenuTree',
@@ -174,7 +167,6 @@ export default defineComponent({
     }
 
     return {
-      Search,
       clickMenuId,
       menuTreeList,
       getMenuTreeList,
