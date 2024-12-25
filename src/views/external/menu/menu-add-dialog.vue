@@ -155,6 +155,34 @@
           />
         </el-form-item>
       </div>
+
+      <div class="form-item-grid">
+        <el-form-item
+          label="所属终端"
+          prop="terminal"
+        >
+          <ev-select
+            v-model="form.terminal"
+            :disabled="params.parentId != ''"
+            dict-type="dic_terminal"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="网络类型"
+          prop="netType"
+        >
+          <ev-select
+            v-model="form.netType"
+            :disabled="params.parentId != ''"
+            dict-type="dic_net_type"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+      </div>
     </el-form>
 
     <template #footer>
@@ -199,6 +227,8 @@ export default defineComponent({
           dataId: '',
           parentId: '',
           parentName: '',
+          terminal: '',
+          netType: '',
         }
       },
     },
@@ -236,6 +266,8 @@ export default defineComponent({
       pageName: null,
       pageCache: 0,
       version: '1.0',
+      terminal: '01',
+      netType: '01',
     })
 
     const rules = reactive<FormRules<MenuBean>>({
@@ -243,6 +275,8 @@ export default defineComponent({
       path: [{required: true, message: '请输入菜单路径', trigger: 'change'}],
       type: [{required: true, message: '请选择菜单类型', trigger: 'change'}],
       version: [{required: true, message: '请输入菜单版本', trigger: 'change'}],
+      terminal: [{ required: true, message: '所属终端为必填项', trigger: 'change'}],
+      netType: [{ required: true, message: '网络类型为必填项', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {
@@ -290,7 +324,11 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
-      form.parentId = props.params.parentId ? props.params.parentId : null
+      if (props.params.parentId) {
+        form.parentId = props.params.parentId
+        form.terminal = props.params.terminal
+        form.netType = props.params.netType
+      }
       if (props.params.dataId) {
         getMenuById(props.params.dataId).then(res => {
           if (res.code === 200) {

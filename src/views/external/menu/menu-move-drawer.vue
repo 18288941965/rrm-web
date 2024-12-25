@@ -18,7 +18,7 @@
       :move-ids="moveIds"
       :disabled-ids="disabledIds"
       :source="1"
-      @set-checked-keys="setCheckedKeys"
+      @set-active-menu="treeCheckChange"
     />
 
     <template #footer>
@@ -40,9 +40,9 @@
 <script lang="ts">
 import {defineComponent,ref, watch} from 'vue'
 import MenuTree from './menu-tree.vue'
-import {MenuBeanVO} from './menuModel'
+import {MenuBeanActive, MenuBeanVO} from './menuModel'
 import DialogFooter from '../../../components/dialog-footer.vue'
-import {deleteConfirm} from '@utils/utils'
+import {operationConfirm} from '@utils/utils'
 import {dialogOptions} from '@utils/dialogOptions'
 import {moveMenuTo} from './menuOption'
 
@@ -101,16 +101,13 @@ export default defineComponent({
       emit('close-dialog', refresh)
     }
 
-    const setCheckedKeys = (data: Map<string, number>) => {
-      if (data.size > 0) {
-        menuMoveTo.value = data.keys().next().value
-      } else {
-        menuMoveTo.value = ''
-      }
+
+    const treeCheckChange = (data: MenuBeanActive) => {
+      menuMoveTo.value = data.id
     }
 
     const submit = (message: string) => {
-      deleteConfirm(message).then(flag => {
+      operationConfirm(message).then(flag => {
         if (flag) {
           moveMenuTo(props.moveIds, menuMoveTo.value).then(res => {
             if (res.code === 200) {
@@ -127,7 +124,7 @@ export default defineComponent({
 
     const submitBefore = () => {
       loading.value = true
-      const message = menuMoveTo.value ? '你确定把选中的菜单移动到 [ 此 ] 目录下吗？' :
+      const message = menuMoveTo.value ? '你确定把菜单移动到 [ 此 ] 目录下吗？' :
           '你确定把选中的菜单移动到 [ 根 ] 目录下吗？'
      submit(message)
     }
@@ -137,7 +134,7 @@ export default defineComponent({
       loading,
       submitBefore,
       menuMoveTreeRef,
-      setCheckedKeys,
+      treeCheckChange,
       handleOpen,
       handleClose,
     }

@@ -16,13 +16,6 @@
         >
           一级菜单排序
         </el-button>
-
-        <el-button
-          :icon="Right"
-          @click="dialogMenuMoveOpen"
-        >
-          移动选中菜单
-        </el-button>
       </div>
 
       <div class="empty-flex" />
@@ -32,9 +25,31 @@
           :disabled="!activeMenu.id"
           :icon="Plus"
           type="success"
-          @click="dialogParamsOpen({ dataId: '', parentId: activeMenu.id, parentName: activeMenu.name })"
+          @click="dialogParamsOpen({ 
+            dataId: '', 
+            parentId: activeMenu.id, 
+            parentName: activeMenu.name, 
+            terminal: activeMenu.terminal, 
+            netType: activeMenu.netType 
+          })"
         >
           添加子菜单
+        </el-button>
+
+        <el-button
+          :disabled="!activeMenu.id"
+          :icon="Edit"
+          @click="dialogParamsOpen({ dataId: activeMenu.id, parentId: '', parentName: '' })"
+        >
+          编辑菜单
+        </el-button>
+
+        <el-button
+          :disabled="!activeMenu.id || activeMenu.childrenCount >= 1"
+          :icon="Delete"
+          @click="deleteData"
+        >
+          删除菜单
         </el-button>
         
         <el-button
@@ -44,6 +59,14 @@
         >
           子菜单排序
         </el-button>
+
+        <el-button
+          :disabled="!activeMenu.id"
+          :icon="Right"
+          @click="dialogMenuMoveOpen"
+        >
+          移动菜单
+        </el-button>
       </div>
     </div>
 
@@ -52,7 +75,6 @@
         ref="menuIndexTreeRef"
         :menu-list="menuList"
         @set-active-menu="treeCheckChange"
-        @set-checked-keys="treeCheckMap"
       />
       
       <div class="menu-index-control">
@@ -68,7 +90,7 @@
           <div>
             <el-switch
               v-model="activeMenu.status"
-              :disabled="!activeMenu.id || activeMenu.childrenCount > 1"
+              :disabled="!activeMenu.id"
               inline-prompt
               :active-value="1"
               :inactive-value="0"
@@ -77,22 +99,6 @@
               class="mgr-medium"
               @change="updateStatus"
             />
-            
-            <el-button
-              :disabled="!activeMenu.id || activeMenu.childrenCount > 1"
-              :icon="Delete"
-              @click="deleteData"
-            >
-              删除菜单
-            </el-button>
-
-            <el-button
-              :disabled="!activeMenu.id"
-              :icon="Edit"
-              @click="dialogParamsOpen({ dataId: activeMenu.id, parentId: '', parentName: '' })"
-            >
-              编辑菜单
-            </el-button>
           </div>
         </div>
 
@@ -108,6 +114,36 @@
           >
             绑定资源 {{ resourceCount }} / <span class="bind-source">{{ activeMenu.bindResourceCount }}</span>
           </el-button>
+
+          <template v-if="activeMenu.id">
+            <el-tag
+              type="info"
+              class="mgl-medium"
+            >
+              {{ activeMenu.visibility === 1 ? '可见' : '不可见' }}
+            </el-tag>
+
+            <el-tag
+              type="info"
+              class="mgl-medium"
+            >
+              {{ activeMenu.typeName }}
+            </el-tag>
+
+            <el-tag
+              type="info"
+              class="mgl-medium"
+            >
+              {{ activeMenu.terminalName }}
+            </el-tag>
+
+            <el-tag
+              type="info"
+              class="mgl-medium"
+            >
+              {{ activeMenu.netTypeName }}
+            </el-tag>
+          </template>
         </div>
 
         <menu-element
@@ -124,7 +160,7 @@
     
     <menu-move-drawer
       :show="dialogMenuMove.show"
-      :menu-list="menuList"
+      :menu-list="getMoveMenuList"
       :move-ids="moveIds"
       :disabled-ids="disabledIds"
       @close-dialog="dialogMenuMoveCloseAndRefresh"
@@ -143,7 +179,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive, ref} from 'vue'
+import {computed, defineComponent, onMounted, reactive, ref} from 'vue'
 import {Delete, Edit, Link, Plus, PriceTag, Sort, Upload, Right} from '@element-plus/icons-vue'
 import MenuAddDialog from './menu-add-dialog.vue'
 import {dialogBaseContent, dialogEmptyContent, dialogParamsContent} from '@utils/dialogOptions'
@@ -159,7 +195,6 @@ import {deleteConfirmContent} from '@utils/utils'
 import MenuTree from './menu-tree.vue'
 import MenuMoveDrawer from './menu-move-drawer.vue'
 import MenuSortDialog from './menu-sort-dialog.vue'
-import {ElMessage} from 'element-plus/es'
 import MenuElement from './menu-element.vue'
 import {countResourceByItemCode} from '../resource/resourceOption'
 import ResourceSelectDialog from '../resource/resource-select-dialog.vue'
@@ -184,6 +219,12 @@ export default defineComponent({
       id: '',
       name: '',
       status: 0,
+      visibility: 0,
+      typeName: '',
+      terminal: '',
+      terminalName: '',
+      netType: '',
+      netTypeName: '',
       childrenCount: 0,
       bindResourceCount: 0,
     })
@@ -198,18 +239,6 @@ export default defineComponent({
           activeMenu.bindResourceCount = res.data
         }
       })
-    }
-
-    // 选中的菜单
-    const checkMap = ref<Array<{
-      id: string
-      count: number
-    }>>([])
-    const treeCheckMap = (data: Map<string, number>) => {
-      checkMap.value = []
-      for (let key of data.keys()) {
-        checkMap.value.push({ id: key, count: data.get(key) as number })
-      }
     }
 
     // ————————删除————————start
@@ -357,6 +386,11 @@ export default defineComponent({
           if (editId === activeMenu.id) {
             Object.assign(activeMenu, {
               name: data.name,
+              visibility: data.visibility,
+              terminal: data.terminal,
+              terminalName: data.terminalName,
+              netType: data.netType,
+              netTypeName: data.netTypeName,
             })
           }
         }
@@ -378,6 +412,9 @@ export default defineComponent({
     // ————————新增、编辑————————end
 
     // ————————菜单移动————————start
+    const getMoveMenuList = computed(() => {
+      return menuList.value.filter(item => item.terminal === activeMenu.terminal && item.netType === activeMenu.netType)
+    })
     const moveIds = ref<Array<string>>([])
     const disabledIds = ref<Array<string>>([])
     const {
@@ -386,17 +423,11 @@ export default defineComponent({
       dialogEmptyClose,
     } = dialogEmptyContent()
     const dialogMenuMoveOpen = () => {
-      if (checkMap.value.length === 0) {
-        ElMessage.warning('未选中菜单！')
-        return
-      }
       const tmpSet = new Set<string>()
-      moveIds.value = checkMap.value.map(item => item.id)
-      checkMap.value.forEach(item => {
-        tmpSet.add(item.id)
-        const childrenIds = findChildrenIds(menuList.value, item.id)
-        childrenIds.forEach(item => tmpSet.add(item))
-      })
+      moveIds.value.push(activeMenu.id)
+      tmpSet.add(activeMenu.id)
+      const childrenIds = findChildrenIds(menuList.value, activeMenu.id)
+      childrenIds.forEach(item => tmpSet.add(item))
       disabledIds.value = Array.of(...tmpSet)
       dialogEmptyOpen()
     }
@@ -467,7 +498,6 @@ export default defineComponent({
         updateStatus,
 
         treeCheckChange,
-        treeCheckMap,
         menuIndexTreeRef,
 
         dialogParam,
@@ -476,6 +506,7 @@ export default defineComponent({
 
         moveIds,
         disabledIds,
+        getMoveMenuList,
         dialogMenuMove,
         dialogMenuMoveOpen,
         dialogMenuMoveCloseAndRefresh,

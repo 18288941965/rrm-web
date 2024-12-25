@@ -14,6 +14,8 @@ interface MenuBeanBase extends MenuBeanDefault{
     pageName: string | null
     pageCache: number
     version: string
+    terminal: string
+    netType: string
 }
 
 interface MenuBean extends MenuBeanBase{
@@ -21,17 +23,23 @@ interface MenuBean extends MenuBeanBase{
     updatedAt?: Date
 }
 
-interface MenuBeanVO extends MenuBeanBase {
-    typeName: string | null
+interface MenuDicName {
+    typeName: string
+    terminalName: string
+    netTypeName: string
+}
+
+interface MenuBeanVO extends MenuBeanBase, MenuDicName {
     children: Array<MenuBeanVO>
     disabled?: boolean
     status: number
 }
 
-interface MenuBeanActive extends MenuBeanDefault{
-    id: string
-    name: string
+interface MenuBeanActive extends MenuBeanDefault, MenuDicName{
     status: number
+    visibility: number
+    terminal: string
+    netType: string
     childrenCount: number
     bindResourceCount?: number
 }
@@ -41,18 +49,16 @@ interface MenuSortBean{
     sortOrder: number
 }
 
-interface MenuElementBean{
-    id: string
+interface MenuElementBean extends MenuBeanDefault{
     menuId: string
-    name: string
     type: string
 }
+
 interface MenuElementBeanVO extends MenuElementBean{
     status: number
     bindResourceCount?: number
     checked?: boolean
 }
-
 
 interface MenuResourceBean{
     menuId: string

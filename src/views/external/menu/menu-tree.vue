@@ -21,21 +21,22 @@
       :data="getMenuTreeList"
       :props="{label: 'name', children: 'children', disabled: 'disabled', class: customNodeClass}"
       node-key="id"
-      show-checkbox
       default-expand-all
       :expand-on-click-node="false"
       :check-strictly="true"
-      @check-change="treeCheckChange"
       @node-click="treeNodeClick"
     >
       <template #default="{ node, data }">
-        <span class="custom-tree-node">
+        <span
+          class="custom-tree-node"
+          :class="{'tree-node-click': data.id === clickMenuId }"
+        >
           <span class="tree-node-label">
             {{ node.label }}
           </span>
           <span>
             <el-tag
-              v-if="!data.visibility"
+              v-if="data.visibility === 0"
               type="warning"
               round
               size="small"
@@ -53,6 +54,26 @@
             >
               停用
             </el-tag>
+            
+            <el-tag
+              v-if="node.level <= 1"
+              type="warning"
+              round
+              size="small"
+              class="mgl-medium"
+            >
+              {{ data.terminalName }}
+            </el-tag>
+            
+            <el-tag
+              v-if="node.level <= 1"
+              type="warning"
+              round
+              size="small"
+              class="mgl-medium"
+            >
+              {{ data.netTypeName }}
+            </el-tag>
           </span>
         </span>
       </template>
@@ -61,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, toRef, computed} from 'vue'
+import {computed, defineComponent, ref, toRef} from 'vue'
 import {MenuBeanVO} from './menuModel'
 import {Search} from '@element-plus/icons-vue'
 
@@ -72,10 +93,6 @@ export default defineComponent({
       type: Array<MenuBeanVO>,
       default: [],
     },
-    source: {
-      type: Number,
-      default: 0,
-    },
     moveIds: {
       type: Array<string>,
       default: [],
@@ -85,42 +102,36 @@ export default defineComponent({
       default: [],
     },
   },
-  emits: ['set-active-menu', 'set-checked-keys'],
+  emits: ['set-active-menu'],
   setup(props, { emit }) {
     const menuTreeList = toRef(props, 'menuList')
 
     const menuElTreeRef = ref()
     const searchVal = ref('')
-    const checkNodeMap = new Map<string, number>
+    const clickMenuId = ref('')
 
     const setActiveMenu = (data: MenuBeanVO) => {
       emit('set-active-menu', {
         id: data.id,
         name: data.name,
         status: data.status,
+        visibility: data.visibility,
+        typeName: data.typeName,
+        terminal: data.terminal,
+        terminalName: data.terminalName,
+        netType: data.netType,
+        netTypeName: data.netTypeName,
         childrenCount: data.children ? data.children.length : 0,
       })
-    }
-
-    const treeCheckChange = (data: MenuBeanVO, checkNode: boolean) => {
-      if (checkNode) {
-        if (props.source === 1) {
-          menuElTreeRef.value.setCheckedKeys([data.id])
-          checkNodeMap.clear()
-          checkNodeMap.set(data.id, data.children.length)
-        } else {
-          checkNodeMap.set(data.id, data.children.length)
-        }
-      } else {
-        checkNodeMap.delete(data.id)
-      }
-      // 根据子节点数量排序
-      const sortedMap = new Map([...checkNodeMap.entries()].sort((a, b) => a[1] - b[1]))
-      emit('set-checked-keys', sortedMap)
+      clickMenuId.value = data.id
     }
 
     const treeNodeClick = (data: MenuBeanVO) => {
-      if (props.source === 1) {
+      // 菜单移动
+      if ((props.moveIds && props.moveIds.includes(data.id))
+      ||
+          (props.disabledIds && props.disabledIds.includes(data.id))
+      ) {
         return
       }
       setActiveMenu(data)
@@ -128,9 +139,7 @@ export default defineComponent({
 
     const cleanActiveMenu = (cleanActive = false) => {
       menuElTreeRef.value.setCheckedKeys([])
-      checkNodeMap.clear()
       menuTreeList.value = []
-      emit('set-checked-keys', checkNodeMap)
       if (cleanActive) {
         emit('set-active-menu', {
           id: '',
@@ -138,6 +147,7 @@ export default defineComponent({
           status: 0,
           childrenCount: 0,
         })
+        clickMenuId.value = ''
       }
     }
 
@@ -165,17 +175,20 @@ export default defineComponent({
       if (props.moveIds.includes(data.id)) {
         return 'tree-move-check'
       }
+      if (props.disabledIds.includes(data.id)) {
+        return 'tree-disabled-select'
+      }
       return null
     }
 
 
     return {
       Search,
+      clickMenuId,
       menuTreeList,
       getMenuTreeList,
       searchVal,
       menuElTreeRef,
-      treeCheckChange,
       cleanActiveMenu,
       treeNodeClick,
       customNodeClass,
@@ -201,11 +214,18 @@ export default defineComponent({
   }
 
   & .custom-tree-node {
+    height: 100%;
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding-right: 8px;
+    border-right: 2px solid transparent;
+  }
+
+  & .tree-node-click{
+    background-image: linear-gradient(to right, transparent, #ddedfd);
+    border-right-color: #409eff;
   }
 }
 </style>
@@ -216,8 +236,16 @@ export default defineComponent({
   }
 }
 
+.tree-move-check > .el-tree-node__content, .tree-disabled-select > .el-tree-node__content{
+  cursor: not-allowed;
+}
+
 .tree-move-check > .el-tree-node__content:nth-of-type(1) {
   color: var(--color-red);
+}
+
+.tree-disabled-select > .el-tree-node__content:nth-of-type(1) {
+  color: var(--el-disabled-text-color);
 }
 
 </style>

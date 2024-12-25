@@ -150,6 +150,8 @@ export default defineComponent({
 
     const rules = reactive<FormRules<RoleBean>>({
       name: [{ required: true, message: '角色名称为必填项', trigger: 'change'}],
+      terminal: [{ required: true, message: '所属终端为必填项', trigger: 'change'}],
+      netType: [{ required: true, message: '网络类型为必填项', trigger: 'change'}],
     })
 
     const resetForm = (formEl: FormInstance | undefined) => {

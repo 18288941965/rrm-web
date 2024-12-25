@@ -32,6 +32,18 @@ export const deleteConfirm = async (message: string) => {
   ).catch(() => {})
 }
 
+// 其他操作确认
+export const operationConfirm = async (message: string) => {
+    return await ElMessageBox.confirm(
+        message,
+        '操作确认',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        },
+    ).catch(() => {})
+}
 
 // 删除确认提示
 export const deleteConfirmContent = async (message: string, title: string) => {
