@@ -25,7 +25,7 @@ interface UsersBean extends UsersBeanBase, UsersBeanChoosable{
     avatar: string | null
     type: string | null
     description: string | null
-    accountStatus: number
+    accountStatus: string
 }
 
 interface UsersBeanVO extends UsersBean{
@@ -35,6 +35,8 @@ interface UsersBeanVO extends UsersBean{
 }
 
 interface UsersBeanQuery extends UsersBeanBase, PaginationQr{
+    username: string
+    accountStatus: string
 }
 
 

@@ -292,7 +292,7 @@ export default defineComponent({
     align-items: center;
   }
   .role-count-bind{
-    color: var(--color-orange);
+    color: var(--el-color-success);
   }
   .role-count-unbind{
     color: var(--color-black-secondary);

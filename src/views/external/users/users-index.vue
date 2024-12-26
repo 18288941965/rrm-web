@@ -1,5 +1,39 @@
 <template>
   <div>
+    <el-form
+      :model="queryParams"
+      label-width="100px"
+    >
+      <div class="users-query-form-grid">
+        <el-form-item label="姓名">
+          <el-input
+            v-model="queryParams.name"
+            placeholder=""
+            clearable
+            style="max-width: 600px"
+          />
+        </el-form-item>
+        
+        <el-form-item label="用户名">
+          <el-input
+            v-model="queryParams.username"
+            placeholder=""
+            clearable
+            style="max-width: 600px"
+          />
+        </el-form-item>
+        
+        <el-form-item label="用户状态">
+          <ev-select
+            v-model="queryParams.accountStatus"
+            dict-type="dic_account_status"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
+      </div>
+    </el-form>
+    
     <div class="mgb-medium users-toolbar">
       <el-button
         class="mgr-medium"
@@ -10,84 +44,194 @@
         创建用户
       </el-button>
 
-      <el-input
-        v-model="queryParams.name"
-        placeholder="请输入用户名称"
-        clearable
-        style="max-width: 600px"
+      <el-button
+        class="mgb-medium"
+        type="primary"
+        :icon="Search"
+        @click="query(1)"
       >
-        <template #append>
-          <el-button
-            :icon="Search"
-            style="width: 100px"
-            @click="query(1)"
-          />
-        </template>
-      </el-input>
+        查询
+      </el-button>
     </div>
 
-    <div
-      v-for="(user, index) in pager.list"
-      :key="'user-' + index"
-      style="display: grid;grid-template-columns: 240px 200px 1fr 1fr;border: 1px solid;margin-bottom: var(--mg-small)"
-    >
-      <div style="display: grid;grid-template-columns: 32px 1fr; align-items: center;">
-        <PersonFill :size="32" />
-        <div>
-          <el-tag
-            v-if="user.accountStatus === 1"
-            type="success"
-            round
+    <div class="users-body">
+      <div
+        v-for="(user, index) in pager.list"
+        :key="'user-' + index"
+        class="users-card"
+      >
+        <div class="users-base">
+          <img
+            :src="avatarM"
+            alt=""
           >
-            正常
-          </el-tag>
-          <el-tag
-            v-else-if="user.accountStatus === -1"
-            type="danger"
-            round
-          >
-            禁用
-          </el-tag>
-          <el-tag
-            v-else
-            type="warning"
-            round
-          >
-            锁定
-          </el-tag>
-          <div>{{ user.name }}</div>
-          <div>{{ user.idNumber }}</div>
+          <div style="line-height: 26px">
+            <div>{{ user.name }}</div>
+            <div class="users-acc-status">
+              <span
+                v-if="user.accountStatus === '01'"
+                class="acc-status-success"
+              />
+              <span
+                v-else-if="user.accountStatus === '02'"
+                class="acc-status-warning"
+              />
+              <span
+                v-else-if="user.accountStatus === '03'"
+                class="acc-status-warning"
+              />
+              <span
+                v-else
+                class="acc-status-warning"
+              />
+              {{ user.username }}
+            </div>
+            <div>
+              <el-icon color="#666666">
+                <User />
+              </el-icon>
+              {{ user.idNumber }}
+            </div>
+            <div>
+              <el-icon color="#666666">
+                <Iphone />
+              </el-icon>
+              {{ user.phoneNumber }}
+            </div>
+          </div>
         </div>
-      </div>
-      <div>
-        <div>出生日期：{{ user.dateOfBirth }}</div>
-        <div>性别：{{ user.genderName }}</div>
-        <div>民族：{{ user.nationName }}</div>
-        <div>手机号码：{{ user.phoneNumber }}</div>
-      </div>
-      <div>
-        <div>用户名：{{ user.username }}</div>
-        <div>所属机构：{{ user.orgName }}</div>
-      </div>
-      <div>
-        <el-button
-          :icon="Link"
-          @click="dialogBaseOpen(user.id)"
-        >
-          绑定角色
-        </el-button>
-        
-        <el-button
-          type="primary"
-          :icon="Edit"
-          @click="dialogBaseOpen(user.id)"
-        />
 
-        <el-button
-          type="danger"
-          :icon="Delete"
-          @click="deleteData(user.id)"
-        />
+        <div class="users-base2">
+          <span>{{ user.dateOfBirth }}</span>
+          <el-divider direction="vertical" />
+          <span>{{ user.genderName }}</span>
+          <el-divider direction="vertical" />
+          <span>{{ user.nationName }}</span>
+        </div>
+
+        <div class="users-org">
+          <div class="org-item">
+            <el-tooltip
+              content="设为默认登录单位"
+              placement="left-start"
+            >
+              <el-button
+                text
+                circle
+              >
+                <el-icon color="#999999">
+                  <CircleCheckFilled />
+                </el-icon>
+              </el-button>
+            </el-tooltip>
+            <div>
+              {{ user.orgName }}
+            </div>
+            <div>
+              <el-tooltip
+                content="绑定角色"
+                placement="right-start"
+              >
+                <el-button
+                  type="primary"
+                  plain
+                  text
+                  circle
+                  @click="dialogBaseOpen(user.id)"
+                >
+                  88
+                </el-button>
+              </el-tooltip>
+            </div>
+          </div>
+          <div
+            class="org-item"
+          >
+            <el-tooltip
+              content="设为默认登录单位"
+              placement="left-start"
+            >
+              <el-button
+                text
+                circle
+              >
+                <el-icon color="#999999">
+                  <CircleCheckFilled />
+                </el-icon>
+              </el-button>
+            </el-tooltip>
+            <div>
+              云南省XX市公安局交通警察支队HH高速公路交巡警二大队法制宣传中队
+            </div>
+            <div>
+              <el-tooltip
+                content="绑定角色"
+                placement="right-start"
+              >
+                <el-button
+                  type="primary"
+                  plain
+                  text
+                  circle
+                  @click="dialogBaseOpen(user.id)"
+                >
+                  56
+                </el-button>
+              </el-tooltip>
+            </div>
+          </div>
+          <div
+            class="org-item"
+          >
+            <el-tooltip
+              content="设为默认登录单位"
+              placement="left-start"
+            >
+              <el-button
+                text
+                circle
+              >
+                <el-icon
+                  color="var(--el-color-success)"
+                >
+                  <CircleCheckFilled />
+                </el-icon>
+              </el-button>
+            </el-tooltip>
+
+            <div>
+              云南省XX市公安局GGGG支队综合执法大队
+            </div>
+            <div>
+              <el-tooltip
+                content="绑定角色"
+                placement="right-start"
+              >
+                <el-button
+                  type="primary"
+                  plain
+                  text
+                  circle
+                  @click="dialogBaseOpen(user.id)"
+                >
+                  1
+                </el-button>
+              </el-tooltip>
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center;border-top: 1px solid var(--border-color);padding: 10px 0;">
+          <el-button
+            type="primary"
+            :icon="Edit"
+            @click="dialogBaseOpen(user.id)"
+          />
+
+          <el-button
+            :icon="Delete"
+            @click="deleteData(user.id)"
+          />
+        </div>
       </div>
     </div>
 
@@ -117,25 +261,34 @@ import {
   Plus,
   Edit,
   Delete,
-    Link,
+  Link,
+  Iphone,
+  CircleCheckFilled,
+  User,
 } from '@element-plus/icons-vue'
-import {PersonFill} from '../../../components/svicon/publicIcon'
+import avatarM from '../../../assets/image/avatar-m.png'
+import EvSelect from '../../../components/evcomp/ev-select.vue'
 
 export default defineComponent({
   name: 'UsersIndex',
   components: {
+    EvSelect,
+    User,
+    CircleCheckFilled,
+    Iphone,
     UsersEditDialog,
     EvPagination,
-    PersonFill,
   },
   setup() {
 
     const queryParams = reactive<UsersBeanQuery>({
       name: '',
+      username: '',
       orgCode: '',
       orgName: '',
+      accountStatus: '',
     })
-    
+
     const pager = reactive<Pagination<UsersBeanVO>>({
       pageNum: 1,
       pageSize: 10,
@@ -187,6 +340,7 @@ export default defineComponent({
       Edit,
       Delete,
       Link,
+      avatarM,
       queryParams,
       pager,
       query,
@@ -201,25 +355,73 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  .users-g-n{
+  .users-query-form-grid{
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 2px;
-    margin-top: var(--mg-ultra-small);
-    & span{
-      border: var(--border-1);
-      background-color: var(--bg-color-banner);
-      color: var(--color-black-secondary);
-      text-align: center;
-      font-size: var(--h6-size);
-    }
-    & span:first-child{
-      border-top-left-radius: var(--border-radius-large);
-      border-bottom-left-radius: var(--border-radius-large);
-    }
-    & span:last-child{
-      border-top-right-radius: var(--border-radius-large);
-      border-bottom-right-radius: var(--border-radius-large);
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .users-body{
+    display: flex;
+    flex-wrap: wrap;
+    & .users-card{
+      width: 366px;
+      margin-right: 15px;
+      position: relative;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      margin-bottom: var(--mg-small);
+      & .users-base{
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        padding: 10px;
+        & img{
+          width: 100px;
+          height: 100px;
+        }
+      }
+      & .users-base2{
+        text-align: center;
+        line-height: 40px;
+        margin: 0 15px;
+        border-bottom: 1px dotted var(--border-color);
+      }
+
+      & .users-org{
+        color: var(--el-text-color-regular);
+        & .org-item{
+          margin: 6px;
+          display: grid;grid-template-columns: 34px 1fr 34px;align-items: center;grid-gap: 5px;
+          &:hover{
+            color: #000000;
+          }
+        }
+      }
     }
   }
+
+  .users-acc-status{
+    display: flex;
+    align-items: center;
+    color: var(--text-color-regular);
+    & span{
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      margin-left: 4px;
+      margin-right: 8px;
+    }
+    & .acc-status-success{
+      background-color: var(--el-color-success);
+    }
+    & .acc-status-danger{
+      background-color: var(--el-color-danger);
+    }
+    & .acc-status-warning{
+      background-color: var(--el-color-warning);
+    }
+  }
+
+
+
 </style>

@@ -163,27 +163,13 @@
         label="账号状态"
         prop="accountStatus"
       >
-        <el-radio-group
+        <ev-select
           v-model="form.accountStatus"
+          dict-type="dic_account_status"
+          :default-attr="{ label: 'entryName', value: 'entryCode' }"
+          clearable
           disabled
-        >
-          <el-radio
-            :value="1"
-            label="正常 [1]"
-          />
-          <el-radio
-            :value="2"
-            label="锁定 [2]"
-          />
-          <el-radio
-            :value="3"
-            label="禁止 [3]"
-          />
-          <el-radio
-            :value="0"
-            label="注销 [0]"
-          />
-        </el-radio-group>
+        />
       </el-form-item>
     </el-form>
 
@@ -271,7 +257,7 @@ export default defineComponent({
       avatar: null,
       type: null,
       description: null,
-      accountStatus: 1,
+      accountStatus: '01',
     })
 
     const rules = reactive<FormRules<UsersBean>>({
