@@ -50,7 +50,7 @@
               size="small"
               class="mgl-medium"
             >
-              {{ data.orgStatus }}
+              {{ data.statusName }}
             </el-tag>
           </span>
         </span>
@@ -86,14 +86,14 @@ export default defineComponent({
 
     const orgElTreeRef = ref()
     const searchVal = ref('')
+    const clickActiveId = ref('')
 
     const setActiveOrg = (data: OrgBeanVO) => {
-      emit('set-active-org', {
-        id: data.id,
-        name: data.name,
-        code: data.code,
-        childrenCount: data.children ? data.children.length : 0,
-      })
+      // 深拷贝去掉 children
+      const childrenCount = data.children ? data.children.length : 0
+      const nodeCopy: OrgBeanVO = { ...data, children: [], childrenCount }
+      emit('set-active-org', nodeCopy)
+      clickActiveId.value = data.id
     }
 
     const cleanCheck = () => {
@@ -174,7 +174,7 @@ export default defineComponent({
 
     const setDisabledMenu = (tree: Array<OrgBeanVO>) => {
       tree.forEach(menu => {
-        if (menu.orgStatus === 0) {
+        if (menu.status === 0) {
           menu.disabled = true
         }
         if (menu.children) {

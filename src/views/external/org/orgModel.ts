@@ -10,7 +10,7 @@ interface OrgBean extends OrgBeanBase{
     parentCode: string | null
     abbrName: string | null
     type: string | null
-    orgStatus: number
+    status: number
     extendedField?: string
     extendedField2?: string
 }
@@ -20,12 +20,19 @@ interface OrgBeanQuery extends OrgBeanBase, PaginationQr{
 
 interface OrgBeanVO extends OrgBean{
     typeName: string | null
+    statusName: string
+    updatedAt: Date | null
     children: Array<OrgBeanVO>
+    childrenCount: number
     disabled?: boolean
 }
 
 interface OrgBeanActive extends OrgBeanBase{
     id: string
+    abbrName: string
+    typeName: string
+    updatedAt: Date | null
+    statusName: string
     childrenCount: number
 }
 

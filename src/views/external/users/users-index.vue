@@ -5,6 +5,14 @@
       label-width="100px"
     >
       <div class="users-query-form-grid">
+        <el-form-item label="用户状态">
+          <ev-select
+            v-model="queryParams.accountStatus"
+            dict-type="dic_account_status"
+            :default-attr="{ label: 'entryName', value: 'entryCode' }"
+            clearable
+          />
+        </el-form-item>
         <el-form-item label="姓名">
           <el-input
             v-model="queryParams.name"
@@ -22,21 +30,11 @@
             style="max-width: 600px"
           />
         </el-form-item>
-        
-        <el-form-item label="用户状态">
-          <ev-select
-            v-model="queryParams.accountStatus"
-            dict-type="dic_account_status"
-            :default-attr="{ label: 'entryName', value: 'entryCode' }"
-            clearable
-          />
-        </el-form-item>
       </div>
     </el-form>
-    
-    <div class="mgb-medium users-toolbar">
+
+    <div class="mgb-medium">
       <el-button
-        class="mgr-medium"
         type="success"
         :icon="Plus"
         @click="dialogBaseOpen(undefined)"
@@ -45,7 +43,6 @@
       </el-button>
 
       <el-button
-        class="mgb-medium"
         type="primary"
         :icon="Search"
         @click="query(1)"
@@ -284,8 +281,6 @@ export default defineComponent({
     const queryParams = reactive<UsersBeanQuery>({
       name: '',
       username: '',
-      orgCode: '',
-      orgName: '',
       accountStatus: '',
     })
 

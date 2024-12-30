@@ -35,19 +35,10 @@
         label="所属机构"
         prop="orgName"
       >
-        <el-input
-          v-model.trim="form.orgName"
-          clearable
-          disabled
-          placeholder="请选择所属机构"
-        >
-          <template #append>
-            <el-button
-              :icon="Select"
-              @click="dialogParamsOpen({ code: form.orgCode, name: form.orgName })"
-            />
-          </template>
-        </el-input>
+        <el-button
+          :icon="Select"
+          @click="dialogParamsOpen({ code: '', name: '' })"
+        />
       </el-form-item>
 
       <div class="form-item-grid">
@@ -245,8 +236,6 @@ export default defineComponent({
     const form = reactive<UsersBean>({
       id: '',
       name: '',
-      orgCode: '',
-      orgName: '',
       username: '',
       password: '',
       gender: null,
@@ -263,7 +252,6 @@ export default defineComponent({
     const rules = reactive<FormRules<UsersBean>>({
       name: [{ required: true, message: '用户名称为必填项', trigger: 'change'}],
       gender: [{ required: true, message: '性别必填项', trigger: 'change'}],
-      orgName: [{ required: true, message: '所属机构为必填项', trigger: 'change'}],
       username: [{ required: true, message: '用户名为必填项', trigger: 'change'}],
       password: [{ required: true, message: '密码为必填项', trigger: 'change'}],
       idNumber: [{ required: true, message: '身份证号为必填项', trigger: 'change'}],

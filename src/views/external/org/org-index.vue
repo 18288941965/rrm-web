@@ -1,45 +1,60 @@
 <template>
   <div>
-    <div class="mgb-medium org-toolbar">
-      <el-button
-        type="success"
-        :icon="Plus"
-        @click="dialogParamsOpen({ dataId: '' })"
-      >
-        创建一级机构
-      </el-button>
+    <div class="org-body">
+      <div class="org-tree">
+        <div class="mgb-medium">
+          <el-button
+            type="success"
+            :icon="Plus"
+            @click="dialogParamsOpen({ dataId: '' })"
+          >
+            创建一级机构
+          </el-button>
+        </div>
 
-      <el-button
-        :icon="Plus"
-        :disabled="!activeOrg.id"
-        @click="dialogParamsOpen({ dataId: '', parentCode: activeOrg.code, parentName: activeOrg.name })"
-      >
-        创建子机构
-      </el-button>
-
-      <el-button
-        :icon="Edit"
-        :disabled="!activeOrg.id"
-        @click="dialogParamsOpen({ dataId: activeOrg.id })"
-      >
-        编辑选中机构
-      </el-button>
+        <org-tree
+          ref="orgIndexTreeRef"
+          :org-list="orgList"
+          @set-active-org="treeCheckChange"
+          @set-checked-keys="null"
+        />
+      </div>
       
-      <el-button
-        :icon="Delete"
-        :disabled="!activeOrg.id || activeOrg.childrenCount > 0"
-        @click="deleteData"
-      >
-        删除选中机构
-      </el-button>
-    </div>
+      <div>
+        <div class="mgb-medium">
+          <el-button
+            :icon="Plus"
+            :disabled="!activeOrg.id"
+            @click="dialogParamsOpen({ dataId: '', parentCode: activeOrg.code, parentName: activeOrg.name })"
+          >
+            添加子机构
+          </el-button>
 
-    <org-tree
-      ref="orgIndexTreeRef"
-      :org-list="orgList"
-      @set-active-org="treeCheckChange"
-      @set-checked-keys="null"
-    />
+          <el-button
+            :icon="Edit"
+            :disabled="!activeOrg.id"
+            @click="dialogParamsOpen({ dataId: activeOrg.id })"
+          >
+            编辑机构
+          </el-button>
+
+          <el-button
+            :icon="Delete"
+            :disabled="!activeOrg.id || activeOrg.childrenCount > 0"
+            @click="deleteData"
+          >
+            删除机构
+          </el-button>
+        </div>
+
+        <div>单位名称：{{ activeOrg.name }}</div>
+        <div>单位简称：{{ activeOrg.abbrName }}</div>
+        <div>单位代码：{{ activeOrg.code }}</div>
+        <div>更新时间：{{ activeOrg.updatedAt }}</div>
+        <div>类型：{{ activeOrg.typeName }}</div>
+        <div>状态：{{ activeOrg.statusName }}</div>
+      </div>
+    </div>
 
     <org-edit-dialog
       v-bind="dialogParam"
@@ -79,9 +94,13 @@ export default defineComponent({
       id: '',
       name: '',
       code: '',
+      abbrName: '',
+      typeName: '',
+      updatedAt: null,
+      statusName: '',
       childrenCount: 0,
     })
-    const treeCheckChange = (data: OrgBeanActive) => {
+    const treeCheckChange = (data: OrgBeanVO) => {
       Object.assign(activeOrg, data)
     }
 
@@ -133,5 +152,10 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
+  .org-body{
+    display: flex;
+    & .org-tree{
+      flex: 1;
+    }
+  }
 </style>

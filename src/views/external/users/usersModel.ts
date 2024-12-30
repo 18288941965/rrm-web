@@ -2,8 +2,6 @@ import {PaginationQr} from '@utils/interface'
 
 interface UsersBeanBase{
     name: string
-    orgCode: string
-    orgName: string
 }
 interface UsersBeanChoosable{
     registrationDate?: Date
@@ -28,10 +26,16 @@ interface UsersBean extends UsersBeanBase, UsersBeanChoosable{
     accountStatus: string
 }
 
+interface UsersOrg{
+    orgCode: string
+    orgName: string
+}
+
 interface UsersBeanVO extends UsersBean{
     genderName: string | null
     nationName: string | null
     typeName: string | null
+    orgList: Array<UsersOrg>
 }
 
 interface UsersBeanQuery extends UsersBeanBase, PaginationQr{
