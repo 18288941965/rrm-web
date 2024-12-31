@@ -145,6 +145,16 @@ export default defineComponent({
       router.replace(RUEnum.HOME)
     }
 
+    const select = (itemCode: string, itemName: string) => {
+      selectItem(itemCode).then(res => {
+        if (res.code == 200) {
+          res.data = itemCode
+          res.message = itemName
+          loginSuccess(res)
+        }
+      })
+    }
+
     const query = () => {
       getAllItem().then(res => {
         if (res.code == 200) {
@@ -153,16 +163,13 @@ export default defineComponent({
             const find = userList.find(user => user.id === item.loginId)
             return !!find
           })
-        }
-      })
-    }
 
-    const select = (itemCode: string, itemName: string) => {
-      selectItem(itemCode).then(res => {
-        if (res.code == 200) {
-          res.data = itemCode
-          res.message = itemName
-          loginSuccess(res)
+          if (itemList.value.length === 1) {
+            const obj: ItemBeanVO = itemList.value[0]
+            setTimeout(() => {
+              select(obj.itemCode, obj.itemName)
+            }, 1000)
+          }
         }
       })
     }

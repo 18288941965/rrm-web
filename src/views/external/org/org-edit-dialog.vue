@@ -9,7 +9,7 @@
   >
     <template #header>
       <dialog-header
-        :title="params.parentCode ? '子机构' : '一级机构'"
+        :title="params.parentId ? '子机构' : '一级机构'"
         :type="form.id ? '编辑' : '新增'"
         :name="params.parentName"
       />
@@ -64,6 +64,18 @@
           clearable
         />
       </el-form-item>
+
+      <el-form-item
+        label="机构状态"
+        prop="status"
+      >
+        <ev-select
+          v-model="form.status"
+          dict-type="dic_org_status"
+          :default-attr="{ label: 'entryName', value: 'entryCode' }"
+          disabled
+        />
+      </el-form-item>
     </el-form>
 
     <template #footer>
@@ -106,7 +118,7 @@ export default defineComponent({
       default() {
         return {
           dataId: '',
-          parentCode: null,
+          parentId: null,
           parentName: null,
         }
       },
@@ -136,9 +148,10 @@ export default defineComponent({
       id: '',
       code: '',
       name: '',
-      parentCode: null,
+      parentId: null,
       abbrName: null,
       type: null,
+      status: '01',
     })
 
     const rules = reactive<FormRules<OrgBean>>({
@@ -150,7 +163,7 @@ export default defineComponent({
       if (!formEl) return
       Object.assign(form, {
         id: '',
-        parentCode: null,
+        parentId: null,
       })
       formEl.resetFields()
     }
@@ -187,8 +200,8 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
-      if (props.params.parentCode) {
-        form.parentCode = props.params.parentCode
+      if (props.params.parentId) {
+        form.parentId = props.params.parentId
       }
       if (props.params.dataId) {
         getOrgById(props.params.dataId).then(res => {

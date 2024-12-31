@@ -108,7 +108,7 @@ export default defineComponent({
         name: activeOrg.name,
         code: activeOrg.code,
       }
-      orgSelectOneTreeRef.value?.cleanActiveOrg(true)
+      orgSelectOneTreeRef.value?.cleanTreeActiveId()
       orgList.value = []
       loading.value = false
       emit('close-dialog', obj)

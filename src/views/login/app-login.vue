@@ -65,8 +65,8 @@ const {
 } = BChannel()
 
 const userBeanBase = reactive<UserBeanBase>({
-  username: '',
-  password: '',
+  username: 'admin',
+  password: '123456',
 })
 
 const local = new LocalStorage()

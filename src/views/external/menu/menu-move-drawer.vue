@@ -93,7 +93,7 @@ export default defineComponent({
 
     // 关闭窗口
     const handleClose = () => {
-      menuMoveTreeRef.value?.cleanClickMenuId()
+      menuMoveTreeRef.value?.cleanTreeActiveId()
       menuMoveTo.value = ''
       loading.value = false
       const refresh = isRefresh.value

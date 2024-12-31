@@ -109,7 +109,7 @@
         <div class="users-org">
           <div class="org-item">
             <el-tooltip
-              content="设为默认登录单位"
+              content="设为默认登录机构"
               placement="left-start"
             >
               <el-button
@@ -145,7 +145,7 @@
             class="org-item"
           >
             <el-tooltip
-              content="设为默认登录单位"
+              content="设为默认登录机构"
               placement="left-start"
             >
               <el-button
@@ -181,7 +181,7 @@
             class="org-item"
           >
             <el-tooltip
-              content="设为默认登录单位"
+              content="设为默认登录机构"
               placement="left-start"
             >
               <el-button

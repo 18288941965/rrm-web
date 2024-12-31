@@ -16,24 +16,22 @@
     </el-input>
 
     <el-tree
-      ref="orgTreeRef"
+      ref="orgElTreeRef"
       class="org-index-tree"
       :class="{'tree-bd': orgTreeList && orgTreeList.length < 1}"
       :data="getOrgTreeList"
       :props="{label: 'name', children: 'children', disabled: 'disabled'}"
-      node-key="id"
+      node-key="code"
+      show-checkbox
       default-expand-all
       :expand-on-click-node="false"
       :check-on-click-node="true"
       :check-strictly="true"
       :filter-node-method="filterNode"
-      @node-click="setActiveOrg"
+      @check-change="treeCheckChange"
     >
       <template #default="{ node, data }">
-        <span
-          class="custom-tree-node"
-          :class="{'tree-node-click': data.id === treeActiveId }"
-        >
+        <span class="custom-tree-node">
           <span class="tree-node-label">
             {{ node.label }}
           </span>
@@ -62,39 +60,131 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, ref, toRef, watch} from 'vue'
+import {computed, defineComponent, nextTick, reactive, ref, toRef, watch} from 'vue'
 import {OrgBeanVO} from './orgModel'
 import {Search} from '@element-plus/icons-vue'
 
 export default defineComponent({
-  name: 'OrgTree',
+  name: 'OrgTree2',
   props: {
     orgList: {
       type: Array<OrgBeanVO>,
       default: [],
     },
+    source: {
+      type: Number,
+      default: 0,
+    },
+    disabledIds: {
+      type: Array<string>,
+      default: [],
+    },
   },
-  emits: ['set-active-org'],
+  emits: ['set-active-org', 'set-checked-keys'],
   setup(props, { emit }) {
     const orgTreeList = toRef(props, 'orgList')
 
-    const orgTreeRef = ref()
+    const orgElTreeRef = ref()
     const searchVal = ref('')
-    const treeActiveId = ref('')
+    const clickActiveId = ref('')
 
     const setActiveOrg = (data: OrgBeanVO) => {
       // 深拷贝去掉 children
       const childrenCount = data.children ? data.children.length : 0
       const nodeCopy: OrgBeanVO = { ...data, children: [], childrenCount }
       emit('set-active-org', nodeCopy)
-      treeActiveId.value = data.id
+      clickActiveId.value = data.id
     }
 
-    const cleanTreeActiveId = () => {
-      treeActiveId.value = ''
+    const cleanCheck = () => {
+      emit('set-active-org', {
+        id: '',
+        name: '',
+        code: '',
+        childrenCount: 0,
+      })
+    }
+
+    const checkVal = reactive<{
+      newVal: string
+      oldVal: string
+    }>({
+      newVal: '',
+      oldVal: '',
+    })
+    const treeCheckChange = (data: OrgBeanVO, checkNode: boolean) => {
+      // 第一次选中
+      if (checkNode && !checkVal.oldVal) {
+        setActiveOrg(data)
+        checkVal.oldVal = data.id
+        checkVal.newVal = data.id
+        return
+      }
+      // 除第一次外选中
+      if (checkNode) {
+        setActiveOrg(data)
+        checkVal.oldVal = checkVal.newVal
+        checkVal.newVal = data.id
+        orgElTreeRef.value.setCheckedKeys([data.code])
+        return
+      }
+
+      // 取消第一个选中的节点
+      if (checkVal.oldVal === checkVal.newVal) {
+        cleanCheck()
+        checkVal.newVal = ''
+        checkVal.oldVal = ''
+      }
+
+      // 取消新选中的值
+      if (checkVal.newVal === data.id) {
+        cleanCheck()
+        checkVal.newVal = ''
+        checkVal.oldVal = ''
+      }
+
+      // 二次触发事件，不做任何处理
+    }
+
+    const cleanActiveOrg = (cleanActive = false) => {
+      orgElTreeRef.value.setCheckedKeys([])
+      orgTreeList.value = []
+      if (cleanActive) {
+        cleanCheck()
+      }
+    }
+
+    // 数据回显
+    const setTreeCheckedKeys = (code: string) => {
+      nextTick(() => {
+        orgElTreeRef.value.setCheckedKeys([code])
+      })
+    }
+
+    const setDisabledOrg = (tree: Array<OrgBeanVO>) => {
+      tree.forEach(org => {
+        if (props.disabledIds.includes(org.id)) {
+          org.disabled = true
+        }
+        if (org.children) {
+          setDisabledOrg(org.children)
+        }
+      })
+    }
+
+    const setDisabledMenu = (tree: Array<OrgBeanVO>) => {
+      tree.forEach(menu => {
+        if (menu.status === 0) {
+          menu.disabled = true
+        }
+        if (menu.children) {
+          setDisabledMenu(menu.children)
+        }
+      })
     }
 
     const getOrgTreeList = computed(() => {
+      setDisabledMenu(orgTreeList.value)
       return orgTreeList.value
     })
 
@@ -104,7 +194,7 @@ export default defineComponent({
     }
 
     watch(searchVal, (val) => {
-      orgTreeRef.value!.filter(val)
+      orgElTreeRef.value!.filter(val)
     })
 
     return {
@@ -112,11 +202,11 @@ export default defineComponent({
       orgTreeList,
       getOrgTreeList,
       searchVal,
-      orgTreeRef,
-      setActiveOrg,
-      cleanTreeActiveId,
+      orgElTreeRef,
+      treeCheckChange,
+      cleanActiveOrg,
+      setTreeCheckedKeys,
       filterNode,
-      treeActiveId,
     }
   },
 })
@@ -142,14 +232,8 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 100%;
     padding-right: 8px;
-    border-right: 2px solid transparent;
-  }
-
-  & .tree-node-click{
-    background-image: linear-gradient(to right, transparent, #ddedfd);
-    border-right-color: #409eff;
+    line-height: var(--size-default);
   }
 }
 </style>

@@ -7,10 +7,10 @@ interface OrgBeanBase{
 
 interface OrgBean extends OrgBeanBase{
     id: string
-    parentCode: string | null
+    parentId: string | null
     abbrName: string | null
     type: string | null
-    status: number
+    status: string
     extendedField?: string
     extendedField2?: string
 }

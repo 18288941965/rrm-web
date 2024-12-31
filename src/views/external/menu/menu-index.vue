@@ -22,30 +22,30 @@
 
       <div>
         <el-button
-          :disabled="!activeMenu.id"
+          :disabled="!activeTreeNode.id"
           :icon="Plus"
           type="success"
           @click="dialogParamsOpen({ 
             dataId: '', 
-            parentId: activeMenu.id, 
-            parentName: activeMenu.name, 
-            terminal: activeMenu.terminal, 
-            netType: activeMenu.netType 
+            parentId: activeTreeNode.id, 
+            parentName: activeTreeNode.name, 
+            terminal: activeTreeNode.terminal, 
+            netType: activeTreeNode.netType 
           })"
         >
           添加子菜单
         </el-button>
 
         <el-button
-          :disabled="!activeMenu.id"
+          :disabled="!activeTreeNode.id"
           :icon="Edit"
-          @click="dialogParamsOpen({ dataId: activeMenu.id, parentId: '', parentName: '' })"
+          @click="dialogParamsOpen({ dataId: activeTreeNode.id, parentId: '', parentName: '' })"
         >
           编辑菜单
         </el-button>
 
         <el-button
-          :disabled="!activeMenu.id || activeMenu.childrenCount >= 1"
+          :disabled="!activeTreeNode.id || activeTreeNode.childrenCount >= 1"
           :icon="Delete"
           @click="deleteData"
         >
@@ -53,15 +53,15 @@
         </el-button>
         
         <el-button
-          :disabled="activeMenu.childrenCount < 1"
+          :disabled="activeTreeNode.childrenCount < 1"
           :icon="Sort"
-          @click="dialogSortOpen(activeMenu.id)"
+          @click="dialogSortOpen(activeTreeNode.id)"
         >
           子菜单排序
         </el-button>
 
         <el-button
-          :disabled="!activeMenu.id"
+          :disabled="!activeTreeNode.id"
           :icon="Right"
           @click="dialogMenuMoveOpen"
         >
@@ -74,23 +74,23 @@
       <menu-tree
         ref="menuIndexTreeRef"
         :menu-list="menuList"
-        @set-active-menu="treeClickChange"
+        @set-active-menu="setActiveTreeNode"
       />
       
       <div class="menu-index-control">
         <div class="control-top">
           <h4>
             <span
-              v-if="!activeMenu.id"
+              v-if="!activeTreeNode.id"
               class="no-data"
             >请点击左侧菜单名称进行后续操作</span>
-            {{ activeMenu.name }}
+            {{ activeTreeNode.name }}
           </h4>
 
           <div>
             <el-switch
-              v-model="activeMenu.status"
-              :disabled="!activeMenu.id"
+              v-model="activeTreeNode.status"
+              :disabled="!activeTreeNode.id"
               inline-prompt
               :active-value="1"
               :inactive-value="0"
@@ -104,50 +104,50 @@
 
         <div class="control-main">
           <p>
-            ID：{{ activeMenu.id }}。强烈建议资源绑定到具体的菜单上，否则容易造成权限的不可控影响。
+            ID：{{ activeTreeNode.id }}。强烈建议资源绑定到具体的菜单上，否则容易造成权限的不可控影响。
           </p>
           <el-button
             class="mgl-medium"
-            :disabled="!activeMenu.id"
+            :disabled="!activeTreeNode.id"
             :icon="Link"
-            @click="dialogBindResourceOpen({ dataId: activeMenu.id, name: activeMenu.name, type: '01' })"
+            @click="dialogBindResourceOpen({ dataId: activeTreeNode.id, name: activeTreeNode.name, type: '01' })"
           >
-            绑定资源 {{ resourceCount }} / <span class="bind-source">{{ activeMenu.bindResourceCount }}</span>
+            绑定资源 {{ resourceCount }} / <span class="bind-source">{{ activeTreeNode.bindResourceCount }}</span>
           </el-button>
 
-          <template v-if="activeMenu.id">
+          <template v-if="activeTreeNode.id">
             <el-tag
               type="info"
               class="mgl-medium"
             >
-              {{ activeMenu.visibility === 1 ? '可见' : '不可见' }}
+              {{ activeTreeNode.visibility === 1 ? '可见' : '不可见' }}
             </el-tag>
 
             <el-tag
               type="info"
               class="mgl-medium"
             >
-              {{ activeMenu.typeName }}
+              {{ activeTreeNode.typeName }}
             </el-tag>
 
             <el-tag
               type="info"
               class="mgl-medium"
             >
-              {{ activeMenu.terminalName }}
+              {{ activeTreeNode.terminalName }}
             </el-tag>
 
             <el-tag
               type="info"
               class="mgl-medium"
             >
-              {{ activeMenu.netTypeName }}
+              {{ activeTreeNode.netTypeName }}
             </el-tag>
           </template>
         </div>
 
         <menu-element
-          :active-menu="activeMenu"
+          :active-menu="activeTreeNode"
           :resource-count="resourceCount"
         />
       </div>
@@ -180,7 +180,7 @@
 
 <script lang="ts">
 import {computed, defineComponent, onMounted, reactive, ref} from 'vue'
-import {Delete, Edit, Link, Plus, PriceTag, Sort, Upload, Right} from '@element-plus/icons-vue'
+import {Delete, Edit, Link, Plus, PriceTag, Right, Sort, Upload} from '@element-plus/icons-vue'
 import MenuAddDialog from './menu-add-dialog.vue'
 import {dialogBaseContent, dialogEmptyContent, dialogParamsContent} from '@utils/dialogOptions'
 import {MenuBeanActive, MenuBeanVO} from './menuModel'
@@ -198,6 +198,7 @@ import MenuSortDialog from './menu-sort-dialog.vue'
 import MenuElement from './menu-element.vue'
 import {countResourceByItemCode} from '../resource/resourceOption'
 import ResourceSelectDialog from '../resource/resource-select-dialog.vue'
+import {deleteNodeById, updateOrInsertNode} from '@utils/treeUtils'
 
 export default defineComponent({
   name: 'MenuIndex',
@@ -214,8 +215,18 @@ export default defineComponent({
     const menuIndexTreeRef = ref()
     const resourceCount = ref(0)
 
-    // ————————树节点点击事件————————start
-    const activeMenu = reactive<MenuBeanActive>({
+    const query = () => {
+      cleanActiveTreeNode()
+      menuIndexTreeRef.value!.cleanTreeActiveId()
+      getMenuByItemCode().then(res => {
+        if (res.code === 200) {
+          menuList.value = res.data
+        }
+      })
+    }
+
+    // ====== S ====== - 树节点点击事件
+    const activeTreeNode = reactive<MenuBeanActive>({
       id: '',
       name: '',
       status: 0,
@@ -228,8 +239,8 @@ export default defineComponent({
       childrenCount: 0,
       bindResourceCount: 0,
     })
-    const cleanActiveMenu = () => {
-      Object.assign(activeMenu, {
+    const cleanActiveTreeNode = () => {
+      Object.assign(activeTreeNode, {
         id: '',
         name: '',
         status: 0,
@@ -243,8 +254,8 @@ export default defineComponent({
         bindResourceCount: 0,
       })
     }
-    const treeClickChange = (data: MenuBeanVO) => {
-      Object.assign(activeMenu, {
+    const setActiveTreeNode = (data: MenuBeanVO) => {
+      Object.assign(activeTreeNode, {
         id: data.id,
         name: data.name,
         status: data.status,
@@ -257,15 +268,48 @@ export default defineComponent({
         childrenCount: data.childrenCount,
         bindResourceCount: 0,
       })
-      countMenuBindResourceByMenuId(activeMenu.id).then(res => {
+      countMenuBindResourceByMenuId(activeTreeNode.id).then(res => {
         if (res.code === 200) {
-          activeMenu.bindResourceCount = res.data
+          activeTreeNode.bindResourceCount = res.data
         }
       })
     }
-    // ————————树节点点击事件————————end
+    // ====== E ====== - 树节点点击事件
 
-    // ————————删除————————start
+    // ====== S ====== - 新增和编辑
+    const {
+      dialogParam,
+      dialogParamsOpen,
+      dialogParamsClose,
+    } = dialogParamsContent()
+    const updateTreeNode = (editId: string) => {
+      getMenuById(editId).then(res => {
+        if (res.code === 200) {
+          const data: MenuBeanVO = res.data
+          updateOrInsertNode(menuList.value, editId, data, data.parentId)
+          // 编辑菜单更新右侧内容
+          if (editId === activeTreeNode.id) {
+            setActiveTreeNode(data)
+          }
+        }
+      })
+    }
+    const dialogParamsCloseAndRefresh = (refresh: boolean, editId: string) => {
+      dialogParamsClose()
+      if (refresh) {
+        updateTreeNode(editId)
+      }
+    }
+    const updateStatus = () => {
+      updateMenuStatus(activeTreeNode.status, activeTreeNode.id).then(res => {
+        if (res.code === 200) {
+          updateTreeNode(activeTreeNode.id)
+        }
+      })
+    }
+    // ====== E ====== - 新增和编辑
+
+    // ====== S ====== - 移动
     const findChildrenIds = (tree: Array<MenuBeanVO>, targetId: string) => {
       const result: Array<string> = []
 
@@ -291,150 +335,8 @@ export default defineComponent({
       tree.forEach(rootNode => traverse(rootNode))
       return result.slice(1)
     }
-    const deleteNodeById = (tree: Array<MenuBeanVO>, id: string) => {
-      for (let i = 0; i < tree.length; i++) {
-        const node = tree[i]
-
-        // 如果找到匹配的节点，删除它
-        if (node.id === id) {
-          tree.splice(i, 1)
-          return true // 返回 true 表示成功删除
-        }
-
-        // 如果有子节点，递归处理
-        if (node.children && node.children.length > 0) {
-          const result = deleteNodeById(node.children, id)
-
-          // 如果在子树中删除了节点，可以停止进一步的处理
-          if (result) {
-            return true
-          }
-        }
-      }
-      return false // 返回 false 表示未找到节点
-    }
-
-    const deleteData = () => {
-      deleteConfirmContent('建议停用菜单而不是删除，删除后将不可恢复，是否确认执行删除操作', activeMenu.name).then(data => {
-        if (data) {
-          deleteMenuById(activeMenu.id).then(res => {
-            if (res.code == 200) {
-              deleteNodeById(menuList.value, activeMenu.id)
-
-              cleanActiveMenu()
-              menuIndexTreeRef.value!.cleanClickMenuId()
-            }
-          })
-        }
-      })
-    }
-    // ————————删除————————end
-
-    // ————————新增、编辑————————start
-    const {
-      dialogParam,
-      dialogParamsOpen,
-      dialogParamsClose,
-    } = dialogParamsContent()
-    const updateOrInsertNode = (tree: Array<MenuBeanVO>, id: string, newData: MenuBeanVO, parentId: string | null) => {
-      let found = false
-
-      function recursiveUpdate(tree: Array<MenuBeanVO>) {
-        for (let node of tree) {
-          // 如果找到匹配的节点，更新它的数据
-          if (node.id === id) {
-            // 后端仅返回当前节点的信息，子节点信息使用历史数据
-            newData.children = node.children
-            Object.assign(node, newData)
-            found = true
-            return true // 返回 true 表示成功更新
-          }
-
-          // 如果有子节点，递归处理
-          if (node.children && node.children.length > 0) {
-            const result = recursiveUpdate(node.children)
-            if (result) return true
-          }
-        }
-        return false
-      }
-
-      // 先尝试更新节点
-      recursiveUpdate(tree)
-
-      // 插入到根节点
-      if (!found && parentId === null) {
-        // 如果没有提供 parentId，则将节点插入到根级别
-        // 创建第一个菜单
-        if (tree.length < 1) {
-          tree.push(newData)
-          return
-        }
-        // 把菜单插入指定位置
-        let index = tree.length
-        for (let i = 0; i < tree.length ; i++) {
-          if (tree[i].sortOrder > newData.sortOrder) {
-            index = i - 1 > -1 ? i - 1 : 0
-            break
-          }
-        }
-        tree.splice(index, 0, newData)
-        return
-      }
-
-      // 如果未找到节点，则插入新的节点
-      if (!found) {
-        function recursiveInsert(tree: Array<MenuBeanVO>) {
-          for (let node of tree) {
-            // 找到 parentId 匹配的节点，在其子节点中插入新的节点
-            if (node.id === parentId) {
-              node.children = node.children || []
-              node.children.push(newData)
-              return true
-            }
-            // 递归检查子节点
-            if (node.children && node.children.length > 0) {
-              const result = recursiveInsert(node.children)
-              if (result) return true
-            }
-          }
-          return false
-        }
-
-        // 如果有 parentId，则递归插入到对应的父节点下
-        recursiveInsert(tree)
-      }
-    }
-    const updateTreeNode = (editId: string) => {
-      getMenuById(editId).then(res => {
-        if (res.code === 200) {
-          const data: MenuBeanVO = res.data
-          updateOrInsertNode(menuList.value, editId, data, data.parentId)
-          // 编辑菜单更新右侧内容
-          if (editId === activeMenu.id) {
-            treeClickChange(data)
-          }
-        }
-      })
-    }
-    const dialogParamsCloseAndRefresh = (refresh: boolean, editId: string) => {
-      dialogParamsClose()
-      if (refresh) {
-        updateTreeNode(editId)
-      }
-    }
-    const updateStatus = () => {
-      updateMenuStatus(activeMenu.status, activeMenu.id).then(res => {
-        if (res.code === 200) {
-          updateTreeNode(activeMenu.id)
-        }
-      })
-    }
-    // ————————新增、编辑————————end
-
-    // ————————菜单移动————————start
     const getMoveMenuList = computed(() => {
-      return menuList.value.filter(item => item.terminal === activeMenu.terminal && item.netType === activeMenu.netType)
+      return menuList.value.filter(item => item.terminal === activeTreeNode.terminal && item.netType === activeTreeNode.netType)
     })
     const moveIds = ref<Array<string>>([])
     const disabledIds = ref<Array<string>>([])
@@ -445,9 +347,9 @@ export default defineComponent({
     } = dialogEmptyContent()
     const dialogMenuMoveOpen = () => {
       const tmpSet = new Set<string>()
-      moveIds.value.push(activeMenu.id)
-      tmpSet.add(activeMenu.id)
-      const childrenIds = findChildrenIds(menuList.value, activeMenu.id)
+      moveIds.value.push(activeTreeNode.id)
+      tmpSet.add(activeTreeNode.id)
+      const childrenIds = findChildrenIds(menuList.value, activeTreeNode.id)
       childrenIds.forEach(item => tmpSet.add(item))
       disabledIds.value = Array.of(...tmpSet)
       dialogEmptyOpen()
@@ -460,36 +362,39 @@ export default defineComponent({
         query()
       }
     }
-    // ————————菜单移动————————end
+    // ====== E ====== - 移动
 
-    // ————————菜单排序————————start
-    const {
-      dialogBase: dialogSort,
-        dialogBaseOpen: dialogSortOpen,
-        dialogBaseCloseAndRefresh: dialogSortCloseAndRefresh,
-    } = dialogBaseContent()
-    // ————————菜单排序————————end
-
-    // ————————菜单绑定资源————————start
+    // ====== S ====== - 菜单绑定资源
     const {
       dialogParam: dialogBindResource,
-        dialogParamsOpen: dialogBindResourceOpen,
-        dialogParamsClose: dialogBindResourceClose,
+      dialogParamsOpen: dialogBindResourceOpen,
+      dialogParamsClose: dialogBindResourceClose,
     } = dialogParamsContent()
     const dialogBindResourceCloseAndRefresh = (refresh: boolean, size: number) => {
       dialogBindResourceClose()
       if (refresh) {
-        activeMenu.bindResourceCount = size
+        activeTreeNode.bindResourceCount = size
       }
     }
-    // ————————菜单绑定资源————————end
+    // ====== E ====== - 菜单绑定资源
 
-    const query = () => {
-      cleanActiveMenu()
-      menuIndexTreeRef.value!.cleanClickMenuId()
-      getMenuByItemCode().then(res => {
-        if (res.code === 200) {
-          menuList.value = res.data
+    const {
+      dialogBase: dialogSort,
+      dialogBaseOpen: dialogSortOpen,
+      dialogBaseCloseAndRefresh: dialogSortCloseAndRefresh,
+    } = dialogBaseContent()
+
+    const deleteData = () => {
+      deleteConfirmContent('建议停用菜单而不是删除，删除后将不可恢复，是否确认执行删除操作', activeTreeNode.name).then(data => {
+        if (data) {
+          deleteMenuById(activeTreeNode.id).then(res => {
+            if (res.code == 200) {
+              deleteNodeById(menuList.value, activeTreeNode.id)
+
+              cleanActiveTreeNode()
+              menuIndexTreeRef.value!.cleanTreeActiveId()
+            }
+          })
         }
       })
     }
@@ -514,12 +419,12 @@ export default defineComponent({
         PriceTag,
         Right,
 
-        activeMenu,
+        activeTreeNode,
         menuList,
         deleteData,
         updateStatus,
 
-        treeClickChange,
+        setActiveTreeNode,
         menuIndexTreeRef,
 
         dialogParam,

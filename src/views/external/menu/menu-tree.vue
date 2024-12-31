@@ -5,11 +5,10 @@
       class="mgb-medium"
       clearable
       placeholder="菜单过滤"
-    >
-    </el-input>
+    />
 
     <el-tree
-      ref="menuElTreeRef"
+      ref="menuTreeRef"
       class="menu-index-tree"
       :class="{'tree-bd': menuTreeList && menuTreeList.length < 1}"
       :data="getMenuTreeList"
@@ -24,7 +23,7 @@
       <template #default="{ node, data }">
         <span
           class="custom-tree-node"
-          :class="{'tree-node-click': data.id === clickMenuId }"
+          :class="{'tree-node-click': data.id === treeActiveId }"
         >
           <span class="tree-node-label">
             {{ node.label }}
@@ -100,16 +99,16 @@ export default defineComponent({
   setup(props, { emit }) {
     const menuTreeList = toRef(props, 'menuList')
 
-    const menuElTreeRef = ref()
+    const menuTreeRef = ref()
     const searchVal = ref('')
-    const clickMenuId = ref('')
+    const treeActiveId = ref('')
 
     const setActiveMenu = (data: MenuBeanVO) => {
       // 深拷贝去掉 children
       const childrenCount = data.children ? data.children.length : 0
       const nodeCopy: MenuBeanVO = { ...data, children: [], childrenCount }
       emit('set-active-menu', nodeCopy)
-      clickMenuId.value = data.id
+      treeActiveId.value = data.id
     }
 
     const treeNodeClick = (data: MenuBeanVO) => {
@@ -123,8 +122,8 @@ export default defineComponent({
       setActiveMenu(data)
     }
 
-    const cleanClickMenuId = () => {
-      clickMenuId.value = ''
+    const cleanTreeActiveId = () => {
+      treeActiveId.value = ''
     }
 
     const setDisabledMenu = (tree: Array<MenuBeanVO>) => {
@@ -158,7 +157,7 @@ export default defineComponent({
     }
 
     watch(searchVal, (val) => {
-      menuElTreeRef.value!.filter(val)
+      menuTreeRef.value!.filter(val)
     })
 
     const filterNode = (value: string, data: MenuBeanVO) => {
@@ -167,12 +166,12 @@ export default defineComponent({
     }
 
     return {
-      clickMenuId,
+      treeActiveId,
       menuTreeList,
       getMenuTreeList,
       searchVal,
-      menuElTreeRef,
-      cleanClickMenuId,
+      menuTreeRef,
+      cleanTreeActiveId,
       treeNodeClick,
       customNodeClass,
       filterNode,
