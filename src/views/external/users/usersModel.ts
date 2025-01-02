@@ -1,4 +1,5 @@
 import {PaginationQr} from '@utils/interface'
+import {OrgCheck} from '../org/orgModel'
 
 interface UsersBeanBase{
     name: string
@@ -23,24 +24,19 @@ interface UsersBean extends UsersBeanBase, UsersBeanChoosable{
     avatar: string | null
     type: string | null
     description: string | null
-    accountStatus: string
-}
-
-interface UsersOrg{
-    orgCode: string
-    orgName: string
+    status: string
+    orgList: Array<OrgCheck>
 }
 
 interface UsersBeanVO extends UsersBean{
     genderName: string | null
     nationName: string | null
     typeName: string | null
-    orgList: Array<UsersOrg>
 }
 
 interface UsersBeanQuery extends UsersBeanBase, PaginationQr{
     username: string
-    accountStatus: string
+    status: string
 }
 
 

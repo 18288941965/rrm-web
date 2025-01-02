@@ -15,7 +15,7 @@
       />
     </template>
     <el-form
-      ref="orgEditRef"
+      ref="orgEditFormRef"
       class="rrm-form"
       :model="form"
       :rules="rules"
@@ -83,7 +83,7 @@
         <template #default>
           <el-button
             type="primary"
-            @click="onSubmit(orgEditRef)"
+            @click="onSubmit(orgEditFormRef)"
           >
             提交
           </el-button>
@@ -135,7 +135,7 @@ export default defineComponent({
       visible,
         isRefresh,
     } = dialogOptions()
-    const orgEditRef = ref<FormInstance>()
+    const orgEditFormRef = ref<FormInstance>()
 
     watch(
         () => props.show,
@@ -161,16 +161,16 @@ export default defineComponent({
 
     const resetForm = (formEl: FormInstance | undefined) => {
       if (!formEl) return
+      formEl.resetFields()
       Object.assign(form, {
         id: '',
         parentId: null,
       })
-      formEl.resetFields()
     }
     
     // 关闭窗口
     const handleClose = () => {
-      resetForm(orgEditRef.value)
+      resetForm(orgEditFormRef.value)
       const refresh = isRefresh.value
       isRefresh.value = false
       emit('close-dialog', refresh)
@@ -216,7 +216,7 @@ export default defineComponent({
       visible,
       rules,
       form,
-      orgEditRef,
+      orgEditFormRef,
       handleOpen,
       handleClose,
       onSubmit,

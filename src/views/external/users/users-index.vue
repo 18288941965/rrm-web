@@ -7,7 +7,7 @@
       <div class="users-query-form-grid">
         <el-form-item label="用户状态">
           <ev-select
-            v-model="queryParams.accountStatus"
+            v-model="queryParams.status"
             dict-type="dic_account_status"
             :default-attr="{ label: 'entryName', value: 'entryCode' }"
             clearable
@@ -66,15 +66,15 @@
             <div>{{ user.name }}</div>
             <div class="users-acc-status">
               <span
-                v-if="user.accountStatus === '01'"
+                v-if="user.status === '01'"
                 class="acc-status-success"
               />
               <span
-                v-else-if="user.accountStatus === '02'"
+                v-else-if="user.status === '02'"
                 class="acc-status-warning"
               />
               <span
-                v-else-if="user.accountStatus === '03'"
+                v-else-if="user.status === '03'"
                 class="acc-status-warning"
               />
               <span
@@ -107,7 +107,11 @@
         </div>
 
         <div class="users-org">
-          <div class="org-item">
+          <div
+            v-for="(org, orgIndex) in user.orgList"
+            :key="'org-list-' + orgIndex"
+            class="org-item"
+          >
             <el-tooltip
               content="设为默认登录机构"
               placement="left-start"
@@ -115,14 +119,16 @@
               <el-button
                 text
                 circle
+                :disabled="org.defaultLogin === 1"
+                @click="setDefaultLogin(user.id, org.id)"
               >
-                <el-icon color="#999999">
+                <el-icon :color="org.defaultLogin ? 'var(--el-color-success)' : '#999999'">
                   <CircleCheckFilled />
                 </el-icon>
               </el-button>
             </el-tooltip>
             <div>
-              {{ user.orgName }}
+              {{ org.name }}
             </div>
             <div>
               <el-tooltip
@@ -141,81 +147,12 @@
               </el-tooltip>
             </div>
           </div>
-          <div
-            class="org-item"
-          >
-            <el-tooltip
-              content="设为默认登录机构"
-              placement="left-start"
-            >
-              <el-button
-                text
-                circle
-              >
-                <el-icon color="#999999">
-                  <CircleCheckFilled />
-                </el-icon>
-              </el-button>
-            </el-tooltip>
-            <div>
-              云南省XX市公安局交通警察支队HH高速公路交巡警二大队法制宣传中队
-            </div>
-            <div>
-              <el-tooltip
-                content="绑定角色"
-                placement="right-start"
-              >
-                <el-button
-                  type="primary"
-                  plain
-                  text
-                  circle
-                  @click="dialogBaseOpen(user.id)"
-                >
-                  56
-                </el-button>
-              </el-tooltip>
-            </div>
-          </div>
-          <div
-            class="org-item"
-          >
-            <el-tooltip
-              content="设为默认登录机构"
-              placement="left-start"
-            >
-              <el-button
-                text
-                circle
-              >
-                <el-icon
-                  color="var(--el-color-success)"
-                >
-                  <CircleCheckFilled />
-                </el-icon>
-              </el-button>
-            </el-tooltip>
-
-            <div>
-              云南省XX市公安局GGGG支队综合执法大队
-            </div>
-            <div>
-              <el-tooltip
-                content="绑定角色"
-                placement="right-start"
-              >
-                <el-button
-                  type="primary"
-                  plain
-                  text
-                  circle
-                  @click="dialogBaseOpen(user.id)"
-                >
-                  1
-                </el-button>
-              </el-tooltip>
-            </div>
-          </div>
+          <el-empty
+            v-if="user.orgList.length <= 0"
+            description="无机构"
+            style="padding: 10px 0"
+            :image-size="40"
+          />
         </div>
         <div style="text-align: center;border-top: 1px solid var(--border-color);padding: 10px 0;">
           <el-button
@@ -246,25 +183,17 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, reactive} from 'vue'
-import {UsersBeanVO, UsersBeanQuery} from './usersModel'
+import {UsersBeanQuery, UsersBeanVO} from './usersModel'
 import {Pagination} from '@utils/interface'
 import {dialogBaseContent} from '@utils/dialogOptions'
-import {deleteUsers, searchUsersPage} from './usersOption'
+import {defaultLoginOrg, deleteUsers, searchUsersPage} from './usersOption'
 import {deleteConfirm} from '@utils/utils'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import UsersEditDialog from './users-edit-dialog.vue'
-import {
-  Search,
-  Plus,
-  Edit,
-  Delete,
-  Link,
-  Iphone,
-  CircleCheckFilled,
-  User,
-} from '@element-plus/icons-vue'
+import {CircleCheckFilled, Delete, Edit, Iphone, Link, Plus, Search, User} from '@element-plus/icons-vue'
 import avatarM from '../../../assets/image/avatar-m.png'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
+import {ElMessage} from 'element-plus/es'
 
 export default defineComponent({
   name: 'UsersIndex',
@@ -281,7 +210,7 @@ export default defineComponent({
     const queryParams = reactive<UsersBeanQuery>({
       name: '',
       username: '',
-      accountStatus: '',
+      status: '',
     })
 
     const pager = reactive<Pagination<UsersBeanVO>>({
@@ -325,6 +254,26 @@ export default defineComponent({
       })
     }
 
+    const setDefaultLogin = (usersId: string, orgId: string) => {
+      defaultLoginOrg(usersId, orgId).then(res => {
+        if (res.code === 200) {
+          // 前端更新状态
+          pager.list.forEach(item => {
+            if (item.id === usersId) {
+              item.orgList.forEach(org => {
+                if (org.id === orgId) {
+                  org.defaultLogin = 1
+                } else {
+                  org.defaultLogin = 0
+                }
+              })
+            }
+          })
+          ElMessage.success(res.message)
+        }
+      })
+    }
+
     onMounted(() => {
       query(1)
     })
@@ -340,6 +289,7 @@ export default defineComponent({
       pager,
       query,
       deleteData,
+      setDefaultLogin,
 
       dialogBase,
       dialogBaseOpen,

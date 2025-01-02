@@ -32,6 +32,13 @@ const updateUsers = (bean: UsersBean) => {
     })
 }
 
+const defaultLoginOrg = (usersId: string, orgId: string) => {
+    return axios.put('/users/defaultLoginOrg', { usersId, orgId }).then((res: { data: AxiosResult }) => {
+        return res.data
+    })
+}
+
+
 const bindUsersRole = (bean: UsersRoleBean) => {
     return axios.post('/users-role', bean).then((res: { data: AxiosResult }) => {
         return res.data
@@ -60,4 +67,5 @@ export {
     bindUsersRole,
     getUsersBindRoleByUserId,
     unbindUsersRole,
+    defaultLoginOrg,
 }

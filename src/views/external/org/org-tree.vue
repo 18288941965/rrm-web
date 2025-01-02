@@ -1,5 +1,5 @@
 <template>
-  <div class="org-tree">
+  <div class="org-tree-body">
     <el-input
       v-model.trim="searchVal"
       class="mgb-medium"
@@ -17,7 +17,7 @@
 
     <el-tree
       ref="orgTreeRef"
-      class="org-index-tree"
+      class="org-tree"
       :class="{'tree-bd': orgTreeList && orgTreeList.length < 1}"
       :data="getOrgTreeList"
       :props="{label: 'name', children: 'children', disabled: 'disabled'}"
@@ -124,45 +124,16 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
-.org-tree{
-  flex: 1;
-  margin-right: var(--mg-medium);
-}
-
-.org-index-tree{
-  border: var(--border-1);
-  border-bottom: 0;
-  border-radius: var(--border-radius-medium);
-  & .el-tree-node__content{
-    border-bottom: var(--border-1);
-  }
-
-  & .custom-tree-node {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    padding-right: 8px;
-    border-right: 2px solid transparent;
-  }
-
-  & .tree-node-click{
-    background-image: linear-gradient(to right, transparent, #ddedfd);
-    border-right-color: #409eff;
-  }
-}
+  @use "../../../assets/scssscoped/org/org-tree";
 </style>
 <style lang="scss">
-.org-index-tree{
-  max-width: 1000px;
-  & .el-tree-node__content, .tree-bd, .el-tree__empty-block{
+  @use "../../../assets/scss/org/org-tree";
+
+  .org-tree .el-tree-node__content {
     border-bottom: var(--border-1);
   }
-}
 
-.tree-move-check > .el-tree-node__content:nth-of-type(1) {
-  color: var(--color-red);
-}
-
+  .tree-move-check > .el-tree-node__content:nth-of-type(1) {
+    color: var(--color-red);
+  }
 </style>

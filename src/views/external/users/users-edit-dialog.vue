@@ -31,16 +31,6 @@
         />
       </el-form-item>
 
-      <el-form-item
-        label="所属机构"
-        prop="orgName"
-      >
-        <el-button
-          :icon="Select"
-          @click="dialogParamsOpen({ code: '', name: '' })"
-        />
-      </el-form-item>
-
       <div class="form-item-grid">
         <el-form-item
           label="用户名"
@@ -152,15 +142,44 @@
 
       <el-form-item
         label="账号状态"
-        prop="accountStatus"
+        prop="status"
       >
         <ev-select
-          v-model="form.accountStatus"
+          v-model="form.status"
           dict-type="dic_account_status"
           :default-attr="{ label: 'entryName', value: 'entryCode' }"
           clearable
           disabled
         />
+      </el-form-item>
+
+      <el-form-item
+        label="所属机构"
+      >
+        <div class="checked-org-body">
+          <ul
+            v-if="form.orgList.length > 0"
+            class="checked-org"
+          >
+            <li
+              v-for="(org, index) in form.orgList"
+              :key="'checked-org-' + index"
+            >
+              <span>{{ org.name }}</span>
+              <span>{{ org.code }}</span>
+            </li>
+          </ul>
+          <el-empty
+            v-else
+            description="未关联机构，请选择"
+            style="padding: 10px 0;width: 100%;"
+            :image-size="40"
+          />
+          <el-button
+            :icon="Select"
+            @click="dialogParamsOpen({ orgChecked: form.orgList.map(item => item.id) })"
+          />
+        </div>
       </el-form-item>
     </el-form>
 
@@ -177,7 +196,7 @@
       </dialog-footer>
     </template>
     
-    <org-select-one-drawer
+    <org-select-more-drawer
       v-bind="dialogParam"
       @close-dialog="dialogParamsClose"
     />
@@ -196,8 +215,8 @@ import {createUsers, getUsersById, updateUsers} from './usersOption'
 import {assignExistingFields} from '@utils/utils'
 import {Select} from '@element-plus/icons-vue'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
-import OrgSelectOneDrawer from '../org/org-select-one-drawer.vue'
-import {OrgBeanBase} from '../org/orgModel'
+import OrgSelectMoreDrawer from '../org/org-select-more-drawer.vue'
+import {OrgCheck} from '../org/orgModel'
 
 export default defineComponent({
   name: 'UsersEditDialog',
@@ -205,7 +224,7 @@ export default defineComponent({
     EvSelect,
     DialogHeader,
     DialogFooter,
-    OrgSelectOneDrawer,
+    OrgSelectMoreDrawer,
   },
   props: {
     dataId: {
@@ -246,7 +265,8 @@ export default defineComponent({
       avatar: null,
       type: null,
       description: null,
-      accountStatus: '01',
+      status: '01',
+      orgList: [],
     })
 
     const rules = reactive<FormRules<UsersBean>>({
@@ -260,11 +280,11 @@ export default defineComponent({
 
     const resetForm = (formEl: FormInstance | undefined) => {
       if (!formEl) return
+      formEl.resetFields()
       Object.assign(form, {
         id: '',
-        orgCode: '',
+        orgList: [],
       })
-      formEl.resetFields()
     }
     
     // 关闭窗口
@@ -336,11 +356,10 @@ export default defineComponent({
       dialogParamsClose: dialogParamsCloses,
     } = dialogParamsContent()
 
-    const dialogParamsClose = (obj: OrgBeanBase) => {
+    const dialogParamsClose = (refresh: boolean, result: Array<OrgCheck>) => {
       dialogParamsCloses()
-      if (obj && obj.name) {
-        form.orgCode = obj.code
-        form.orgName = obj.name
+      if (refresh) {
+        form.orgList = result
       }
     }
 
@@ -364,8 +383,23 @@ export default defineComponent({
 
 </script>
 
-
 <style scoped lang="scss">
+  .checked-org-body{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    grid-gap: 10px;
+  }
+  .checked-org{
+    & li{
+      display: flex;
+      justify-content: space-between;
+      border-radius: var(--border-radius-small);
+      padding:  0 var(--pd-ultra-small);
+      margin: var(--mg-small) 0;
+      background-color: #EDF2FA;
+    }
+  }
   .form-item-grid{
     display: grid;
     grid-template-columns: 1fr 1fr;

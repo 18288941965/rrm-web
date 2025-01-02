@@ -1,8 +1,11 @@
-import {PaginationQr} from '@utils/interface'
-
 interface OrgBeanBase{
     code: string
     name: string
+}
+
+interface OrgCheck extends OrgBeanBase{
+    id: string
+    defaultLogin?: number
 }
 
 interface OrgBean extends OrgBeanBase{
@@ -13,9 +16,6 @@ interface OrgBean extends OrgBeanBase{
     status: string
     extendedField?: string
     extendedField2?: string
-}
-
-interface OrgBeanQuery extends OrgBeanBase, PaginationQr{
 }
 
 interface OrgBeanVO extends OrgBean{
@@ -39,7 +39,7 @@ interface OrgBeanActive extends OrgBeanBase{
 export {
     type OrgBeanBase,
     type OrgBean,
-    type OrgBeanQuery,
     type OrgBeanVO,
     type OrgBeanActive,
+    type OrgCheck,
 }
