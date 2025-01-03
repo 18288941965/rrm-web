@@ -8,8 +8,8 @@ const createRole = (bean: RoleBean) => {
     })
 }
 
-const searchRolePage = (params: RoleBeanBase) => {
-    return axios.post('/role/page', params).then((res: { data: AxiosResult }) => {
+const searchRoleTree = () => {
+    return axios.get('/role/tree').then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
@@ -58,7 +58,7 @@ const unbindRoleMenu = (roleId: string, menuId: string, type: string) => {
 
 export {
     createRole,
-    searchRolePage,
+    searchRoleTree,
     getRoleById,
     deleteRole,
     updateRoleStatus,

@@ -167,7 +167,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  @use "../../../assets/scssscoped/org/org-tree";
+  @use "../../../assets/scssscoped/tree/org-tree";
 </style>
 
 <style lang="scss">

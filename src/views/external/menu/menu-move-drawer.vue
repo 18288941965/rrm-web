@@ -18,7 +18,7 @@
       :move-ids="moveIds"
       :disabled-ids="disabledIds"
       :source="1"
-      @set-active-menu="treeCheckChange"
+      @set-active-node="treeCheckChange"
     />
 
     <template #footer>

@@ -1,5 +1,3 @@
-import {PaginationQr} from '@utils/interface'
-
 interface RoleBeanBase{
     name: string
     type: string
@@ -7,14 +5,12 @@ interface RoleBeanBase{
 
 interface RoleBean extends RoleBeanBase{
     id: string
+    parentId: string | null
     status: number
     sortOrder: number
     description: string
     terminal: string
     netType: string
-}
-
-interface RoleBeanQuery extends RoleBeanBase, PaginationQr{
 }
 
 interface RoleBeanVO extends RoleBean{
@@ -23,6 +19,22 @@ interface RoleBeanVO extends RoleBean{
     netTypeName: string
     bindMenuCount: number
     bindElementCount: number
+    children: Array<RoleBeanVO>
+    childrenCount: number
+}
+
+interface RoleBeanActive {
+    id: string
+    name: string
+    status: number
+    description: string
+    typeName: string
+    terminalName: string
+    netTypeName: string
+    bindMenuCount: number
+    bindElementCount: number
+    children: Array<RoleBeanVO>
+    childrenCount: number
 }
 
 interface RoleMenuBean{
@@ -34,7 +46,7 @@ interface RoleMenuBean{
 export {
     type RoleBeanBase,
     type RoleBean,
-    type RoleBeanQuery,
     type RoleMenuBean,
     type RoleBeanVO,
+    type RoleBeanActive,
 }

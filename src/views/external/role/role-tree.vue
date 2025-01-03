@@ -4,16 +4,16 @@
       v-model.trim="searchVal"
       class="mgb-medium"
       clearable
-      placeholder="机构过滤"
+      placeholder="角色过滤"
       style="max-width: 600px"
     >
     </el-input>
 
     <el-tree
-      ref="orgTreeRef"
+      ref="roleTreeRef"
       class="rrm-tree"
-      :class="{'tree-bd': orgTreeList && orgTreeList.length < 1}"
-      :data="getOrgTreeList"
+      :class="{'tree-bd': roleTreeList && roleTreeList.length < 1}"
+      :data="getRoleTreeList"
       :props="{label: 'name', children: 'children', disabled: 'disabled'}"
       node-key="id"
       default-expand-all
@@ -21,7 +21,7 @@
       :check-on-click-node="true"
       :check-strictly="true"
       :filter-node-method="filterNode"
-      @node-click="setActiveOrg"
+      @node-click="setActiveRole"
     >
       <template #default="{ node, data }">
         <span
@@ -33,12 +33,11 @@
           </span>
           <span>
             <el-tag
-              v-if="data.type"
               type="info"
               round
               size="small"
             >
-              {{ data.typeName }}
+              {{ data.terminalName }}
             </el-tag>
             <el-tag
               type="warning"
@@ -46,7 +45,7 @@
               size="small"
               class="mgl-medium"
             >
-              {{ data.statusName }}
+              {{ data.netTypeName }}
             </el-tag>
           </span>
         </span>
@@ -57,28 +56,28 @@
 
 <script lang="ts">
 import {computed, defineComponent, ref, toRef, watch} from 'vue'
-import {OrgBeanVO} from './orgModel'
+import {RoleBeanVO} from './roleModel'
 
 export default defineComponent({
-  name: 'OrgTree',
+  name: 'RoleTree',
   props: {
-    orgList: {
-      type: Array<OrgBeanVO>,
+    roleList: {
+      type: Array<RoleBeanVO>,
       default: [],
     },
   },
   emits: ['set-active-node'],
   setup(props, { emit }) {
-    const orgTreeList = toRef(props, 'orgList')
+    const roleTreeList = toRef(props, 'roleList')
 
-    const orgTreeRef = ref()
+    const roleTreeRef = ref()
     const searchVal = ref('')
     const treeActiveId = ref('')
 
-    const setActiveOrg = (data: OrgBeanVO) => {
+    const setActiveRole = (data: RoleBeanVO) => {
       // 深拷贝去掉 children
       const childrenCount = data.children ? data.children.length : 0
-      const nodeCopy: OrgBeanVO = { ...data, children: [], childrenCount }
+      const nodeCopy: RoleBeanVO = { ...data, children: [], childrenCount }
       emit('set-active-node', nodeCopy)
       treeActiveId.value = data.id
     }
@@ -87,25 +86,25 @@ export default defineComponent({
       treeActiveId.value = ''
     }
 
-    const getOrgTreeList = computed(() => {
-      return orgTreeList.value
+    const getRoleTreeList = computed(() => {
+      return roleTreeList.value
     })
 
-    const filterNode = (value: string, data: OrgBeanVO) => {
+    const filterNode = (value: string, data: RoleBeanVO) => {
       if (!value) return true
       return data.name.includes(value)
     }
 
     watch(searchVal, (val) => {
-      orgTreeRef.value!.filter(val)
+      roleTreeRef.value!.filter(val)
     })
 
     return {
-      orgTreeList,
-      getOrgTreeList,
+      roleTreeList,
+      getRoleTreeList,
       searchVal,
-      orgTreeRef,
-      setActiveOrg,
+      roleTreeRef,
+      setActiveRole,
       cleanTreeActiveId,
       filterNode,
       treeActiveId,

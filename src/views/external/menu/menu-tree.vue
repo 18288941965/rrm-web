@@ -95,7 +95,7 @@ export default defineComponent({
       default: [],
     },
   },
-  emits: ['set-active-menu'],
+  emits: ['set-active-node'],
   setup(props, { emit }) {
     const menuTreeList = toRef(props, 'menuList')
 
@@ -107,7 +107,7 @@ export default defineComponent({
       // 深拷贝去掉 children
       const childrenCount = data.children ? data.children.length : 0
       const nodeCopy: MenuBeanVO = { ...data, children: [], childrenCount }
-      emit('set-active-menu', nodeCopy)
+      emit('set-active-node', nodeCopy)
       treeActiveId.value = data.id
     }
 
@@ -179,8 +179,6 @@ export default defineComponent({
   },
 })
 </script>
-
-
 
 <style scoped lang="scss">
 .menu-tree{

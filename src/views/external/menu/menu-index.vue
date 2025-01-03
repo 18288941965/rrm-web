@@ -74,7 +74,7 @@
       <menu-tree
         ref="menuIndexTreeRef"
         :menu-list="menuList"
-        @set-active-menu="setActiveTreeNode"
+        @set-active-node="setActiveTreeNode"
       />
       
       <div class="menu-index-control">

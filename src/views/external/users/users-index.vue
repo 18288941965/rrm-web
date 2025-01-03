@@ -142,7 +142,7 @@
                   circle
                   @click="dialogBaseOpen(user.id)"
                 >
-                  88
+                  {{ org.roleCount }}
                 </el-button>
               </el-tooltip>
             </div>

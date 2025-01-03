@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="org-body">
+    <div class="org-index-body">
       <div class="org-tree">
         <div class="mgb-medium">
           <el-button
@@ -15,11 +15,11 @@
         <org-tree
           ref="orgIndexTreeRef"
           :org-list="orgList"
-          @set-active-org="setActiveTreeNode"
+          @set-active-node="setActiveTreeNode"
         />
       </div>
       
-      <div class="org-detail">
+      <div class="org-index-detail">
         <div class="mgb-medium">
           <el-button
             :icon="Plus"
@@ -208,14 +208,14 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  .org-body{
+  .org-index-body{
     display: flex;
     & .org-tree{
       flex: 1;
     }
   }
 
-  .org-detail{
+  .org-index-detail{
     flex: 1;
     & table{
       width: 100%;

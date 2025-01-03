@@ -6,6 +6,7 @@ interface OrgBeanBase{
 interface OrgCheck extends OrgBeanBase{
     id: string
     defaultLogin?: number
+    roleCount?: number
 }
 
 interface OrgBean extends OrgBeanBase{

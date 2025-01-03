@@ -1,174 +1,200 @@
 <template>
   <div>
-    <div class="mgb-medium role-toolbar">
-      <el-button
-        class="mgr-medium"
-        type="success"
-        :icon="Plus"
-        @click="dialogBaseOpen(undefined)"
-      >
-        创建角色
-      </el-button>
-      
-      <el-input
-        v-model="queryParams.name"
-        placeholder="请输入角色名称"
-        clearable
-        style="max-width: 600px"
-      >
-        <template #append>
+    <div class="role-index-body">
+      <div>
+        <el-button
+            class="mgb-medium"
+            type="success"
+            :icon="Plus"
+            @click="dialogBaseOpen(undefined)"
+        >
+          创建一级角色
+        </el-button>
+        <role-tree
+            ref="roleIndexTreeRef"
+            :role-list="roleList"
+            @set-active-node="setActiveTreeNode"
+        />
+      </div>
+
+      <div>
+        <div class="mgb-medium">
           <el-button
-            :icon="Search"
-            style="width: 100px"
-            @click="query(1)"
-          />
-        </template>
-      </el-input>
+              :icon="Plus"
+              :disabled="!activeTreeNode.id"
+              @click="dialogBaseOpen(undefined)"
+          >
+            添加子角色
+          </el-button>
+
+          <el-button
+              :icon="Edit"
+              :disabled="!activeTreeNode.id"
+              @click="dialogBaseOpen(activeTreeNode.id)"
+          >
+            编辑角色
+          </el-button>
+
+          <el-button
+              :icon="Delete"
+              :disabled="!activeTreeNode.id || activeTreeNode.childrenCount >= 1"
+              @click="deleteData(activeTreeNode.id, activeTreeNode.name)"
+          >
+            删除角色
+          </el-button>
+        </div>
+
+        <div class="role-index-control">
+          <div class="control-top">
+            <h4>
+            <span
+                v-if="!activeTreeNode.id"
+                class="no-data"
+            >请点击左侧角色名称进行后续操作</span>
+              {{ activeTreeNode.name }}
+            </h4>
+
+            <div>
+              <el-switch
+                  v-model="activeTreeNode.status"
+                  :disabled="!activeTreeNode.id"
+                  inline-prompt
+                  :active-value="1"
+                  :inactive-value="0"
+                  active-text="启用"
+                  inactive-text="停用"
+                  @change="setRoleStatus(activeTreeNode.id, activeTreeNode.status)"
+              />
+            </div>
+          </div>
+
+          <div class="control-main">
+            <p>
+              角色描述：{{ activeTreeNode.description }}
+            </p>
+            <p>
+              绑定菜单：{{ activeTreeNode.bindMenuCount }} / {{ countObj.menuCount }}
+
+            </p>
+            <p>
+              绑定控件：{{ activeTreeNode.bindElementCount }} / {{ countObj.elementCount }}
+            </p>
+            <el-button
+                :icon="Apps"
+                :disabled="!activeTreeNode.id"
+                @click="dialogBindMenuOpen({ dataId: activeTreeNode.id, name: activeTreeNode.name })"
+            >
+              绑定菜单和控件
+            </el-button>
+
+            <template v-if="activeTreeNode.id">
+              <el-tag
+                  type="info"
+                  class="mgl-medium"
+              >
+                {{ activeTreeNode.typeName }}
+              </el-tag>
+
+              <el-tag
+                  type="info"
+                  class="mgl-medium"
+              >
+                {{ activeTreeNode.terminalName }}
+              </el-tag>
+
+              <el-tag
+                  type="info"
+                  class="mgl-medium"
+              >
+                {{ activeTreeNode.netTypeName }}
+              </el-tag>
+            </template>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <el-table
-      :data="pager.list"
-      border
-      table-layout="auto"
-    >
-      <el-table-column
-        prop="sortOrder"
-        width="80"
-        label="顺序号"
-        align="center"
-      />
-      <el-table-column
-        prop="name"
-        label="角色名称"
-      />
-      <el-table-column
-        prop="typeName"
-        label="角色类型"
-      />
-      <el-table-column
-        prop="description"
-        label="角色描述"
-      />
-      <el-table-column
-        prop="terminalName"
-        label="终端"
-      />
-      <el-table-column
-        prop="netTypeName"
-        label="网络类型"
-      />
-      <el-table-column
-        prop="statusName"
-        width="100"
-        label="角色状态"
-        align="center"
-      >
-        <template #default="scope">
-          <el-switch
-            v-model="scope.row.status"
-            inline-prompt
-            :active-value="1"
-            :inactive-value="0"
-            active-text="启用"
-            inactive-text="停用"
-            @change="setRoleStatus(scope.row.id, scope.row.status)"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="_bindMenu"
-        label="绑定菜单"
-      >
-        <template #default="scope">
-          {{ countObj.menuCount }} /
-          <span :class="scope.row.bindMenuCount > 0 ? 'role-count-bind' : 'role-count-unbind'">{{ scope.row.bindMenuCount }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="_bindElement"
-        label="绑定控件"
-      >
-        <template #default="scope">
-          {{ countObj.elementCount }} /
-          <span :class="scope.row.bindElementCount > 0 ? 'role-count-bind' : 'role-count-unbind'">{{ scope.row.bindElementCount }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column>
-        <template #default="scope">
-          <el-button
-            type="primary"
-            :icon="Edit"
-            @click="dialogBaseOpen(scope.row.id)"
-          />
-
-          <el-button
-            type="danger"
-            :icon="Delete"
-            @click="deleteData(scope.row.id, scope.row.name)"
-          />
-
-
-          <el-button
-            :icon="Apps"
-            @click="dialogBindMenuOpen({ dataId: scope.row.id, name: scope.row.name })"
-          >
-            绑定菜单和控件
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <ev-pagination
-      :pager="pager"
-      @query="query"
-    />
-    
     <role-edit-dialog
-      v-bind="dialogBase"
-      @close-dialog="dialogBaseCloseAndRefresh($event, query)"
+        v-bind="dialogBase"
+        @close-dialog="dialogBaseCloseAndRefresh($event, query)"
     />
-    
+
     <menu-select-dialog
-      v-bind="dialogBindMenu"
-      @close-dialog="dialogBindMenuCloseAndRefresh"
+        v-bind="dialogBindMenu"
+        @close-dialog="dialogBindMenuCloseAndRefresh"
     />
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive} from 'vue'
-import {Pagination} from '@utils/interface'
-import {RoleBeanQuery, RoleBeanVO} from './roleModel'
-import {deleteRole, searchRolePage, updateRoleStatus} from './roleOption'
+import {defineComponent, onMounted, reactive, ref} from 'vue'
+import {RoleBeanActive, RoleBeanVO} from './roleModel'
+import {deleteRole, searchRoleTree, updateRoleStatus} from './roleOption'
 import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
 import {Delete, Edit, Plus, Search} from '@element-plus/icons-vue'
 import RoleEditDialog from './role-edit-dialog.vue'
-import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import {ElMessage} from 'element-plus'
 import {deleteConfirmContent} from '@utils/utils'
 import {Apps} from '../../../components/svicon/menuIcon'
 import MenuSelectDialog from '../menu/menu-select-dialog.vue'
 import {countElement, countMenu} from '../menu/menuOption'
+import RoleTree from './role-tree.vue'
+import MenuElement from "../menu/menu-element.vue";
 
 export default defineComponent({
   name: 'RoleIndex',
   components: {
-    EvPagination,
+    MenuElement,
+    RoleTree,
     RoleEditDialog,
     MenuSelectDialog,
   },
   setup() {
-    const queryParams = reactive<RoleBeanQuery>({
-      name: '',
-      type: '',
-    })
+    const roleIndexTreeRef = ref()
+    const roleList = ref<Array<RoleBeanVO>>([])
 
-    const pager = reactive<Pagination<RoleBeanVO>>({
-      pageNum: 1,
-      pageSize: 10,
-      total: 0,
-      list: [],
+    const query = () => {
+      roleIndexTreeRef.value!.cleanTreeActiveId()
+      searchRoleTree().then(res => {
+        if (res.code === 200) {
+          roleList.value = res.data
+        }
+      })
+    }
+
+    // ====== S ====== - 树节点点击事件
+    const activeTreeNode = reactive<RoleBeanActive>({
+      id: '',
+      name: '',
+      status: 0,
+      description: '',
+      typeName: '',
+      terminalName: '',
+      netTypeName: '',
+      bindMenuCount: 0,
+      bindElementCount: 0,
+      children: [],
+      childrenCount: 0,
     })
+    const cleanActiveTreeNode = () => {
+      Object.assign(activeTreeNode, {
+        id: '',
+        name: '',
+        status: 0,
+        description: '',
+        typeName: '',
+        terminalName: '',
+        netTypeName: '',
+        bindMenuCount: 0,
+        bindElementCount: 0,
+        children: [],
+        childrenCount: 0,
+      })
+    }
+    const setActiveTreeNode = (data: RoleBeanVO) => {
+      Object.assign(activeTreeNode, data)
+    }
+    // ====== E ====== - 树节点点击事件
 
     const countObj = reactive<{
       menuCount: number
@@ -177,22 +203,6 @@ export default defineComponent({
       menuCount: 0,
       elementCount: 0,
     })
-
-    const query = (pageNum = pager.pageNum, pageSize = pager.pageSize) => {
-      Object.assign(pager, {
-        pageNum,
-        pageSize,
-      })
-      searchRolePage({
-        pageNum: pager.pageNum,
-        pageSize: pager.pageSize,
-        ...queryParams,
-      }).then(res => {
-        if (res.code === 200) {
-          Object.assign(pager, res.data)
-        }
-      })
-    }
 
     const {
       dialogBase,
@@ -203,9 +213,9 @@ export default defineComponent({
     const setRoleStatus = (id: string, status: number) => {
       updateRoleStatus(id, status).then(res => {
         if (res.code !== 200) {
-          for (let i = 0; i < pager.list.length; i++) {
-            if (id === pager.list[i].id) {
-              pager.list[i].status = status === 1 ? 0 : 1
+          for (let i = 0; i < roleList.value.length; i++) {
+            if (id === roleList.value[i].id) {
+              roleList.value[i].status = status === 1 ? 0 : 1
               break
             }
           }
@@ -220,7 +230,7 @@ export default defineComponent({
         if (flag) {
           deleteRole(id).then(res => {
             if (res.code === 200) {
-              query(1)
+              query()
             }
           })
         }
@@ -229,13 +239,13 @@ export default defineComponent({
 
     const {
       dialogParam: dialogBindMenu,
-        dialogParamsOpen: dialogBindMenuOpen,
-        dialogParamsClose: dialogBindMenuClose,
+      dialogParamsOpen: dialogBindMenuOpen,
+      dialogParamsClose: dialogBindMenuClose,
     } = dialogParamsContent()
 
-    const dialogBindMenuCloseAndRefresh = (menuSize: number, elementSize: number,  roleId: string) => {
+    const dialogBindMenuCloseAndRefresh = (menuSize: number, elementSize: number, roleId: string) => {
       dialogBindMenuClose()
-      pager.list.forEach(item => {
+      roleList.value.forEach(item => {
         if (item.id === roleId) {
           item.bindMenuCount = menuSize
           item.bindElementCount = elementSize
@@ -245,7 +255,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      query(1)
+      query()
 
       countMenu().then(res => {
         if (res.code === 200) {
@@ -259,17 +269,22 @@ export default defineComponent({
         }
       })
     })
-    
+
     return {
       Search,
       Plus,
       Edit,
       Delete,
       Apps,
-      queryParams,
-      pager,
+      roleList,
       query,
       countObj,
+
+      roleIndexTreeRef,
+      activeTreeNode,
+      cleanActiveTreeNode,
+      setActiveTreeNode,
+
 
       deleteData,
       setRoleStatus,
@@ -287,14 +302,47 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  .role-toolbar{
+.role-index-body{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+ .role-index-control{
+  border: var(--border-1);
+  border-radius: var(--border-radius-medium);
+  & .control-top{
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    line-height: var(--size-medium);
+    border-bottom: var(--border-1);
+    padding-left: var(--pd-medium);
+    padding-right: var(--pd-ultra-small);
   }
-  .role-count-bind{
-    color: var(--el-color-success);
+  & .control-main{
+    padding: var(--pd-medium);
+    & p{
+      text-indent: 2rem;
+      color: var(--color-black-secondary);
+    }
+    & .bind-source{
+      padding-left: var(--pd-ultra-small);
+      font-weight: bolder;
+    }
   }
-  .role-count-unbind{
-    color: var(--color-black-secondary);
-  }
+}
+
+
+.role-toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.role-count-bind {
+  color: var(--el-color-success);
+}
+
+.role-count-unbind {
+  color: var(--color-black-secondary);
+}
 </style>

@@ -82,7 +82,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['push-router', 'set-parent-menu', 'set-active-menu'],
+  emits: ['push-router', 'set-parent-menu', 'set-active-node'],
   setup (props, {emit}) {
     const router = useRouter()
     const adminMenuRef = ref()
@@ -103,7 +103,7 @@ export default defineComponent({
 
     const setActivePath = (menuId: string) => {
       const menuPath = rrmMenuDfs(menus.value[0], menuId, false)
-      emit('set-active-menu', menuPath)
+      emit('set-active-node', menuPath)
     }
 
     // 1、展开当前的菜单
