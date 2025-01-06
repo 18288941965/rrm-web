@@ -5,7 +5,7 @@
   >
     <el-menu-item
       v-if="!menu.children || menu.children.length === 0"
-      :key="menu.id"
+      :key="index + '_' + menu.id"
       :index="menu.id"
       :class="{'menu-active' : menu.id === menuId }"
       @click="pushRouter(menu)"
@@ -17,7 +17,7 @@
 
     <el-sub-menu
       v-else
-      :key="menu.id"
+      :key="index + '_' + menu.id"
       :index="menu.id"
     >
       <template #title>
