@@ -30,19 +30,19 @@
           </span>
           <span>
             <el-tag
-                v-if="node.level <= 1"
-                type="info"
-                round
-                size="small"
+              v-if="node.level <= 1"
+              type="info"
+              round
+              size="small"
             >
               {{ data.terminalName }}
             </el-tag>
             <el-tag
-                v-if="node.level <= 1"
-                type="warning"
-                round
-                size="small"
-                class="mgl-medium"
+              v-if="node.level <= 1"
+              type="warning"
+              round
+              size="small"
+              class="mgl-medium"
             >
               {{ data.netTypeName }}
             </el-tag>
@@ -74,9 +74,9 @@ import {dialogOptions} from '@utils/dialogOptions'
 import {RoleBean, RoleBeanVO} from './roleModel'
 import {searchRoleTree} from './roleOption'
 import {PropPrams} from '@utils/interface'
-import {bindUsersRole, getUsersBindRole} from "../users/usersOption";
-import {UsersRoleBean} from "../users/usersModel";
-import {ElMessage} from "element-plus/es";
+import {bindUsersRole, getUsersBindRole} from '../users/usersOption'
+import {UsersRoleBean} from '../users/usersModel'
+import {ElMessage} from 'element-plus/es'
 
 export default defineComponent({
   name: 'RoleSelectMoreDrawer',
@@ -187,7 +187,5 @@ export default defineComponent({
 </style>
 
 <style lang="scss">
-.rrm-tree .el-tree-node__content {
-    border-bottom: var(--border-1);
-}
+@use "../../../assets/scss/tree/rrm-tree";
 </style>

@@ -225,7 +225,7 @@ export default defineComponent({
     }
 
     const deleteData = (id: number, entryName: string) => {
-      deleteConfirmContent('建议停用字典项而不是删除，删除后将不可恢复，是否确认执行删除操作？', entryName).then(flag => {
+      deleteConfirmContent('建议停用字典项而不是删除，删除将会清空相关信息且不可恢复，你确定要执行删除操作吗？', entryName).then(flag => {
         if (flag) {
           deleteDictEntry(id).then(res => {
             if (res.code === 200) {

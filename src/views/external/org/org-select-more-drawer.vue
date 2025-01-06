@@ -171,7 +171,5 @@ export default defineComponent({
 </style>
 
 <style lang="scss">
-.rrm-tree .el-tree-node__content {
-    border-bottom: var(--border-1);
-}
+@use "../../../assets/scss/tree/rrm-tree";
 </style>

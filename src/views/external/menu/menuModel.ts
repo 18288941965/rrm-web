@@ -43,6 +43,7 @@ interface MenuBeanActive extends MenuBeanDefault, MenuDicName{
     netType: string
     childrenCount: number
     bindResourceCount?: number
+    elementCount?: number
 }
 
 interface MenuSortBean{

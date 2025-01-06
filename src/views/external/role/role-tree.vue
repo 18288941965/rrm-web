@@ -120,10 +120,6 @@ export default defineComponent({
 <style lang="scss">
   @use "../../../assets/scss/tree/rrm-tree";
 
-  .rrm-tree .el-tree-node__content {
-    border-bottom: var(--border-1);
-  }
-
   .tree-move-check > .el-tree-node__content:nth-of-type(1) {
     color: var(--color-red);
   }

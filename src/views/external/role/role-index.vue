@@ -145,13 +145,11 @@ import {Apps} from '../../../components/svicon/menuIcon'
 import MenuSelectDialog from '../menu/menu-select-dialog.vue'
 import {countElement, countMenu} from '../menu/menuOption'
 import RoleTree from './role-tree.vue'
-import MenuElement from '../menu/menu-element.vue'
 import {deleteNodeById, updateOrInsertNode} from '@utils/treeUtils'
 
 export default defineComponent({
   name: 'RoleIndex',
   components: {
-    MenuElement,
     RoleTree,
     RoleEditDialog,
     MenuSelectDialog,
@@ -250,7 +248,7 @@ export default defineComponent({
     }
 
     const deleteData = (id: string, name: string) => {
-      deleteConfirmContent('建议停用角色而不是删除，删除后将不可恢复，是否确认执行删除操作？', name).then(flag => {
+      deleteConfirmContent('建议停用角色而不是删除，删除将会清空相关信息且不可恢复，你确定要执行删除操作吗？', name).then(flag => {
         if (flag) {
           deleteRole(id).then(res => {
             if (res.code == 200) {
@@ -330,22 +328,4 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @use "../../../assets/scssscoped/layout/tree-layout";
-
-.role-index-body{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.role-toolbar {
-  display: flex;
-  align-items: center;
-}
-
-.role-count-bind {
-  color: var(--el-color-success);
-}
-
-.role-count-unbind {
-  color: var(--color-black-secondary);
-}
 </style>

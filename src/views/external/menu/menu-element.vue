@@ -100,7 +100,8 @@ export default defineComponent({
       default: 0,
     },
   },
-  setup(props) {
+  emits: ['set-element-count'],
+  setup(props, { emit }) {
     const dataList = ref<Array<MenuElementBeanVO>>([])
     
     const query = () => {
@@ -114,15 +115,17 @@ export default defineComponent({
               }
             })
           })
+          emit('set-element-count', dataList.value.length)
         }
       })
     }
 
     const deleteData = (id: string, name: string) => {
-      deleteConfirmContent('建议停用控件而不是删除，删除后将不可恢复，是否确认执行删除操作？', name).then(data => {
+      deleteConfirmContent('建议停用控件而不是删除，删除将会清空相关信息且不可恢复，你确定要执行删除操作吗？', name).then(data => {
         if (data) {
           deleteMenuElementById(id).then(res => {
             if (res.code === 200) {
+              ElMessage.success(res.message)
               for (let i = 0; i < dataList.value.length; i++) {
                 if (dataList.value[i].id === id) {
                   dataList.value.splice(i, 1)

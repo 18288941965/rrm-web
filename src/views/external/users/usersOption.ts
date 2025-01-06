@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {UsersBean, UsersBeanBase, UsersRoleBean} from './usersModel'
+import {UsersBean, UsersBeanQuery, UsersRoleBean} from './usersModel'
 
 const createUsers = (bean: UsersBean) => {
     return axios.post('/users', bean).then((res: { data: AxiosResult }) => {
@@ -8,7 +8,7 @@ const createUsers = (bean: UsersBean) => {
     })
 }
 
-const searchUsersPage = (params: UsersBeanBase) => {
+const searchUsersPage = (params: UsersBeanQuery) => {
     return axios.post('/users/page', params).then((res: { data: AxiosResult }) => {
         return res.data
     })

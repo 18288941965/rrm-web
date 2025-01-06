@@ -3,6 +3,8 @@ import {OrgCheck} from '../org/orgModel'
 
 interface UsersBeanBase{
     name: string
+    username: string
+    status: string
 }
 interface UsersBeanChoosable{
     registrationDate?: Date
@@ -14,7 +16,6 @@ interface UsersBeanChoosable{
 }
 interface UsersBean extends UsersBeanBase, UsersBeanChoosable{
     id: string
-    username: string
     password: string
     gender: string | null
     nation: string | null
@@ -24,7 +25,6 @@ interface UsersBean extends UsersBeanBase, UsersBeanChoosable{
     avatar: string | null
     type: string | null
     description: string | null
-    status: string
     orgList: Array<OrgCheck>
 }
 
@@ -35,10 +35,7 @@ interface UsersBeanVO extends UsersBean{
 }
 
 interface UsersBeanQuery extends UsersBeanBase, PaginationQr{
-    username: string
-    status: string
 }
-
 
 interface UsersRoleBean{
     usersId: string

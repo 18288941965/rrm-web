@@ -75,11 +75,11 @@
               />
               <span
                 v-else-if="user.status === '03'"
-                class="acc-status-warning"
+                class="acc-status-danger"
               />
               <span
                 v-else
-                class="acc-status-warning"
+                class="acc-status-info"
               />
               {{ user.username }}
             </div>
@@ -163,7 +163,7 @@
 
           <el-button
             :icon="Delete"
-            @click="deleteData(user.id)"
+            @click="deleteData(user.id, user.name)"
           />
         </div>
       </div>
@@ -192,7 +192,7 @@ import {UsersBeanQuery, UsersBeanVO} from './usersModel'
 import {Pagination} from '@utils/interface'
 import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
 import {defaultLoginOrg, deleteUsers, searchUsersPage} from './usersOption'
-import {deleteConfirm} from '@utils/utils'
+import {deleteConfirmContent} from '@utils/utils'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
 import UsersEditDialog from './users-edit-dialog.vue'
 import {CircleCheckFilled, Delete, Edit, Iphone, Link, Plus, Search, User} from '@element-plus/icons-vue'
@@ -249,8 +249,8 @@ export default defineComponent({
       dialogBaseCloseAndRefresh,
     } = dialogBaseContent<string>()
 
-    const deleteData = (id: string) => {
-      deleteConfirm('你确定要删除此用户吗？').then(flag => {
+    const deleteData = (id: string, name: string) => {
+      deleteConfirmContent('建议注销用户而不是删除，删除将会清空相关信息且不可恢复，你确定要执行删除操作吗？', name).then(flag => {
         if (flag) {
           deleteUsers(id).then(res => {
             if (res.code === 200) {
@@ -401,8 +401,8 @@ export default defineComponent({
     & .acc-status-warning{
       background-color: var(--el-color-warning);
     }
+    & .acc-status-info{
+      background-color: var(--el-color-info);
+    }
   }
-
-
-
 </style>
