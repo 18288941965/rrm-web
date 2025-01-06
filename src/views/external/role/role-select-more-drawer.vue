@@ -1,7 +1,7 @@
 <template>
   <el-drawer
     v-model="visible"
-    title="机构选择（多选）"
+    title="角色选择"
     direction="rtl"
     :before-close="handleClose"
     :close-on-click-modal="false"
@@ -9,15 +9,15 @@
     @open="handleOpen"
   >
     <el-tree
-      ref="orgSelectMoreElTreeRef"
+      ref="roleSelectMoreElTreeRef"
       class="rrm-tree"
-      :class="{'tree-bd': orgList && orgList.length < 1}"
-      :data="orgList"
+      :class="{'tree-bd': roleList && roleList.length < 1}"
+      :data="roleList"
       :props="{label: 'name', children: 'children', disabled: 'disabled'}"
       node-key="id"
       show-checkbox
       default-expand-all
-      :default-checked-keys="params.orgChecked"
+      :default-checked-keys="roleChecked"
       :expand-on-click-node="false"
       :check-on-click-node="true"
       :check-strictly="true"
@@ -30,20 +30,21 @@
           </span>
           <span>
             <el-tag
-              v-if="data.type"
-              type="info"
-              round
-              size="small"
+                v-if="node.level <= 1"
+                type="info"
+                round
+                size="small"
             >
-              {{ data.typeName }}
+              {{ data.terminalName }}
             </el-tag>
             <el-tag
-              type="warning"
-              round
-              size="small"
-              class="mgl-medium"
+                v-if="node.level <= 1"
+                type="warning"
+                round
+                size="small"
+                class="mgl-medium"
             >
-              {{ data.statusName }}
+              {{ data.netTypeName }}
             </el-tag>
           </span>
         </span>
@@ -70,12 +71,15 @@
 import {defineComponent, PropType, ref, watch} from 'vue'
 import DialogFooter from '../../../components/dialog-footer.vue'
 import {dialogOptions} from '@utils/dialogOptions'
-import {OrgBeanVO, OrgCheck} from './orgModel'
-import {getOrgByItemCode} from './orgOption'
+import {RoleBean, RoleBeanVO} from './roleModel'
+import {searchRoleTree} from './roleOption'
 import {PropPrams} from '@utils/interface'
+import {bindUsersRole, getUsersBindRole} from "../users/usersOption";
+import {UsersRoleBean} from "../users/usersModel";
+import {ElMessage} from "element-plus/es";
 
 export default defineComponent({
-  name: 'OrgSelectMoreDrawer',
+  name: 'RoleSelectMoreDrawer',
   components: {
     DialogFooter,
   },
@@ -84,7 +88,8 @@ export default defineComponent({
       type: Object as PropType<PropPrams>,
       default() {
         return {
-          orgChecked: Array<string>,
+          usersId: '',
+          orgId: '',
         }
       },
     },
@@ -96,13 +101,14 @@ export default defineComponent({
   },
   emits: ['close-dialog'],
   setup (props, {emit}) {
-    const orgList = ref<Array<OrgBeanVO>>([])
+    const roleList = ref<Array<RoleBeanVO>>([])
+    const roleChecked = ref<Array<string>>([])
     
     const {
       visible,
-        loading,
+      loading,
     } = dialogOptions()
-    const orgSelectMoreElTreeRef = ref()
+    const roleSelectMoreElTreeRef = ref()
     
     watch(
       () => props.show,
@@ -111,51 +117,61 @@ export default defineComponent({
       },
     )
 
-    const filterNode = (value: string, data: OrgBeanVO) => {
+    const filterNode = (value: string, data: RoleBeanVO) => {
       if (!value) return true
       return data.name.includes(value)
     }
     const searchVal = ref('')
     watch(searchVal, (val) => {
-      orgSelectMoreElTreeRef.value!.filter(val)
+      roleSelectMoreElTreeRef.value!.filter(val)
     })
 
     const handleOpen = () => {
-      getOrgByItemCode().then(res => {
+      getUsersBindRole(props.params.usersId, props.params.orgId).then(res => {
         if (res.code === 200) {
-          orgList.value = res.data
-          if (props.params.code) {
-            orgSelectMoreElTreeRef.value?.setTreeCheckedKeys(props.params.code)
-          }
+          roleChecked.value = res.data.map((item: RoleBean) => item.id)
+
+          searchRoleTree().then(res => {
+            if (res.code === 200) {
+              roleList.value = res.data
+              if (props.params.code) {
+                roleSelectMoreElTreeRef.value?.setTreeCheckedKeys(props.params.code)
+              }
+            }
+          })
         }
       })
     }
 
     // 关闭窗口
-    const handleClose = (event: Event | null, checkedOrgBeans: Array<OrgCheck>) => {
-      orgList.value = []
+    const handleClose = (event: Event | null, roleCount: number) => {
+      roleList.value = []
       loading.value = false
-      emit('close-dialog', event === null, checkedOrgBeans)
+      emit('close-dialog', event === null, roleCount, props.params.usersId, props.params.orgId)
     }
 
     const submit = () => {
-      const checkedNodes: Array<OrgBeanVO> = orgSelectMoreElTreeRef.value?.getCheckedNodes()
-      const checkedOrgBeans: Array<OrgCheck> = checkedNodes.map(item => {
-        return {
-          id: item.id,
-          name: item.name,
-          code: item.code,
+      const checkedNodesKeys: Array<string> = roleSelectMoreElTreeRef.value?.getCheckedKeys()
+      const obj: UsersRoleBean = {
+        usersId: props.params.usersId,
+        roleIdList: checkedNodesKeys,
+        orgId: props.params.orgId,
+      }
+      bindUsersRole(obj).then(res => {
+        if (res.code === 200) {
+          ElMessage.success(res.message)
+          handleClose(null, checkedNodesKeys.length)
         }
       })
-      handleClose(null, checkedOrgBeans)
     }
 
     return {
       visible,
       loading,
-      orgList,
+      roleChecked,
+      roleList,
       submit,
-      orgSelectMoreElTreeRef,
+      roleSelectMoreElTreeRef,
       handleOpen,
       handleClose,
 

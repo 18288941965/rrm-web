@@ -171,7 +171,7 @@
           </ul>
           <el-empty
             v-else
-            description="未关联机构，请选择"
+            description="未选中机构信息"
             style="padding: 10px 0;width: 100%;"
             :image-size="40"
           />

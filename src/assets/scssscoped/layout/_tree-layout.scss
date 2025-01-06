@@ -1,0 +1,25 @@
+.layout-main{
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+
+  & .layout-right-control{
+    border: var(--border-1);
+    border-radius: var(--border-radius-medium);
+    & .control-top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      line-height: var(--size-medium);
+      border-bottom: var(--border-1);
+      padding-left: var(--pd-medium);
+      padding-right: var(--pd-ultra-small);
+    }
+    & p{
+      text-indent: 2rem;
+      color: var(--color-black-secondary);
+    }
+    & .control-main{
+      padding: var(--pd-medium);
+    }
+  }
+}

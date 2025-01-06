@@ -1,69 +1,83 @@
 <template>
   <div>
-    <div class="role-index-body">
+    <div class="layout-main">
       <div>
         <el-button
-            class="mgb-medium"
-            type="success"
-            :icon="Plus"
-            @click="dialogBaseOpen(undefined)"
+          class="mgb-medium"
+          type="success"
+          :icon="Plus"
+          @click="dialogParamsOpen({ dataId: '' })"
         >
           创建一级角色
         </el-button>
         <role-tree
-            ref="roleIndexTreeRef"
-            :role-list="roleList"
-            @set-active-node="setActiveTreeNode"
+          ref="roleIndexTreeRef"
+          :role-list="roleList"
+          @set-active-node="setActiveTreeNode"
         />
       </div>
 
       <div>
         <div class="mgb-medium">
           <el-button
-              :icon="Plus"
-              :disabled="!activeTreeNode.id"
-              @click="dialogBaseOpen(undefined)"
+            :icon="Plus"
+            :disabled="!activeTreeNode.id"
+            @click="dialogParamsOpen({
+              dataId: '',
+              parentId: activeTreeNode.id,
+              parentName: activeTreeNode.name,
+              terminal: activeTreeNode.terminal,
+              netType: activeTreeNode.netType
+            })"
           >
             添加子角色
           </el-button>
 
           <el-button
-              :icon="Edit"
-              :disabled="!activeTreeNode.id"
-              @click="dialogBaseOpen(activeTreeNode.id)"
+            :icon="Edit"
+            :disabled="!activeTreeNode.id"
+            @click="dialogParamsOpen({ dataId: activeTreeNode.id })"
           >
             编辑角色
           </el-button>
 
           <el-button
-              :icon="Delete"
-              :disabled="!activeTreeNode.id || activeTreeNode.childrenCount >= 1"
-              @click="deleteData(activeTreeNode.id, activeTreeNode.name)"
+            :icon="Delete"
+            :disabled="!activeTreeNode.id || activeTreeNode.childrenCount >= 1"
+            @click="deleteData(activeTreeNode.id, activeTreeNode.name)"
           >
             删除角色
           </el-button>
+
+          <el-button
+            :icon="Apps"
+            :disabled="!activeTreeNode.id"
+            @click="dialogBindMenuOpen({ dataId: activeTreeNode.id, name: activeTreeNode.name })"
+          >
+            绑定菜单和控件
+          </el-button>
         </div>
 
-        <div class="role-index-control">
+        <div class="layout-right-control">
           <div class="control-top">
             <h4>
-            <span
+              <span
                 v-if="!activeTreeNode.id"
                 class="no-data"
-            >请点击左侧角色名称进行后续操作</span>
+              >请点击左侧角色名称进行后续操作</span>
               {{ activeTreeNode.name }}
             </h4>
 
             <div>
               <el-switch
-                  v-model="activeTreeNode.status"
-                  :disabled="!activeTreeNode.id"
-                  inline-prompt
-                  :active-value="1"
-                  :inactive-value="0"
-                  active-text="启用"
-                  inactive-text="停用"
-                  @change="setRoleStatus(activeTreeNode.id, activeTreeNode.status)"
+                v-model="activeTreeNode.status"
+                :disabled="!activeTreeNode.id"
+                inline-prompt
+                :active-value="1"
+                :inactive-value="0"
+                active-text="启用"
+                inactive-text="停用"
+                @change="setRoleStatus(activeTreeNode.id, activeTreeNode.status)"
               />
             </div>
           </div>
@@ -74,37 +88,29 @@
             </p>
             <p>
               绑定菜单：{{ activeTreeNode.bindMenuCount }} / {{ countObj.menuCount }}
-
             </p>
             <p>
               绑定控件：{{ activeTreeNode.bindElementCount }} / {{ countObj.elementCount }}
             </p>
-            <el-button
-                :icon="Apps"
-                :disabled="!activeTreeNode.id"
-                @click="dialogBindMenuOpen({ dataId: activeTreeNode.id, name: activeTreeNode.name })"
-            >
-              绑定菜单和控件
-            </el-button>
 
             <template v-if="activeTreeNode.id">
               <el-tag
-                  type="info"
-                  class="mgl-medium"
+                type="info"
+                class="mgl-medium"
               >
                 {{ activeTreeNode.typeName }}
               </el-tag>
 
               <el-tag
-                  type="info"
-                  class="mgl-medium"
+                type="info"
+                class="mgl-medium"
               >
                 {{ activeTreeNode.terminalName }}
               </el-tag>
 
               <el-tag
-                  type="info"
-                  class="mgl-medium"
+                type="info"
+                class="mgl-medium"
               >
                 {{ activeTreeNode.netTypeName }}
               </el-tag>
@@ -115,13 +121,13 @@
     </div>
 
     <role-edit-dialog
-        v-bind="dialogBase"
-        @close-dialog="dialogBaseCloseAndRefresh($event, query)"
+      v-bind="dialogParam"
+      @close-dialog="dialogParamsCloseAndRefresh"
     />
 
     <menu-select-dialog
-        v-bind="dialogBindMenu"
-        @close-dialog="dialogBindMenuCloseAndRefresh"
+      v-bind="dialogBindMenu"
+      @close-dialog="dialogBindMenuCloseAndRefresh"
     />
   </div>
 </template>
@@ -129,8 +135,8 @@
 <script lang="ts">
 import {defineComponent, onMounted, reactive, ref} from 'vue'
 import {RoleBeanActive, RoleBeanVO} from './roleModel'
-import {deleteRole, searchRoleTree, updateRoleStatus} from './roleOption'
-import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
+import {deleteRole, getRoleById, searchRoleTree, updateRoleStatus} from './roleOption'
+import {dialogParamsContent} from '@utils/dialogOptions'
 import {Delete, Edit, Plus, Search} from '@element-plus/icons-vue'
 import RoleEditDialog from './role-edit-dialog.vue'
 import {ElMessage} from 'element-plus'
@@ -139,7 +145,8 @@ import {Apps} from '../../../components/svicon/menuIcon'
 import MenuSelectDialog from '../menu/menu-select-dialog.vue'
 import {countElement, countMenu} from '../menu/menuOption'
 import RoleTree from './role-tree.vue'
-import MenuElement from "../menu/menu-element.vue";
+import MenuElement from '../menu/menu-element.vue'
+import {deleteNodeById, updateOrInsertNode} from '@utils/treeUtils'
 
 export default defineComponent({
   name: 'RoleIndex',
@@ -168,6 +175,8 @@ export default defineComponent({
       name: '',
       status: 0,
       description: '',
+      terminal: '',
+      netType: '',
       typeName: '',
       terminalName: '',
       netTypeName: '',
@@ -182,6 +191,8 @@ export default defineComponent({
         name: '',
         status: 0,
         description: '',
+        terminal: '',
+        netType: '',
         typeName: '',
         terminalName: '',
         netTypeName: '',
@@ -205,21 +216,34 @@ export default defineComponent({
     })
 
     const {
-      dialogBase,
-      dialogBaseOpen,
-      dialogBaseCloseAndRefresh,
-    } = dialogBaseContent<string>()
+      dialogParam,
+      dialogParamsOpen,
+      dialogParamsClose,
+    } = dialogParamsContent()
+
+    const updateTreeNode = (editId: string) => {
+      getRoleById(editId).then(res => {
+        if (res.code === 200) {
+          const data: RoleBeanVO = res.data
+          updateOrInsertNode(roleList.value, editId, data, data.parentId)
+          // 编辑菜单更新右侧内容
+          if (editId === activeTreeNode.id) {
+            setActiveTreeNode(data)
+          }
+        }
+      })
+    }
+    const dialogParamsCloseAndRefresh = (refresh: boolean, id: string) => {
+      dialogParamsClose()
+      if (refresh) {
+        updateTreeNode(id)
+      }
+    }
 
     const setRoleStatus = (id: string, status: number) => {
       updateRoleStatus(id, status).then(res => {
-        if (res.code !== 200) {
-          for (let i = 0; i < roleList.value.length; i++) {
-            if (id === roleList.value[i].id) {
-              roleList.value[i].status = status === 1 ? 0 : 1
-              break
-            }
-          }
-        } else {
+        if (res.code === 200) {
+          updateTreeNode(id)
           ElMessage.success(res.message)
         }
       })
@@ -229,8 +253,11 @@ export default defineComponent({
       deleteConfirmContent('建议停用角色而不是删除，删除后将不可恢复，是否确认执行删除操作？', name).then(flag => {
         if (flag) {
           deleteRole(id).then(res => {
-            if (res.code === 200) {
-              query()
+            if (res.code == 200) {
+              deleteNodeById(roleList.value, activeTreeNode.id)
+
+              cleanActiveTreeNode()
+              roleIndexTreeRef.value!.cleanTreeActiveId()
             }
           })
         }
@@ -289,9 +316,9 @@ export default defineComponent({
       deleteData,
       setRoleStatus,
 
-      dialogBase,
-      dialogBaseOpen,
-      dialogBaseCloseAndRefresh,
+      dialogParam,
+      dialogParamsOpen,
+      dialogParamsCloseAndRefresh,
 
       dialogBindMenu,
       dialogBindMenuOpen,
@@ -302,36 +329,12 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@use "../../../assets/scssscoped/layout/tree-layout";
+
 .role-index-body{
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-
- .role-index-control{
-  border: var(--border-1);
-  border-radius: var(--border-radius-medium);
-  & .control-top{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    line-height: var(--size-medium);
-    border-bottom: var(--border-1);
-    padding-left: var(--pd-medium);
-    padding-right: var(--pd-ultra-small);
-  }
-  & .control-main{
-    padding: var(--pd-medium);
-    & p{
-      text-indent: 2rem;
-      color: var(--color-black-secondary);
-    }
-    & .bind-source{
-      padding-left: var(--pd-ultra-small);
-      font-weight: bolder;
-    }
-  }
-}
-
 
 .role-toolbar {
   display: flex;

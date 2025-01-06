@@ -140,7 +140,7 @@
                   plain
                   text
                   circle
-                  @click="dialogBaseOpen(user.id)"
+                  @click="dialogParamBindRoleOpen({ usersId: user.id, orgId: org.id })"
                 >
                   {{ org.roleCount }}
                 </el-button>
@@ -149,7 +149,7 @@
           </div>
           <el-empty
             v-if="user.orgList.length <= 0"
-            description="无机构"
+            description="未关联机构信息"
             style="padding: 10px 0"
             :image-size="40"
           />
@@ -178,6 +178,11 @@
       v-bind="dialogBase"
       @close-dialog="dialogBaseCloseAndRefresh($event, query)"
     />
+
+    <role-select-more-drawer
+      v-bind="dialogParamBindRole"
+      @close-dialog="dialogParamsCloseAndRefresh"
+    />
   </div>
 </template>
 
@@ -185,7 +190,7 @@
 import {defineComponent, onMounted, reactive} from 'vue'
 import {UsersBeanQuery, UsersBeanVO} from './usersModel'
 import {Pagination} from '@utils/interface'
-import {dialogBaseContent} from '@utils/dialogOptions'
+import {dialogBaseContent, dialogParamsContent} from '@utils/dialogOptions'
 import {defaultLoginOrg, deleteUsers, searchUsersPage} from './usersOption'
 import {deleteConfirm} from '@utils/utils'
 import EvPagination from '../../../components/evcomp/ev-pagination.vue'
@@ -194,6 +199,7 @@ import {CircleCheckFilled, Delete, Edit, Iphone, Link, Plus, Search, User} from 
 import avatarM from '../../../assets/image/avatar-m.png'
 import EvSelect from '../../../components/evcomp/ev-select.vue'
 import {ElMessage} from 'element-plus/es'
+import RoleSelectMoreDrawer from '../role/role-select-more-drawer.vue'
 
 export default defineComponent({
   name: 'UsersIndex',
@@ -204,6 +210,7 @@ export default defineComponent({
     Iphone,
     UsersEditDialog,
     EvPagination,
+    RoleSelectMoreDrawer,
   },
   setup() {
 
@@ -274,6 +281,26 @@ export default defineComponent({
       })
     }
 
+    const {
+      dialogParam: dialogParamBindRole,
+        dialogParamsClose: dialogParamBindRoleClose,
+        dialogParamsOpen: dialogParamBindRoleOpen,
+    } = dialogParamsContent()
+    const dialogParamsCloseAndRefresh = (refresh: boolean, roleCount: number, usersId: string, orgId: string) => {
+      dialogParamBindRoleClose()
+      if (refresh) {
+        pager.list.forEach(item => {
+          if (item.id === usersId) {
+            item.orgList.forEach(org => {
+              if (org.id === orgId) {
+                org.roleCount = roleCount
+              }
+            })
+          }
+        })
+      }
+    }
+
     onMounted(() => {
       query(1)
     })
@@ -294,6 +321,10 @@ export default defineComponent({
       dialogBase,
       dialogBaseOpen,
       dialogBaseCloseAndRefresh,
+
+      dialogParamBindRole,
+      dialogParamBindRoleOpen,
+      dialogParamsCloseAndRefresh,
     }
   },
 })
@@ -333,9 +364,14 @@ export default defineComponent({
 
       & .users-org{
         color: var(--el-text-color-regular);
+        height: 122px;
+        overflow: auto;
         & .org-item{
           margin: 6px;
-          display: grid;grid-template-columns: 34px 1fr 34px;align-items: center;grid-gap: 5px;
+          display: grid;
+          grid-template-columns: 34px 1fr 34px;
+          align-items: center;
+          grid-gap: 5px;
           &:hover{
             color: #000000;
           }

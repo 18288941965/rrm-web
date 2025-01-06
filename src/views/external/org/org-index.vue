@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="org-index-body">
-      <div class="org-tree">
+    <div class="layout-main">
+      <div>
         <div class="mgb-medium">
           <el-button
             type="success"
@@ -19,7 +19,7 @@
         />
       </div>
       
-      <div class="org-index-detail">
+      <div>
         <div class="mgb-medium">
           <el-button
             :icon="Plus"
@@ -46,34 +46,25 @@
           </el-button>
         </div>
 
-        <table>
-          <tbody>
-            <tr>
-              <td>机构名称</td>
-              <td>{{ activeTreeNode.name }}</td>
-            </tr>
-            <tr>
-              <td>机构简称</td>
-              <td>{{ activeTreeNode.abbrName }}</td>
-            </tr>
-            <tr>
-              <td>机构代码</td>
-              <td>{{ activeTreeNode.code }}</td>
-            </tr>
-            <tr>
-              <td>机构类型</td>
-              <td>{{ activeTreeNode.typeName }}</td>
-            </tr>
-            <tr>
-              <td>机构状态</td>
-              <td>{{ activeTreeNode.statusName }}</td>
-            </tr>
-            <tr>
-              <td>更新时间</td>
-              <td>{{ activeTreeNode.updatedAt }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="layout-right-control">
+          <div class="control-top">
+            <h4>
+            <span
+                v-if="!activeTreeNode.id"
+                class="no-data"
+            >请点击左侧机构进行后续操作</span>
+              {{ activeTreeNode.name }}
+            </h4>
+          </div>
+          <div class="control-main">
+            <p>机构名称：{{ activeTreeNode.name }}</p>
+            <p>机构简称：{{ activeTreeNode.abbrName }}</p>
+            <p>机构代码：{{ activeTreeNode.code }}</p>
+            <p>机构类型：{{ activeTreeNode.typeName }}</p>
+            <p>机构状态：{{ activeTreeNode.statusName }}</p>
+            <p>更新时间：{{ activeTreeNode.updatedAt }}</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -208,34 +199,5 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  .org-index-body{
-    display: flex;
-    & .org-tree{
-      flex: 1;
-    }
-  }
-
-  .org-index-detail{
-    flex: 1;
-    & table{
-      width: 100%;
-      border: 1px solid var(--border-color);
-      border-collapse: collapse;
-      line-height: 32px;
-      & td{
-        border-bottom: 1px solid var(--border-color);
-      }
-      & tr td:first-child{
-        width: 120px;
-        padding-left: var(--pd-small);
-        border-right: 1px solid var(--border-color);
-        font-weight: bolder;
-        color: #909399;
-        background-color: var(--bg-color-header);
-      }
-      & tr td:last-child{
-        padding-left: var(--pd-medium);
-      }
-    }
-  }
+@use "../../../assets/scssscoped/layout/tree-layout";
 </style>

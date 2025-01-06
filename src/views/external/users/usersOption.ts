@@ -38,25 +38,17 @@ const defaultLoginOrg = (usersId: string, orgId: string) => {
     })
 }
 
-
 const bindUsersRole = (bean: UsersRoleBean) => {
     return axios.post('/users-role', bean).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
 
-const getUsersBindRoleByUserId = (usersId: string) => {
-    return axios.get(`/users-role/${usersId}`).then((res: { data: AxiosResult }) => {
+const getUsersBindRole = (usersId: string, roleId: string) => {
+    return axios.get(`/users-role/${usersId}/${roleId}`).then((res: { data: AxiosResult }) => {
         return res.data
     })
 }
-
-const unbindUsersRole = (usersId: string, roleId: string) => {
-    return axios.delete(`/users-role/${usersId}/${roleId}`).then((res: { data: AxiosResult }) => {
-        return res.data
-    })
-}
-
 
 export {
     createUsers,
@@ -65,7 +57,6 @@ export {
     deleteUsers,
     updateUsers,
     bindUsersRole,
-    getUsersBindRoleByUserId,
-    unbindUsersRole,
+    getUsersBindRole,
     defaultLoginOrg,
 }

@@ -3,4 +3,8 @@
   & .el-tree-node__content, .tree-bd, .el-tree__empty-block{
     border-bottom: var(--border-1);
   }
+
+  & .el-tree-node__content {
+    border-bottom: var(--border-1);
+  }
 }

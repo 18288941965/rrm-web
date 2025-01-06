@@ -9,8 +9,9 @@
   >
     <template #header>
       <dialog-header
-        title="角色"
+        :title="params.parentId ? '子角色' : '一级角色'"
         :type="form.id ? '编辑' : '新增'"
+        :name="params.parentName"
       />
     </template>
     <el-form
@@ -47,6 +48,7 @@
       >
         <ev-select
           v-model="form.terminal"
+          :disabled="params.parentId != '' || form.id"
           dict-type="dic_terminal"
           :default-attr="{ label: 'entryName', value: 'entryCode' }"
           clearable
@@ -59,6 +61,7 @@
       >
         <ev-select
           v-model="form.netType"
+          :disabled="params.parentId != '' || form.id"
           dict-type="dic_net_type"
           :default-attr="{ label: 'entryName', value: 'entryCode' }"
           clearable
@@ -93,9 +96,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, ref, watch} from 'vue'
+import {defineComponent, PropType, reactive, ref, watch} from 'vue'
 import {ElMessage, FormInstance, FormRules} from 'element-plus/es'
-import {AxiosResult} from '@utils/interface'
+import {AxiosResult, PropPrams} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
 import DialogHeader from '../../../components/dialog-header.vue'
 import DialogFooter from '../../../components/dialog-footer.vue'
@@ -112,9 +115,17 @@ export default defineComponent({
     DialogFooter,
   },
   props: {
-    dataId: {
-      type: String,
-      default: '',
+    params: {
+      type: Object as PropType<PropPrams>,
+      default() {
+        return {
+          dataId: '',
+          parentId: '',
+          parentName: '',
+          terminal: '',
+          netType: '',
+        }
+      },
     },
     show: {
       type: Boolean,
@@ -139,6 +150,7 @@ export default defineComponent({
 
     const form = reactive<RoleBean>({
       id: '',
+      parentId: null,
       name: '',
       status: 1,
       type: '',
@@ -164,18 +176,18 @@ export default defineComponent({
     }
     
     // 关闭窗口
-    const handleClose = () => {
+    const handleClose = (evt: Event | null, id: string) => {
       resetForm(roleEditRef.value)
       const refresh = isRefresh.value
       isRefresh.value = false
-      emit('close-dialog', refresh)
+      emit('close-dialog', refresh, id)
     }
 
     const handleCallback = (res: AxiosResult) => {
       if (res.code == 200) {
         ElMessage.success(res.message)
         isRefresh.value = true
-        handleClose()
+        handleClose(null, res.data)
       }
     }
 
@@ -183,7 +195,7 @@ export default defineComponent({
       if (!formEl) return
       formEl.validate((valid) => {
         if (valid) {
-          if (props.dataId) {
+          if (props.params.dataId) {
             updateRole(form).then(res => {handleCallback(res)})
           } else {
             createRole(form).then(res => {handleCallback(res)})
@@ -195,8 +207,13 @@ export default defineComponent({
     }
 
     const handleOpen = () => {
-      if (props.dataId) {
-        getRoleById(props.dataId).then(res => {
+      if (props.params.parentId) {
+        form.parentId = props.params.parentId
+        form.terminal = props.params.terminal
+        form.netType = props.params.netType
+      }
+      if (props.params.dataId) {
+        getRoleById(props.params.dataId).then(res => {
           if (res.code === 200) {
             assignExistingFields(form, res.data)
           }
@@ -218,7 +235,6 @@ export default defineComponent({
 })
 
 </script>
-
 
 <style scoped lang="scss">
   

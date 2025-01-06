@@ -42,8 +42,8 @@ interface UsersBeanQuery extends UsersBeanBase, PaginationQr{
 
 interface UsersRoleBean{
     usersId: string
-    roleId: string
-    orgCode: string
+    roleIdList: Array<string>
+    orgId: string
 }
 
 export {

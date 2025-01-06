@@ -28,6 +28,8 @@ interface RoleBeanActive {
     name: string
     status: number
     description: string
+    terminal: string
+    netType: string
     typeName: string
     terminalName: string
     netTypeName: string

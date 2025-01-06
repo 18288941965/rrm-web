@@ -5,9 +5,7 @@
       class="mgb-medium"
       clearable
       placeholder="角色过滤"
-      style="max-width: 600px"
-    >
-    </el-input>
+    />
 
     <el-tree
       ref="roleTreeRef"
@@ -33,6 +31,7 @@
           </span>
           <span>
             <el-tag
+              v-if="node.level <= 1"
               type="info"
               round
               size="small"
@@ -40,6 +39,7 @@
               {{ data.terminalName }}
             </el-tag>
             <el-tag
+              v-if="node.level <= 1"
               type="warning"
               round
               size="small"
