@@ -11,8 +11,7 @@
       :border="border"
       :value="item.value"
       :label="item.label"
-    >
-    </el-checkbox>
+    />
   </el-checkbox-group>
 </template>
 
