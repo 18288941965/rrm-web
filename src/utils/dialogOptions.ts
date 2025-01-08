@@ -7,7 +7,11 @@ export function dialogEmptyContent () {
     show: false,
   })
   const dialogEmptyOpen = () => {
-    dialogEmpty.show = true
+    dialogEmpty.show = false
+    // 开发环境优化
+    setTimeout(function () {
+      dialogEmpty.show = true
+    }, 10)
   }
   const dialogEmptyClose = () => {
     dialogEmpty.show = false
@@ -35,7 +39,11 @@ export function dialogBaseContent<T = string> () {
   })
   const dialogBaseOpen = (id : UnwrapRef<T> | undefined) => {
     dialogBase.dataId = id
-    dialogBase.show = true
+    dialogBase.show = false
+    // 开发环境优化
+    setTimeout(function () {
+      dialogBase.show = true
+    }, 10)
   }
   const dialogBaseClose = () => {
     dialogBase.dataId = undefined
@@ -63,7 +71,11 @@ export function dialogParamsContent () {
   })
   const dialogParamsOpen = (params: any) => {
     dialogParam.params = params
-    dialogParam.show = true
+    dialogParam.show = false
+    // 开发环境优化
+    setTimeout(function () {
+      dialogParam.show = true
+    }, 10)
   }
   const dialogParamsClose = () => {
     dialogParam.params = {}

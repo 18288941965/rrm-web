@@ -168,7 +168,7 @@ export default defineComponent({
     }
     
     // 关闭窗口
-    const handleClose = (evt: Event | undefined, add = false) => {
+    const handleClose = (_done: () => void, add = false) => {
       resetForm(dictItemEditRef.value)
       const refresh = isRefresh.value
       isRefresh.value = false
@@ -179,7 +179,7 @@ export default defineComponent({
       if (res.code == 200) {
         ElMessage.success(res.message)
         isRefresh.value = true
-        handleClose(undefined, add)
+        handleClose(() => {}, add)
       }
     }
 

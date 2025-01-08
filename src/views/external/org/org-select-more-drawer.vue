@@ -132,10 +132,10 @@ export default defineComponent({
     }
 
     // 关闭窗口
-    const handleClose = (event: Event | null, checkedOrgBeans: Array<OrgCheck>) => {
+    const handleClose = (_done: () => void, checkedOrgBeans: Array<OrgCheck>) => {
       orgList.value = []
       loading.value = false
-      emit('close-dialog', event === null, checkedOrgBeans)
+      emit('close-dialog', _done.toString().startsWith('()'), checkedOrgBeans)
     }
 
     const submit = () => {
@@ -147,7 +147,7 @@ export default defineComponent({
           code: item.code,
         }
       })
-      handleClose(null, checkedOrgBeans)
+      handleClose(() => {}, checkedOrgBeans)
     }
 
     return {

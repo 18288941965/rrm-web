@@ -176,7 +176,7 @@ export default defineComponent({
     }
     
     // 关闭窗口
-    const handleClose = (evt: Event | null, id: string) => {
+    const handleClose = (_done: () => void, id: string) => {
       resetForm(roleEditRef.value)
       const refresh = isRefresh.value
       isRefresh.value = false
@@ -187,7 +187,7 @@ export default defineComponent({
       if (res.code == 200) {
         ElMessage.success(res.message)
         isRefresh.value = true
-        handleClose(null, res.data)
+        handleClose(() => {}, res.data)
       }
     }
 

@@ -144,10 +144,10 @@ export default defineComponent({
     }
 
     // 关闭窗口
-    const handleClose = (event: Event | null, roleCount: number) => {
+    const handleClose = (_done: () => void, roleCount: number) => {
       roleList.value = []
       loading.value = false
-      emit('close-dialog', event === null, roleCount, props.params.usersId, props.params.orgId)
+      emit('close-dialog', _done.toString().startsWith('()'), roleCount, props.params.usersId, props.params.orgId)
     }
 
     const submit = () => {
@@ -160,7 +160,7 @@ export default defineComponent({
       bindUsersRole(obj).then(res => {
         if (res.code === 200) {
           ElMessage.success(res.message)
-          handleClose(null, checkedNodesKeys.length)
+          handleClose(() => {}, checkedNodesKeys.length)
         }
       })
     }
