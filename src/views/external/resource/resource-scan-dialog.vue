@@ -114,7 +114,6 @@ export default defineComponent({
   props: {
     show: {
       type: Boolean,
-      default: false,
       required: true,
     },
   },

@@ -209,7 +209,7 @@ export default defineComponent({
 
     watch(
         () => props.selectDictType,
-        (newVal, oldVal) => {
+        () => {
           if (props.selectDictType.id) {
             queryParams.typeCode = props.selectDictType.typeCode
             query(1)

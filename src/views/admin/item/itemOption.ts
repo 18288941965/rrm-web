@@ -1,4 +1,3 @@
-// 退出系统
 import {ItemBean} from './itemModel'
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'

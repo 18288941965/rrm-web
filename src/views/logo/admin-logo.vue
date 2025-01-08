@@ -35,15 +35,12 @@ export default defineComponent({
     },
     moduleIcon: {
       type: String,
-      default: undefined,
     },
     moduleLabel: {
       type: String,
-      default: undefined,
     },
     moduleCode: {
       type: String,
-      default: undefined,
     },
     clickTo: {
       type: String,

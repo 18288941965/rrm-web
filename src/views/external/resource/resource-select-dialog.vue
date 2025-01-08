@@ -234,7 +234,6 @@ export default defineComponent({
     },
     show: {
       type: Boolean,
-      default: false,
       required: true,
     },
   },
@@ -242,7 +241,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const {
       visible,
-      isRefresh,
     } = dialogOptions()
 
     watch(
@@ -332,7 +330,7 @@ export default defineComponent({
       return path.filter(item => item)
     }
 
-    const handleNodeClick = (data: PackageNameTree, node: Node) => {
+    const handleNodeClick = (_data: PackageNameTree, node: Node) => {
       const nodePath = getNodePath(node)
       queryParams.serviceName = nodePath[0]
       if (nodePath.length > 1) {

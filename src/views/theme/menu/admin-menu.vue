@@ -36,7 +36,7 @@
 
         <el-sub-menu
           v-else
-          :key="index + '_' + menu.id"
+          :key="index + '__' + menu.id"
           :index="menu.id"
         >
           <template #title>

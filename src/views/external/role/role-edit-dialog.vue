@@ -129,7 +129,6 @@ export default defineComponent({
     },
     show: {
       type: Boolean,
-      default: false,
       required: true,
     },
   },

@@ -1,10 +1,8 @@
 import {reactive, ref} from 'vue'
 import {ActiveMenus} from './menuModels'
-import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
 import {PushRouter} from '@utils/types'
 import rrmMenuDfs from '../../../algo/rrmMenuDfs'
-import {useRouter} from 'vue-router'
 import {RrmMenuBean} from './menuModels'
 
 export function MenuStatusContent() {
@@ -116,7 +114,6 @@ export function MenuStatusContent() {
 export function MenuOptions() {
     const menus = ref<RrmMenuBean[]>([])
     const menuDefaultOpeneds = ref<String[]>([])
-    const router = useRouter()
 
     const getDemoData = () => {
         const obj: AxiosResult = {
@@ -154,7 +151,7 @@ export function MenuOptions() {
             icon: 'admin-temp.png',
             url: '/app/home',
             id: '01',
-            pid: undefined,
+            pid: null,
             sxh: 1,
             cache: false,
             name: 'AdminTheme',

@@ -14,8 +14,6 @@
       v-show="getMenuLabel"
       class="active-menu-label"
     >
-      <!--      <span>/</span>
-      <span>{{ getMenuLabel }}</span>-->
     </div>
 
     <div class="empty-flex" />
@@ -64,11 +62,10 @@ export default defineComponent({
     },
     moduleIcon: {
       type: String,
-      default: undefined,
     },
     moduleLabel: {
       type: String,
-      default: undefined,
+      default: null,
     },
     activeMenus: {
       type: Object as PropType<ActiveMenus>,

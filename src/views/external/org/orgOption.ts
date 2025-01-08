@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {OrgBean, OrgBeanBase} from './orgModel'
+import {OrgBean} from './orgModel'
 
 const createOrg = (bean: OrgBean) => {
     return axios.post('/org', bean).then((res: { data: AxiosResult }) => {

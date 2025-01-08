@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {RoleBean, RoleBeanBase, RoleMenuBean} from './roleModel'
+import {RoleBean, RoleMenuBean} from './roleModel'
 
 const createRole = (bean: RoleBean) => {
     return axios.post('/role', bean).then((res: { data: AxiosResult }) => {

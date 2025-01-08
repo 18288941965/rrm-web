@@ -97,7 +97,6 @@ export default defineComponent({
     },
     resourceCount: {
       type: Number,
-      default: 0,
     },
   },
   emits: ['set-element-count'],

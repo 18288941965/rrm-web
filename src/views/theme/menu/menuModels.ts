@@ -18,11 +18,11 @@ interface RrmMenuBeanBase{
  * @param children 子菜单
  */
 interface RrmMenuBean extends RrmMenuBeanBase{
-    pid: string | undefined
-    url: string | undefined
+    pid: string | null
+    url: string | null
     cache: boolean
-    name: string | undefined
-    sxh: number | undefined
+    name: string | null
+    sxh: number | null
     children?: Array<RrmMenuBean>
 }
 

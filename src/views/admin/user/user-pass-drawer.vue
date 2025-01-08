@@ -66,7 +66,6 @@ export default defineComponent({
   props: {
     show: {
       type: Boolean,
-      default: false,
       required: true,
     },
   },
@@ -98,7 +97,7 @@ export default defineComponent({
       emit('close-dialog')
     }
 
-    const validate = (rule: any, value: any, callback: any) => {
+    const validate = (_rule: any, value: any, callback: any) => {
       const chineseCharPattern = /[\u4e00-\u9fa5]/
       if (chineseCharPattern.test(value)) {
         callback(new Error('密码不能包含中文字符'))

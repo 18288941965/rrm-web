@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent,ref, watch} from 'vue'
+import {defineComponent, PropType, ref, watch} from 'vue'
 import MenuTree from './menu-tree.vue'
 import {MenuBeanVO} from './menuModel'
 import DialogFooter from '../../../components/dialog-footer.vue'
@@ -55,20 +55,19 @@ export default defineComponent({
   props: {
     show: {
       type: Boolean,
-      default: false,
       required: true,
     },
     menuList: {
-      type: Array<MenuBeanVO>,
-      default: [],
+      type: Array as PropType<MenuBeanVO[]>,
+      default: (): MenuBeanVO[] => [],
     },
     moveIds: {
-      type: Array<string>,
-      default: [],
+      type: Array as PropType<string[]>,
+      default: (): string[] => [],
     },
     disabledIds: {
-      type: Array<string>,
-      default: [],
+      type: Array as PropType<string[]>,
+      default: (): string[] => [],
     },
   },
   emits: ['close-dialog'],

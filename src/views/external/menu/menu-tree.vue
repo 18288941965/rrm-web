@@ -76,23 +76,23 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, watch, ref, toRef} from 'vue'
+import {computed, defineComponent, watch, ref, toRef, PropType} from 'vue'
 import {MenuBeanVO} from './menuModel'
 
 export default defineComponent({
   name: 'MenuTree',
   props: {
     menuList: {
-      type: Array<MenuBeanVO>,
-      default: [],
+      type: Array as PropType<MenuBeanVO[]>,
+      default: (): MenuBeanVO[] => [],
     },
     moveIds: {
-      type: Array<string>,
-      default: [],
+      type: Array as PropType<string[]>,
+      default: (): string[] => [],
     },
     disabledIds: {
-      type: Array<string>,
-      default: [],
+      type: Array as PropType<string[]>,
+      default: (): string[] => [],
     },
   },
   emits: ['set-active-node'],

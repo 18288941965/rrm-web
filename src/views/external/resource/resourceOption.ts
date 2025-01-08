@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {AxiosResult} from '@utils/interface'
-import {ResourceQuery, ResourceScanBean} from './resourceModel'
+import {ResourceQuery} from './resourceModel'
 
 const searchResourcePage = (params: ResourceQuery) => {
     return axios.post('/resource/page', params).then((res: { data: AxiosResult }) => {

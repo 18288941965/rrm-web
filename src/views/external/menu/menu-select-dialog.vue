@@ -79,7 +79,7 @@ import {PropPrams} from '@utils/interface'
 import {dialogOptions} from '@utils/dialogOptions'
 
 import DialogHeader from '../../../components/dialog-header.vue'
-import {MenuBean, MenuBeanVO, MenuElementBean} from './menuModel'
+import {MenuBean, MenuBeanVO, MenuElementBeanVO} from './menuModel'
 import {getMenuByItemCode, getMenuElementByMenuId} from './menuOption'
 import type Node from 'element-plus/es/components/tree/src/model/node'
 import {bindRoleMenu, getRoleBindMenuByRoleId, unbindRoleMenu} from '../role/roleOption'
@@ -104,7 +104,6 @@ export default defineComponent({
     },
     show: {
       type: Boolean,
-      default: false,
       required: true,
     },
   },
@@ -116,7 +115,7 @@ export default defineComponent({
 
     const menuSelectElTreeRef = ref()
     const menuList = ref<Array<MenuBean>>([])
-    const elementList = ref<Array<MenuElementBean>>([])
+    const elementList = ref<Array<MenuElementBeanVO>>([])
 
     const bindObj = reactive<{
       menuIds: Array<string>
