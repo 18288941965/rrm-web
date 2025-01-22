@@ -200,5 +200,5 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  @use "@assets/scssscoped/theme/admin-theme2";
+  @use "@assets/scssscoped/admin-theme2";
 </style>

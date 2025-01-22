@@ -463,7 +463,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@use "../../../assets/scssscoped/layout/tree-layout";
+@use "../../../assets/scssscoped/tree-layout";
 
 .layout-main .bind-source{
   padding-left: var(--pd-ultra-small);

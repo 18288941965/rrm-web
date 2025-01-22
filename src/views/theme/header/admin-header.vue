@@ -116,5 +116,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@use "@assets/scssscoped/theme/admin-header";
+@use "@assets/scssscoped/admin-header";
 </style>

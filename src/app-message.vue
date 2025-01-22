@@ -63,5 +63,5 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  @use "@assets/scssscoped/components/app-message";
+  @use "@assets/scssscoped/app-message";
 </style>

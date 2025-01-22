@@ -57,7 +57,7 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
-@use "@assets/scss/components/common";
+@use "@assets/scss/common";
   .dialog-header{
     display: flex;
     align-items: center;

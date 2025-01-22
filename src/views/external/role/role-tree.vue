@@ -115,10 +115,10 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
-  @use "../../../assets/scssscoped/tree/rrm-tree";
+  @use "../../../assets/scssscoped/rrm-tree";
 </style>
 <style lang="scss">
-  @use "../../../assets/scss/tree/rrm-tree";
+  @use "../../../assets/scss/rrm-tree";
 
   .tree-move-check > .el-tree-node__content:nth-of-type(1) {
     color: var(--color-red);

@@ -327,5 +327,5 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@use "../../../assets/scssscoped/layout/tree-layout";
+@use "../../../assets/scssscoped/tree-layout";
 </style>

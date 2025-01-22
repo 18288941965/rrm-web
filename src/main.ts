@@ -11,8 +11,8 @@ import '@assets/css/base/cover-element.css'
 import '@assets/css/base/scroll.css'
 import '@assets/css/base/nprogress.css'
 import '@assets/css/base/animation.css'
-import '@assets/scss/base/_base.scss'
-import '@assets/scss/components/_base-button.scss'
+import '@assets/scss/_base.scss'
+import '@assets/scss/_base-button.scss'
 
 import * as menuIcon from './components/svicon/menuIcon'
 

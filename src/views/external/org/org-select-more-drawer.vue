@@ -166,9 +166,9 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  @use "../../../assets/scssscoped/tree/rrm-tree";
+  @use "../../../assets/scssscoped/rrm-tree";
 </style>
 
 <style lang="scss">
-@use "../../../assets/scss/tree/rrm-tree";
+@use "../../../assets/scss/rrm-tree";
 </style>

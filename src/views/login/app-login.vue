@@ -88,5 +88,5 @@ const login = () => {
 </script>
 
 <style scoped lang="scss">
-  @use "@assets/scssscoped/base/app-login";
+  @use "@assets/scssscoped/app-login";
 </style>

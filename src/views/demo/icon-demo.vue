@@ -61,5 +61,5 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  @use "@assets/scssscoped/demo/icon-demo";
+  @use "@assets/scssscoped/icon-demo";
 </style>

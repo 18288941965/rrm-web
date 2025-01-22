@@ -56,5 +56,5 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  @use "@assets/scssscoped/theme/admin-logo";
+  @use "@assets/scssscoped/admin-logo";
 </style>

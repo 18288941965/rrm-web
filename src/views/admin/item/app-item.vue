@@ -195,7 +195,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@use "@assets/scss/mixin/mixin" as *;
+@use "@assets/scss/mixin" as *;
 
 .item-body{
   & .item-header{
@@ -269,7 +269,7 @@ export default defineComponent({
 
 
 <style lang="scss">
-@use "@assets/scss/mixin/mixin" as *;
+@use "@assets/scss/mixin" as *;
 
 .user-avatar-container details{
   @include flex-base();
