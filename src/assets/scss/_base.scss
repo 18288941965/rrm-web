@@ -1,22 +1,5 @@
 @use "mixin" as *;
 
-.global-menu-item-wrapper{
-	position: relative;
-	border-radius: var(--border-radius-small);
-	&:hover{
-		background-color: var(--hover-color-light-blue);
-	}
-}
-
-.global-menu-item{
-	display: inline-block;
-	width: 100%;
-	line-height: var(--size-medium);
-	border-radius: inherit;
-	text-decoration: none;
-	padding: 0 var(--pd-medium);
-}
-
 .global-active a[aria-current='page']{
 	@extend .active
 }
